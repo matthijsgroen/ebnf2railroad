@@ -2,6 +2,12 @@
   "name": "ebnf2railroad",
   "version": "1.0.0",
   "description": "EBNF to Railroad diagram",
+  "keywords": [
+    "ebnf",
+    "context-free grammar",
+    "railroad diagram",
+    "syntax diagra"
+  ],
   "main": "index.js",
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
   "author": "Matthijs Groen <matthijs@kabisa.nl>",
