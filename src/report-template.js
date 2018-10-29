@@ -14,6 +14,7 @@ const documentTemplate = ({ title, contents }) =>
     code {
       padding: 1em;
       background: rgb(255, 246, 209);
+      display: inline-block;
     }
     a,
     a:visited,
@@ -68,9 +69,6 @@ const documentTemplate = ({ title, contents }) =>
 </head>
 <body>
   <article>
-    <header>
-      <h1>${title}</h1>
-    </header>
     ${contents}
   </article>
 </body>
@@ -88,7 +86,47 @@ const ebnfTemplate = ({ identifier, ebnf, diagram }) =>
 </section>
 `;
 
+const PARAGRAPH = "p";
+const HEADER = "h";
+
+const commentTemplate = comment =>
+  comment
+    .split("\n")
+    .map(e => ({ type: PARAGRAPH, content: e.trim() }))
+    .reduce((acc, item, index, src) => {
+      const ahead = src[index + 1];
+      const lastAcc = acc[acc.length - 1];
+      if (
+        item.type === PARAGRAPH &&
+        item.content.length > 0 &&
+        ahead &&
+        ahead.type === PARAGRAPH &&
+        ahead.content.length === 0 &&
+        (!lastAcc || lastAcc.type !== HEADER)
+      ) {
+        return acc.concat({ type: HEADER, content: item.content });
+      }
+      if (
+        item.type === PARAGRAPH &&
+        item.content.length === 0 &&
+        lastAcc.type === HEADER
+      ) {
+        return acc;
+      }
+      return acc.concat(item);
+    }, [])
+    .map(
+      item =>
+        item.type === PARAGRAPH
+          ? `<p>${item.content}</p>`
+          : item.type === HEADER
+            ? `<h1>${item.content}</h1>`
+            : ""
+    )
+    .join("");
+
 module.exports = {
   documentTemplate,
-  ebnfTemplate
+  ebnfTemplate,
+  commentTemplate
 };
