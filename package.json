@@ -1,0 +1,23 @@
+{
+  "name": "ebnf2railroad",
+  "version": "1.0.0",
+  "description": "EBNF to Railroad diagram",
+  "main": "index.js",
+  "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
+  "author": "Matthijs Groen <matthijs@kabisa.nl>",
+  "license": "MIT",
+  "bin": {
+    "ebnf2railroad": "./bin/ebnf2railroad.js"
+  },
+  "scripts": {
+    "build-parser": "jison src/ebnf.jison -o src/ebnf-parser.js"
+  },
+  "private": false,
+  "dependencies": {
+    "commander": "^2.19.0",
+    "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams.git"
+  },
+  "devDependencies": {
+    "jison": "^0.4.18"
+  }
+}
