@@ -2,12 +2,12 @@
 
 %{
   const {
-    Diagram
-    // Sequence
-    // Choice
+    Diagram,
+    Sequence,
+    Choice,
     // OneOrMore
-    // Terminal
-    // NonTerminal
+    Terminal,
+    NonTerminal
     // Skip
   } = require("railroad-diagrams");
 %}
@@ -16,13 +16,21 @@
 %lex
 %%
 \s+                   {/* skip whitespace */}
-[a-z]+[A-Za-z0-9 ]*   {return 'IDENTIFIER'; }
+[a-z][A-Za-z0-9 ]*    {return 'IDENTIFIER'; }
 "="                   {return '='; }
+";"                   {return ';'; }
+","                   {return ','; }
+"|"                   {return '|'; }
+\"[^"]+\"             {return 'STRING'; }
+\'[^']+\'             {return 'STRING'; }
 <<EOF>>               {return 'EOF';}
 
 /lex
 
 /* operator associations and precedence */
+
+%left ','
+%left '|'
 
 %start grammar
 
@@ -34,12 +42,37 @@ grammar
     ;
 
 production_list
-    : production_list production { $$ = $production_list.concat($production); }
-    | production                 { $$ = [$production] }
+    : production_list production
+        { $$ = $production_list.concat($production); }
+    | production
+        { $$ = [$production] }
     ;
 
 production
-    : IDENTIFIER "="
-        {$$ = { identifier: $1.trim(), diagram: Diagram() };}
+    : IDENTIFIER "=" rhs ";"
+        %{
+          $$ = {
+            identifier: $1.trim(),
+            diagram: Diagram($rhs)
+          };
+        %}
+    ;
+
+rhs
+  : rhs "," rhs
+      { $$ = Sequence($1, $3) }
+  | rhs "|" rhs
+      { $$ = Choice(0, $1, $3) }
+  | identifier
+  | terminal
+  ;
+
+identifier
+    : IDENTIFIER
+        {$$ = NonTerminal($1.trim()); }
+    ;
+
+terminal
+    : STRING { $$ = Terminal($1.slice(1, -1)) }
     ;
 
