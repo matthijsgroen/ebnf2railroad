@@ -1,5 +1,17 @@
 /* Parse and convert ebnf */
 
+%{
+  const {
+    Diagram
+    // Sequence
+    // Choice
+    // OneOrMore
+    // Terminal
+    // NonTerminal
+    // Skip
+  } = require("railroad-diagrams");
+%}
+
 /* lexical grammar */
 %lex
 %%
@@ -22,12 +34,12 @@ grammar
     ;
 
 production_list
-    : production_list production { $$ = $production_list; $$.push($production); }
+    : production_list production { $$ = $production_list.concat($production); }
     | production                 { $$ = [$production] }
     ;
 
 production
     : IDENTIFIER "="
-        {$$ = { identifier: $1.trim() };}
+        {$$ = { identifier: $1.trim(), diagram: Diagram() };}
     ;
 

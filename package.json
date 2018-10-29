@@ -14,7 +14,8 @@
   },
   "private": false,
   "dependencies": {
-    "commander": "^2.19.0"
+    "commander": "^2.19.0",
+    "railroad-diagrams": "^1.0.0"
   },
   "devDependencies": {
     "jison": "^0.4.18"
