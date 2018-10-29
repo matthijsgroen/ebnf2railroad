@@ -115,9 +115,9 @@ nomnom@1.5.2:
     chalk "~0.4.0"
     underscore "~1.6.0"
 
-railroad-diagrams@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/railroad-diagrams/-/railroad-diagrams-1.0.0.tgz#eb7e6267548ddedfb899c1b90e57374559cddb7e"
+"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams.git":
+  version "1.1.0"
+  resolved "https://github.com/tabatkins/railroad-diagrams.git#dbcb5bfc93d0826f63b4bc08b957214bebc7ffdb"
 
 source-map@~0.1.33:
   version "0.1.43"

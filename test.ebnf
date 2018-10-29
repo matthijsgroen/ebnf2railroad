@@ -1,3 +1,0 @@
-hi there = "Hello", "World", 'foo';
-row = 'Nice to meet you';
-foo = hi there | row | "Hello";

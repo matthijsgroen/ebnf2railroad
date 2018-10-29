@@ -4,6 +4,7 @@ const {
   NonTerminal,
   OneOrMore,
   Sequence,
+  OptionalSequence,
   Skip,
   Terminal
 } = require("railroad-diagrams");
@@ -21,7 +22,9 @@ const productionToEBNF = production => {
     )};`;
   }
   if (production.terminal) {
-    return `"${production.terminal}"`;
+    return production.terminal.indexOf('"') > -1
+      ? `'${production.terminal}'`
+      : `"${production.terminal}"`;
   }
   if (production.nonTerminal) {
     return `<a href="#${production.nonTerminal}">${production.nonTerminal}</a>`;
@@ -54,6 +57,8 @@ const productionToEBNF = production => {
   return "unknown construct";
 };
 
+const SHRINK_LIMIT = 13; // This can cut off letters of the alphabet nicely
+
 const productionToDiagram = production => {
   if (production.identifier) {
     return Diagram(productionToDiagram(production.definition));
@@ -65,7 +70,15 @@ const productionToDiagram = production => {
     return NonTerminal(production.nonTerminal);
   }
   if (production.choice) {
-    return Choice(0, ...production.choice.map(productionToDiagram));
+    const options = production.choice.map(productionToDiagram);
+    const results = [];
+    while (options.length > SHRINK_LIMIT) {
+      const subSection = options.splice(0, SHRINK_LIMIT);
+      results.push(Choice(0, ...subSection));
+    }
+    return results.length === 0
+      ? Choice(0, ...options)
+      : OptionalSequence(...results, Choice(0, ...options));
   }
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
@@ -94,6 +107,49 @@ const productionToDiagram = production => {
   return "unknown construct";
 };
 
+const hasReferenceTo = (production, identifier) => {
+  if (production.definition) {
+    return hasReferenceTo(production.definition, identifier);
+  }
+  if (production.terminal) {
+    return false;
+  }
+  if (production.nonTerminal) {
+    return production.nonTerminal === identifier;
+  }
+  if (production.choice) {
+    return production.choice.some(item => hasReferenceTo(item, identifier));
+  }
+  if (production.sequence) {
+    return production.sequence.some(item => hasReferenceTo(item, identifier));
+  }
+  if (production.repetition) {
+    return hasReferenceTo(production.repetition, identifier);
+  }
+  if (production.optional) {
+    return hasReferenceTo(production.optional, identifier);
+  }
+  if (production.group) {
+    return hasReferenceTo(production.group, identifier);
+  }
+  if (production.exceptNonTerminal) {
+    return (
+      production.exceptNonTerminal === identifier ||
+      production.include === identifier
+    );
+  }
+  if (production.exceptTerminal) {
+    return production.include === identifier;
+  }
+  return false;
+};
+
+const searchReferencesToIdentifier = (identifier, ast) =>
+  ast
+    .filter(production => production.identifier !== identifier)
+    .filter(production => hasReferenceTo(production, identifier))
+    .map(production => production.identifier);
+
 const createDocumentation = (ast, options) => {
   const contents = ast
     .map(production => {
@@ -104,6 +160,7 @@ const createDocumentation = (ast, options) => {
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
+        references: searchReferencesToIdentifier(production.identifier, ast),
         diagram: diagram.toString()
       });
     })

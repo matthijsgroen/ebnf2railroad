@@ -25,8 +25,8 @@
 
 /* operator associations and precedence */
 
-%left ','
 %left '|'
+%left ','
 
 %start grammar
 

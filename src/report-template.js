@@ -3,6 +3,7 @@ const documentTemplate = ({ title, contents }) =>
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta name="generator" content="ebnf2railroad" />
   <title>${title}</title>
   <style type="text/css">
@@ -75,14 +76,23 @@ const documentTemplate = ({ title, contents }) =>
 </html>
 `;
 
-const ebnfTemplate = ({ identifier, ebnf, diagram }) =>
+const referencesTemplate = (identifier, references) =>
+  `<p>Items referencing <strong>${identifier}</strong>:<p>
+<ul>
+${references
+    .map(reference => `<li><a href="#${reference}">${reference}</a></li>`)
+    .join("")}
+</ul>
+`;
+
+const ebnfTemplate = ({ identifier, ebnf, diagram, references }) =>
   `<section>
   <h2 id="${identifier}">${identifier}:</h2>
   <div class="diagram-container">
   ${diagram}
   </div>
   <code>${ebnf}</code>
-
+  ${references.length > 0 ? referencesTemplate(identifier, references) : ""}
 </section>
 `;
 
