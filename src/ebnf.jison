@@ -1,17 +1,5 @@
 /* Parse and convert ebnf */
 
-%{
-  const {
-    Diagram,
-    Sequence,
-    Choice,
-    // OneOrMore
-    Terminal,
-    NonTerminal
-    // Skip
-  } = require("railroad-diagrams");
-%}
-
 /* lexical grammar */
 %lex
 %%
@@ -53,26 +41,26 @@ production
         %{
           $$ = {
             identifier: $1.trim(),
-            diagram: Diagram($rhs)
+            definition: $rhs
           };
         %}
     ;
 
 rhs
   : rhs "," rhs
-      { $$ = Sequence($1, $3) }
+      { $$ = $1.sequence ? { sequence: $1.sequence.concat($3) } : { sequence: [$1, $3] } }
   | rhs "|" rhs
-      { $$ = Choice(0, $1, $3) }
+      { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
   | identifier
   | terminal
   ;
 
 identifier
     : IDENTIFIER
-        {$$ = NonTerminal($1.trim()); }
+        {$$ = { nonTerminal: $1.trim() }; }
     ;
 
 terminal
-    : STRING { $$ = Terminal($1.slice(1, -1)) }
+    : STRING { $$ = { terminal: $1.slice(1, -1) } }
     ;
 

@@ -34,7 +34,7 @@ prettyPrintDiagram = diagram => {
       .join(", ")})`;
   }
   if (diagram instanceof Choice) {
-    return `Choice(${diagram.items
+    return `Choice(0, ${diagram.items
       .filter(t => t.tagName === "g")
       .map(prettyPrintDiagram)
       .join(", ")})`;
@@ -48,6 +48,46 @@ prettyPrintDiagram = diagram => {
   return "hallo";
 };
 
+const productionToEBNF = production => {
+  if (production.identifier) {
+    return `${production.identifier} = ${productionToEBNF(
+      production.definition
+    )};`;
+  }
+  if (production.terminal) {
+    return `"${production.terminal}"`;
+  }
+  if (production.nonTerminal) {
+    return production.nonTerminal;
+  }
+  if (production.choice) {
+    return production.choice.map(productionToEBNF).join(" | ");
+  }
+  if (production.sequence) {
+    return production.sequence.map(productionToEBNF).join(" , ");
+  }
+  return "hello";
+};
+
+const productionToDiagram = production => {
+  if (production.identifier) {
+    return Diagram(productionToDiagram(production.definition));
+  }
+  if (production.terminal) {
+    return Terminal(production.terminal);
+  }
+  if (production.nonTerminal) {
+    return NonTerminal(production.nonTerminal);
+  }
+  if (production.choice) {
+    return Choice(0, ...production.choice.map(productionToDiagram));
+  }
+  if (production.sequence) {
+    return Sequence(...production.sequence.map(productionToDiagram));
+  }
+  return "hello";
+};
+
 async function run(args) {
   program.parse(args);
   if (program.args.length === 0) {
@@ -56,18 +96,17 @@ async function run(args) {
   }
   const filename = program.args[0];
   const ebnf = await readFile(filename, "utf8");
+  const basename = filename
+    .split(".")
+    .slice(0, -1)
+    .join(".");
+  const defaultOutputFilename = basename + ".html";
   const ast = ebnfParser.parse(ebnf);
-  //const seqA = Sequence("a", "b");
-  //const seqB = Sequence("c", "d");
-  //if (seqA instanceof Sequence) {
-  //console.log("sequence!");
-  //seqA.items.push(...seqB.items);
-  //}
-  //console.log(seqA);
-  //console.log(prettyPrintDiagram(ast[2].diagram));
   ast.forEach(production => {
     console.log("-- Rule: ", production.identifier);
-    console.log(prettyPrintDiagram(production.diagram));
+    console.log("  ", productionToEBNF(production));
+    const diagram = productionToDiagram(production);
+    console.log("  ", prettyPrintDiagram(diagram));
   });
 }
 
