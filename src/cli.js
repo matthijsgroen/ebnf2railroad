@@ -3,7 +3,7 @@ const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parser } = require("./ebnf-parser");
-const { createDocumentation } = require("./report-builder");
+const { createDocumentation, optimizeAst } = require("./report-builder");
 
 program.version("1.0.0");
 
@@ -33,7 +33,8 @@ async function run(args) {
     const targetFilename = program.target || defaultOutputFilename;
 
     const ast = parser.parse(ebnf);
-    const report = createDocumentation(ast, {
+    const optimizedAst = optimizeAst(ast);
+    const report = createDocumentation(optimizedAst, {
       title: basename
     });
     await writeFile(targetFilename, report, "utf8");

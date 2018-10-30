@@ -61,7 +61,7 @@ rhs
   | rhs "|" rhs
       { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
   | "{" rhs "}"
-      { $$ = { repetition: $2 } }
+      { $$ = { repetition: $2, skippable: true } }
   | "(" rhs ")"
       { $$ = { group: $2 } }
   | "[" rhs "]"

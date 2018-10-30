@@ -39,8 +39,13 @@ const productionToEBNF = production => {
   if (production.specialSequence) {
     return `? ${production.specialSequence} ?`;
   }
-  if (production.repetition && production.amount === undefined) {
+  if (production.repetition && production.skippable === true) {
     return `{ ${productionToEBNF(production.repetition)} }`;
+  }
+  if (production.repetition && production.skippable === false) {
+    return `${productionToEBNF(production.repetition)} , { ${productionToEBNF(
+      production.repetition
+    )} }`;
   }
   if (production.repetition && production.amount !== undefined) {
     return `${production.amount} * ${productionToEBNF(production.repetition)}`;
@@ -86,12 +91,15 @@ const productionToDiagram = production => {
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
   }
-  if (production.repetition && production.amount === undefined) {
+  if (production.repetition && production.skippable === true) {
     return Choice(
       1,
       Skip(),
       OneOrMore(productionToDiagram(production.repetition))
     );
+  }
+  if (production.repetition && production.skippable === false) {
+    return OneOrMore(productionToDiagram(production.repetition));
   }
   if (production.repetition && production.amount !== undefined) {
     return OneOrMore(
@@ -200,6 +208,63 @@ const createDocumentation = (ast, options) => {
   });
 };
 
+const optimizeProduction = production => {
+  if (production.definition) {
+    return {
+      ...production,
+      definition: optimizeProduction(production.definition)
+    };
+  }
+  if (production.choice) {
+    return {
+      ...production,
+      choice: production.choice.map(optimizeProduction)
+    };
+  }
+  if (production.sequence) {
+    const optimizedSequence = {
+      ...production,
+      sequence: production.sequence
+        .map((item, idx, list) => {
+          const ahead = list[idx + 1];
+          if (ahead && ahead.repetition && ahead.skippable === true) {
+            const isSame =
+              JSON.stringify(ahead.repetition) === JSON.stringify(item);
+            if (isSame) {
+              ahead.skippable = false;
+              return false;
+            }
+          }
+          return optimizeProduction(item);
+        })
+        .filter(Boolean)
+    };
+    return optimizedSequence;
+  }
+  if (production.repetition) {
+    return {
+      ...production,
+      repetition: optimizeProduction(production.repetition)
+    };
+  }
+  if (production.optional) {
+    return {
+      ...production,
+      optional: optimizeProduction(production.optional)
+    };
+  }
+  if (production.group) {
+    return {
+      ...production,
+      group: optimizeProduction(production.group)
+    };
+  }
+  return production;
+};
+
+const optimizeAst = ast => ast.map(line => optimizeProduction(line));
+
 module.exports = {
-  createDocumentation
+  createDocumentation,
+  optimizeAst
 };

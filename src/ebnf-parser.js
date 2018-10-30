@@ -102,7 +102,7 @@ case 7:
  this.$ = $$[$0-2].choice ? { choice: $$[$0-2].choice.concat($$[$0]) } : { choice: [$$[$0-2], $$[$0]] } 
 break;
 case 8:
- this.$ = { repetition: $$[$0-1] } 
+ this.$ = { repetition: $$[$0-1], skippable: true } 
 break;
 case 9:
  this.$ = { group: $$[$0-1] } 
