@@ -57,8 +57,6 @@ const productionToEBNF = production => {
   return "unknown construct";
 };
 
-const SHRINK_LIMIT = 13; // This can cut off letters of the alphabet nicely
-
 const productionToDiagram = production => {
   if (production.identifier) {
     return Diagram(productionToDiagram(production.definition));
@@ -71,14 +69,7 @@ const productionToDiagram = production => {
   }
   if (production.choice) {
     const options = production.choice.map(productionToDiagram);
-    const results = [];
-    while (options.length > SHRINK_LIMIT) {
-      const subSection = options.splice(0, SHRINK_LIMIT);
-      results.push(Choice(0, ...subSection));
-    }
-    return results.length === 0
-      ? Choice(0, ...options)
-      : OptionalSequence(...results, Choice(0, ...options));
+    return Choice(0, ...options);
   }
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
