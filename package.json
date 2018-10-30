@@ -5,8 +5,13 @@
   "keywords": [
     "ebnf",
     "context-free grammar",
+    "railroad",
     "railroad diagram",
-    "syntax diagra"
+    "syntax diagram",
+    "diagram",
+    "documentation",
+    "generator",
+    "cli"
   ],
   "main": "index.js",
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
