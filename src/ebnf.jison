@@ -4,21 +4,23 @@
 %lex
 %%
 \s+                      { /* skip whitespace */}
-[a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
-"="                      { return '='; }
-";"                      { return ';'; }
-","                      { return ','; }
-"|"                      { return '|'; }
-"-"                      { return '-'; }
-"{"                      { return '{'; }
-"}"                      { return '}'; }
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
-"("                      { return '('; }
+[a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
+"="                      { return '='; } // declaration
+";"                      { return ';'; } // end of statement
+"."                      { return ';'; } // end of statement
+","                      { return ','; } // sequence
+"|"                      { return '|'; } // alternation
+"-"                      { return '-'; } // exclusion
+"{"                      { return '{'; } // zero or more
+"}"                      { return '}'; }
+"("                      { return '('; } // group
 ")"                      { return ')'; }
-"["                      { return '['; }
+"["                      { return '['; } // optional
 "]"                      { return ']'; }
 \"[^"]+\"                { return 'STRING'; }
 \'[^']+\'                { return 'STRING'; }
+"?"[^\?]+"?"             { return 'SEQUENCE'; }
 <<EOF>>                  { return 'EOF';}
 
 /lex
@@ -64,6 +66,7 @@ rhs
   | identifier
   | terminal
   | exception
+  | specialSequence
   ;
 
 exception
@@ -76,6 +79,10 @@ exception
 identifier
     : IDENTIFIER
         {$$ = { nonTerminal: $1.trim() }; }
+    ;
+
+specialSequence
+    : SEQUENCE { $$ = { specialSequence: $1.slice(1, -1).trim() } }
     ;
 
 terminal

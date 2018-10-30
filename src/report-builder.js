@@ -35,6 +35,9 @@ const productionToEBNF = production => {
   if (production.sequence) {
     return production.sequence.map(productionToEBNF).join(" , ");
   }
+  if (production.specialSequence) {
+    return `? ${production.specialSequence} ?`;
+  }
   if (production.repetition) {
     return `{ ${productionToEBNF(production.repetition)} }`;
   }
@@ -66,6 +69,11 @@ const productionToDiagram = production => {
   }
   if (production.nonTerminal) {
     return NonTerminal(production.nonTerminal);
+  }
+  if (production.specialSequence) {
+    const sequence = Terminal(" " + production.specialSequence + " ");
+    sequence.attrs.class = "special-sequence";
+    return sequence;
   }
   if (production.choice) {
     const options = production.choice.map(productionToDiagram);

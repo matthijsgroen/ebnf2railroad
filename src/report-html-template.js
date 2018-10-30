@@ -65,6 +65,12 @@ const documentTemplate = ({ title, contents }) =>
     svg.railroad-diagram g.non-terminal text {
         /*font-style: italic;*/
     }
+    svg.railroad-diagram g.special-sequence rect {
+        fill: #FFDB4D;
+    }
+    svg.railroad-diagram g.special-sequence text {
+        font-style: italic;
+    }
     svg.railroad-diagram rect {
         stroke-width: 3;
         stroke: black;
