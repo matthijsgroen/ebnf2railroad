@@ -26,7 +26,8 @@ const documentTemplate = ({ title, contents }) =>
       background: #FFFCF0;
     }
     code {
-      padding: 1em;
+      padding: 1em 1em 1em 3em;
+      text-indent: -2em;
       background: rgb(255, 246, 209);
       display: inline-block;
     }
