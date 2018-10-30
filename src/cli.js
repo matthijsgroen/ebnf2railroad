@@ -20,19 +20,24 @@ async function run(args) {
     return;
   }
 
-  const filename = program.args[0];
-  const ebnf = await readFile(filename, "utf8");
-  const basename = filename
-    .split(".")
-    .slice(0, -1)
-    .join(".");
-  const defaultOutputFilename = basename + ".html";
+  try {
+    const filename = program.args[0];
+    const ebnf = await readFile(filename, "utf8");
+    const basename = filename
+      .split(".")
+      .slice(0, -1)
+      .join(".");
+    const defaultOutputFilename = basename + ".html";
 
-  const ast = parser.parse(ebnf);
-  const report = createDocumentation(ast, {
-    title: basename
-  });
-  await writeFile(defaultOutputFilename, report, "utf8");
+    const ast = parser.parse(ebnf);
+    const report = createDocumentation(ast, {
+      title: basename
+    });
+    await writeFile(defaultOutputFilename, report, "utf8");
+  } catch (e) {
+    console.error(e.message);
+    process.exit(1);
+  }
 }
 
 module.exports = {
