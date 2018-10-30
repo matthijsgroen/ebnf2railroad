@@ -98,21 +98,38 @@ ${references
 </ul>
 `;
 
-const ebnfTemplate = ({ identifier, ebnf, diagram, references }) =>
+const referencesToTemplate = (identifier, references) =>
+  `<p><strong>${identifier}</strong> is referencing:<p>
+<ul>
+${references
+    .map(reference => `<li><a href="#${reference}">${reference}</a></li>`)
+    .join("")}
+</ul>
+`;
+
+const ebnfTemplate = ({
+  identifier,
+  ebnf,
+  diagram,
+  referencedBy,
+  referencesTo
+}) =>
   `<section>
   <h4 id="${identifier}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}
   </div>
   <code>${ebnf}</code>
-  ${references.length > 0 ? referencesTemplate(identifier, references) : ""}
+  ${referencedBy.length > 0 ? referencesTemplate(identifier, referencedBy) : ""}
+  ${
+    referencesTo.length > 0
+      ? referencesToTemplate(identifier, referencesTo)
+      : ""
+  }
 </section>
 `;
 
-const commentTemplate = comment => {
-  console.log(dedent(comment));
-  return converter.makeHtml(dedent(comment));
-};
+const commentTemplate = comment => converter.makeHtml(dedent(comment));
 
 module.exports = {
   documentTemplate,

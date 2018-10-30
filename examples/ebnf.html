@@ -78,6 +78,11 @@
   </div>
   <code>grammar = { <a href="#rule">rule</a> };</code>
   
+  <p><strong>grammar</strong> is referencing:<p>
+<ul>
+<li><a href="#rule">rule</a></li>
+</ul>
+
 </section>
 <section>
   <h4 id="rule">rule</h4>
@@ -89,6 +94,11 @@
   <p>Items referencing <strong>rule</strong>:<p>
 <ul>
 <li><a href="#grammar">grammar</a></li>
+</ul>
+
+  <p><strong>rule</strong> is referencing:<p>
+<ul>
+<li><a href="#lhs">lhs</a></li><li><a href="#rhs">rhs</a></li>
 </ul>
 
 </section>
@@ -104,6 +114,11 @@
 <li><a href="#rule">rule</a></li>
 </ul>
 
+  <p><strong>lhs</strong> is referencing:<p>
+<ul>
+<li><a href="#identifier">identifier</a></li>
+</ul>
+
 </section>
 <section>
   <h4 id="rhs">rhs</h4>
@@ -115,6 +130,11 @@
   <p>Items referencing <strong>rhs</strong>:<p>
 <ul>
 <li><a href="#rule">rule</a></li>
+</ul>
+
+  <p><strong>rhs</strong> is referencing:<p>
+<ul>
+<li><a href="#identifier">identifier</a></li><li><a href="#terminal">terminal</a></li><li><a href="#rhs">rhs</a></li>
 </ul>
 
 </section>
@@ -130,6 +150,11 @@
 <li><a href="#lhs">lhs</a></li><li><a href="#rhs">rhs</a></li>
 </ul>
 
+  <p><strong>identifier</strong> is referencing:<p>
+<ul>
+<li><a href="#letter">letter</a></li><li><a href="#digit">digit</a></li>
+</ul>
+
 </section>
 <section>
   <h4 id="terminal">terminal</h4>
@@ -143,6 +168,11 @@
 <li><a href="#rhs">rhs</a></li>
 </ul>
 
+  <p><strong>terminal</strong> is referencing:<p>
+<ul>
+<li><a href="#character">character</a></li>
+</ul>
+
 </section>
 <section>
   <h4 id="character">character</h4>
@@ -154,6 +184,11 @@
   <p>Items referencing <strong>character</strong>:<p>
 <ul>
 <li><a href="#terminal">terminal</a></li>
+</ul>
+
+  <p><strong>character</strong> is referencing:<p>
+<ul>
+<li><a href="#letter">letter</a></li><li><a href="#digit">digit</a></li><li><a href="#symbol">symbol</a></li>
 </ul>
 
 </section>
@@ -170,6 +205,7 @@
 <li><a href="#identifier">identifier</a></li><li><a href="#character">character</a></li>
 </ul>
 
+  
 </section>
 <section>
   <h4 id="digit">digit</h4>
@@ -183,6 +219,7 @@
 <li><a href="#identifier">identifier</a></li><li><a href="#character">character</a></li>
 </ul>
 
+  
 </section>
 <section>
   <h4 id="symbol">symbol</h4>
@@ -196,6 +233,7 @@
 <li><a href="#character">character</a></li>
 </ul>
 
+  
 </section>
 
   </article>

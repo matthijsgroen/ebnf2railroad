@@ -98,41 +98,44 @@ const productionToDiagram = production => {
   return "unknown construct";
 };
 
-const hasReferenceTo = (production, identifier) => {
+const getReferences = production => {
   if (production.definition) {
-    return hasReferenceTo(production.definition, identifier);
+    return getReferences(production.definition);
   }
   if (production.terminal) {
-    return false;
+    return [];
   }
   if (production.nonTerminal) {
-    return production.nonTerminal === identifier;
+    return [production.nonTerminal];
   }
   if (production.choice) {
-    return production.choice.some(item => hasReferenceTo(item, identifier));
+    return production.choice
+      .map(item => getReferences(item))
+      .reduce((acc, item) => acc.concat(item), [])
+      .filter(Boolean);
   }
   if (production.sequence) {
-    return production.sequence.some(item => hasReferenceTo(item, identifier));
+    return production.sequence
+      .map(item => getReferences(item))
+      .reduce((acc, item) => acc.concat(item), [])
+      .filter(Boolean);
   }
   if (production.repetition) {
-    return hasReferenceTo(production.repetition, identifier);
+    return getReferences(production.repetition);
   }
   if (production.optional) {
-    return hasReferenceTo(production.optional, identifier);
+    return getReferences(production.optional);
   }
   if (production.group) {
-    return hasReferenceTo(production.group, identifier);
+    return getReferences(production.group);
   }
   if (production.exceptNonTerminal) {
-    return (
-      production.exceptNonTerminal === identifier ||
-      production.include === identifier
-    );
+    return [production.exceptNonTerminal, production.include];
   }
   if (production.exceptTerminal) {
-    return production.include === identifier;
+    return [production.include];
   }
-  return false;
+  return [];
 };
 
 const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
@@ -140,8 +143,18 @@ const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 const searchReferencesToIdentifier = (identifier, ast) =>
   ast
     .filter(production => production.identifier !== identifier)
-    .filter(production => hasReferenceTo(production, identifier))
+    .filter(production =>
+      getReferences(production).some(ref => ref === identifier)
+    )
     .map(production => production.identifier);
+
+const searchReferencesFromIdentifier = (identifier, ast) =>
+  ast
+    .filter(production => production.identifier === identifier)
+    .map(production => getReferences(production))
+    .reduce((acc, item) => acc.concat(item), [])
+    .filter(Boolean)
+    .filter((item, index, list) => list.indexOf(item) === index);
 
 const createDocumentation = (ast, options) => {
   const contents = ast
@@ -153,7 +166,11 @@ const createDocumentation = (ast, options) => {
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
-        references: searchReferencesToIdentifier(production.identifier, ast),
+        referencedBy: searchReferencesToIdentifier(production.identifier, ast),
+        referencesTo: searchReferencesFromIdentifier(
+          production.identifier,
+          ast
+        ),
         diagram: vacuum(diagram.toString())
       });
     })
