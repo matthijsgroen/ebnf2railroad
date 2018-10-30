@@ -13,7 +13,7 @@ const {
   documentTemplate,
   ebnfTemplate,
   commentTemplate
-} = require("./report-template");
+} = require("./report-html-template");
 
 const productionToEBNF = production => {
   if (production.identifier) {
@@ -135,6 +135,8 @@ const hasReferenceTo = (production, identifier) => {
   return false;
 };
 
+const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
+
 const searchReferencesToIdentifier = (identifier, ast) =>
   ast
     .filter(production => production.identifier !== identifier)
@@ -152,7 +154,7 @@ const createDocumentation = (ast, options) => {
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
         references: searchReferencesToIdentifier(production.identifier, ast),
-        diagram: diagram.toString()
+        diagram: vacuum(diagram.toString())
       });
     })
     .join("");

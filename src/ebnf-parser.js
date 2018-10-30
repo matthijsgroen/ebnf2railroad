@@ -123,7 +123,7 @@ case 17:
  this.$ = { terminal: $$[$0].slice(1, -1) } 
 break;
 case 18:
- this.$ = {comment: $$[$0].slice(2, -2).trim() } 
+ this.$ = {comment: $$[$0].slice(2, -2) } 
 break;
 }
 },

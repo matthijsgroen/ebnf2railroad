@@ -83,6 +83,6 @@ terminal
     ;
 
 comment
-    : COMMENT { $$ = {comment: $1.slice(2, -2).trim() } }
+    : COMMENT { $$ = {comment: $1.slice(2, -2) } }
     ;
 

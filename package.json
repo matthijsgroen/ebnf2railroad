@@ -21,7 +21,8 @@
   "private": false,
   "dependencies": {
     "commander": "^2.19.0",
-    "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams.git"
+    "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams.git",
+    "showdown": "^1.8.7"
   },
   "devDependencies": {
     "jison": "^0.4.18"

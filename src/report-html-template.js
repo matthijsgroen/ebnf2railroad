@@ -1,3 +1,16 @@
+const { Converter } = require("showdown");
+const converter = new Converter();
+
+const dedent = text => {
+  const lines = text.split("\n");
+  if (lines[0] == "") lines.shift();
+  const res = lines[0].match(/^([^\S\n]*).*/);
+  const indentDepth = res[1].length;
+  return lines
+    .map(v => v.slice(indentDepth))
+    .reduce((r, l) => r + l + "\n", "");
+};
+
 const documentTemplate = ({ title, contents }) =>
   `<!DOCTYPE html>
 <html>
@@ -25,9 +38,9 @@ const documentTemplate = ({ title, contents }) =>
     a:hover {
       color: #000;
     }
-    h2 {
-      margin: 2em 0 0;
-    }
+		section h4 {
+			margin-bottom: 0;
+		}
     svg.railroad-diagram path {
         stroke-width: 3;
         stroke: black;
@@ -87,7 +100,7 @@ ${references
 
 const ebnfTemplate = ({ identifier, ebnf, diagram, references }) =>
   `<section>
-  <h2 id="${identifier}">${identifier}:</h2>
+  <h4 id="${identifier}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}
   </div>
@@ -96,44 +109,10 @@ const ebnfTemplate = ({ identifier, ebnf, diagram, references }) =>
 </section>
 `;
 
-const PARAGRAPH = "p";
-const HEADER = "h";
-
-const commentTemplate = comment =>
-  comment
-    .split("\n")
-    .map(e => ({ type: PARAGRAPH, content: e.trim() }))
-    .reduce((acc, item, index, src) => {
-      const ahead = src[index + 1];
-      const lastAcc = acc[acc.length - 1];
-      if (
-        item.type === PARAGRAPH &&
-        item.content.length > 0 &&
-        ahead &&
-        ahead.type === PARAGRAPH &&
-        ahead.content.length === 0 &&
-        (!lastAcc || lastAcc.type !== HEADER)
-      ) {
-        return acc.concat({ type: HEADER, content: item.content });
-      }
-      if (
-        item.type === PARAGRAPH &&
-        item.content.length === 0 &&
-        lastAcc.type === HEADER
-      ) {
-        return acc;
-      }
-      return acc.concat(item);
-    }, [])
-    .map(
-      item =>
-        item.type === PARAGRAPH
-          ? `<p>${item.content}</p>`
-          : item.type === HEADER
-            ? `<h1>${item.content}</h1>`
-            : ""
-    )
-    .join("");
+const commentTemplate = comment => {
+  console.log(dedent(comment));
+  return converter.makeHtml(dedent(comment));
+};
 
 module.exports = {
   documentTemplate,
