@@ -77,7 +77,7 @@ const productionToDiagram = production => {
     return Terminal(production.terminal);
   }
   if (production.nonTerminal) {
-    return NonTerminal(production.nonTerminal);
+    return NonTerminal(production.nonTerminal, `#${production.nonTerminal}`);
   }
   if (production.specialSequence) {
     const sequence = Terminal(" " + production.specialSequence + " ");
