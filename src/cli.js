@@ -9,6 +9,7 @@ program.version("1.0.0");
 
 program
   .usage("[options] <file>")
+  .option("-o, --target [target]", "output the file to target destination.")
   .description(
     "Converts a EBNF file to a HTML file with SVG railroad diagrams"
   );
@@ -29,11 +30,13 @@ async function run(args) {
       .join(".");
     const defaultOutputFilename = basename + ".html";
 
+    const targetFilename = program.target || defaultOutputFilename;
+
     const ast = parser.parse(ebnf);
     const report = createDocumentation(ast, {
       title: basename
     });
-    await writeFile(defaultOutputFilename, report, "utf8");
+    await writeFile(targetFilename, report, "utf8");
   } catch (e) {
     console.error(e.message);
     process.exit(1);
