@@ -11,7 +11,7 @@ program
   .usage("[options] <file>")
   .option("-o, --target [target]", "output the file to target destination.")
   .description(
-    "Converts a EBNF file to a HTML file with SVG railroad diagrams"
+    "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
   );
 
 async function run(args) {
