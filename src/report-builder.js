@@ -1,10 +1,11 @@
 const {
   Choice,
+  Comment,
   Diagram,
   NonTerminal,
   OneOrMore,
-  Sequence,
   OptionalSequence,
+  Sequence,
   Skip,
   Terminal
 } = require("railroad-diagrams");
@@ -38,8 +39,11 @@ const productionToEBNF = production => {
   if (production.specialSequence) {
     return `? ${production.specialSequence} ?`;
   }
-  if (production.repetition) {
+  if (production.repetition && production.amount === undefined) {
     return `{ ${productionToEBNF(production.repetition)} }`;
+  }
+  if (production.repetition && production.amount !== undefined) {
+    return `${production.amount} * ${productionToEBNF(production.repetition)}`;
   }
   if (production.group) {
     return `( ${productionToEBNF(production.group)} )`;
@@ -82,11 +86,17 @@ const productionToDiagram = production => {
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
   }
-  if (production.repetition) {
+  if (production.repetition && production.amount === undefined) {
     return Choice(
       1,
       Skip(),
       OneOrMore(productionToDiagram(production.repetition))
+    );
+  }
+  if (production.repetition && production.amount !== undefined) {
+    return OneOrMore(
+      productionToDiagram(production.repetition),
+      Comment(`${production.amount} ×`)
     );
   }
   if (production.optional) {

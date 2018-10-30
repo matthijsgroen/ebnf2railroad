@@ -6,6 +6,8 @@
 \s+                      { /* skip whitespace */}
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
 [a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
+[0-9]+                   { return 'DIGIT'; }
+"*"                      { return '*'; } // repetition
 "="                      { return '='; } // declaration
 ";"                      { return ';'; } // end of statement
 "."                      { return ';'; } // end of statement
@@ -29,6 +31,7 @@
 
 %left '|'
 %left ','
+%left '*'
 
 %start grammar
 
@@ -63,6 +66,8 @@ rhs
       { $$ = { group: $2 } }
   | "[" rhs "]"
       { $$ = { optional: $2 } }
+  | DIGIT "*" rhs
+      { $$ = { repetition: $3, amount: $1 } }
   | identifier
   | terminal
   | exception
