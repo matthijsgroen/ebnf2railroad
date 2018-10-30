@@ -1,10 +1,11 @@
 const {
   Choice,
+  Comment,
   Diagram,
   NonTerminal,
   OneOrMore,
-  Sequence,
   OptionalSequence,
+  Sequence,
   Skip,
   Terminal
 } = require("railroad-diagrams");
@@ -13,7 +14,7 @@ const {
   documentTemplate,
   ebnfTemplate,
   commentTemplate
-} = require("./report-template");
+} = require("./report-html-template");
 
 const productionToEBNF = production => {
   if (production.identifier) {
@@ -35,8 +36,19 @@ const productionToEBNF = production => {
   if (production.sequence) {
     return production.sequence.map(productionToEBNF).join(" , ");
   }
-  if (production.repetition) {
+  if (production.specialSequence) {
+    return `? ${production.specialSequence} ?`;
+  }
+  if (production.repetition && production.skippable === true) {
     return `{ ${productionToEBNF(production.repetition)} }`;
+  }
+  if (production.repetition && production.skippable === false) {
+    return `${productionToEBNF(production.repetition)} , { ${productionToEBNF(
+      production.repetition
+    )} }`;
+  }
+  if (production.repetition && production.amount !== undefined) {
+    return `${production.amount} * ${productionToEBNF(production.repetition)}`;
   }
   if (production.group) {
     return `( ${productionToEBNF(production.group)} )`;
@@ -57,8 +69,6 @@ const productionToEBNF = production => {
   return "unknown construct";
 };
 
-const SHRINK_LIMIT = 13; // This can cut off letters of the alphabet nicely
-
 const productionToDiagram = production => {
   if (production.identifier) {
     return Diagram(productionToDiagram(production.definition));
@@ -67,27 +77,34 @@ const productionToDiagram = production => {
     return Terminal(production.terminal);
   }
   if (production.nonTerminal) {
-    return NonTerminal(production.nonTerminal);
+    return NonTerminal(production.nonTerminal, `#${production.nonTerminal}`);
+  }
+  if (production.specialSequence) {
+    const sequence = Terminal(" " + production.specialSequence + " ");
+    sequence.attrs.class = "special-sequence";
+    return sequence;
   }
   if (production.choice) {
     const options = production.choice.map(productionToDiagram);
-    const results = [];
-    while (options.length > SHRINK_LIMIT) {
-      const subSection = options.splice(0, SHRINK_LIMIT);
-      results.push(Choice(0, ...subSection));
-    }
-    return results.length === 0
-      ? Choice(0, ...options)
-      : OptionalSequence(...results, Choice(0, ...options));
+    return Choice(0, ...options);
   }
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
   }
-  if (production.repetition) {
+  if (production.repetition && production.skippable === true) {
     return Choice(
       1,
       Skip(),
       OneOrMore(productionToDiagram(production.repetition))
+    );
+  }
+  if (production.repetition && production.skippable === false) {
+    return OneOrMore(productionToDiagram(production.repetition));
+  }
+  if (production.repetition && production.amount !== undefined) {
+    return OneOrMore(
+      productionToDiagram(production.repetition),
+      Comment(`${production.amount} ×`)
     );
   }
   if (production.optional) {
@@ -107,48 +124,63 @@ const productionToDiagram = production => {
   return "unknown construct";
 };
 
-const hasReferenceTo = (production, identifier) => {
+const getReferences = production => {
   if (production.definition) {
-    return hasReferenceTo(production.definition, identifier);
+    return getReferences(production.definition);
   }
   if (production.terminal) {
-    return false;
+    return [];
   }
   if (production.nonTerminal) {
-    return production.nonTerminal === identifier;
+    return [production.nonTerminal];
   }
   if (production.choice) {
-    return production.choice.some(item => hasReferenceTo(item, identifier));
+    return production.choice
+      .map(item => getReferences(item))
+      .reduce((acc, item) => acc.concat(item), [])
+      .filter(Boolean);
   }
   if (production.sequence) {
-    return production.sequence.some(item => hasReferenceTo(item, identifier));
+    return production.sequence
+      .map(item => getReferences(item))
+      .reduce((acc, item) => acc.concat(item), [])
+      .filter(Boolean);
   }
   if (production.repetition) {
-    return hasReferenceTo(production.repetition, identifier);
+    return getReferences(production.repetition);
   }
   if (production.optional) {
-    return hasReferenceTo(production.optional, identifier);
+    return getReferences(production.optional);
   }
   if (production.group) {
-    return hasReferenceTo(production.group, identifier);
+    return getReferences(production.group);
   }
   if (production.exceptNonTerminal) {
-    return (
-      production.exceptNonTerminal === identifier ||
-      production.include === identifier
-    );
+    return [production.exceptNonTerminal, production.include];
   }
   if (production.exceptTerminal) {
-    return production.include === identifier;
+    return [production.include];
   }
-  return false;
+  return [];
 };
+
+const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 
 const searchReferencesToIdentifier = (identifier, ast) =>
   ast
     .filter(production => production.identifier !== identifier)
-    .filter(production => hasReferenceTo(production, identifier))
+    .filter(production =>
+      getReferences(production).some(ref => ref === identifier)
+    )
     .map(production => production.identifier);
+
+const searchReferencesFromIdentifier = (identifier, ast) =>
+  ast
+    .filter(production => production.identifier === identifier)
+    .map(production => getReferences(production))
+    .reduce((acc, item) => acc.concat(item), [])
+    .filter(Boolean)
+    .filter((item, index, list) => list.indexOf(item) === index);
 
 const createDocumentation = (ast, options) => {
   const contents = ast
@@ -160,8 +192,12 @@ const createDocumentation = (ast, options) => {
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
-        references: searchReferencesToIdentifier(production.identifier, ast),
-        diagram: diagram.toString()
+        referencedBy: searchReferencesToIdentifier(production.identifier, ast),
+        referencesTo: searchReferencesFromIdentifier(
+          production.identifier,
+          ast
+        ),
+        diagram: vacuum(diagram.toString())
       });
     })
     .join("");
@@ -172,6 +208,63 @@ const createDocumentation = (ast, options) => {
   });
 };
 
+const optimizeProduction = production => {
+  if (production.definition) {
+    return {
+      ...production,
+      definition: optimizeProduction(production.definition)
+    };
+  }
+  if (production.choice) {
+    return {
+      ...production,
+      choice: production.choice.map(optimizeProduction)
+    };
+  }
+  if (production.sequence) {
+    const optimizedSequence = {
+      ...production,
+      sequence: production.sequence
+        .map((item, idx, list) => {
+          const ahead = list[idx + 1];
+          if (ahead && ahead.repetition && ahead.skippable === true) {
+            const isSame =
+              JSON.stringify(ahead.repetition) === JSON.stringify(item);
+            if (isSame) {
+              ahead.skippable = false;
+              return false;
+            }
+          }
+          return optimizeProduction(item);
+        })
+        .filter(Boolean)
+    };
+    return optimizedSequence;
+  }
+  if (production.repetition) {
+    return {
+      ...production,
+      repetition: optimizeProduction(production.repetition)
+    };
+  }
+  if (production.optional) {
+    return {
+      ...production,
+      optional: optimizeProduction(production.optional)
+    };
+  }
+  if (production.group) {
+    return {
+      ...production,
+      group: optimizeProduction(production.group)
+    };
+  }
+  return production;
+};
+
+const optimizeAst = ast => ast.map(line => optimizeProduction(line));
+
 module.exports = {
-  createDocumentation
+  createDocumentation,
+  optimizeAst
 };

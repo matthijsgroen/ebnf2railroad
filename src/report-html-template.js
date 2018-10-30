@@ -1,3 +1,16 @@
+const { Converter } = require("showdown");
+const converter = new Converter();
+
+const dedent = text => {
+  const lines = text.split("\n");
+  if (lines[0] == "") lines.shift();
+  const res = lines[0].match(/^([^\S\n]*).*/);
+  const indentDepth = res[1].length;
+  return lines
+    .map(v => v.slice(indentDepth))
+    .reduce((r, l) => r + l + "\n", "");
+};
+
 const documentTemplate = ({ title, contents }) =>
   `<!DOCTYPE html>
 <html>
@@ -13,7 +26,8 @@ const documentTemplate = ({ title, contents }) =>
       background: #FFFCF0;
     }
     code {
-      padding: 1em;
+      padding: 1em 1em 1em 3em;
+      text-indent: -2em;
       background: rgb(255, 246, 209);
       display: inline-block;
     }
@@ -25,9 +39,9 @@ const documentTemplate = ({ title, contents }) =>
     a:hover {
       color: #000;
     }
-    h2 {
-      margin: 2em 0 0;
-    }
+		section h4 {
+			margin-bottom: 0;
+		}
     svg.railroad-diagram path {
         stroke-width: 3;
         stroke: black;
@@ -51,6 +65,12 @@ const documentTemplate = ({ title, contents }) =>
     }
     svg.railroad-diagram g.non-terminal text {
         /*font-style: italic;*/
+    }
+    svg.railroad-diagram g.special-sequence rect {
+        fill: #FFDB4D;
+    }
+    svg.railroad-diagram g.special-sequence text {
+        font-style: italic;
     }
     svg.railroad-diagram rect {
         stroke-width: 3;
@@ -85,55 +105,38 @@ ${references
 </ul>
 `;
 
-const ebnfTemplate = ({ identifier, ebnf, diagram, references }) =>
+const referencesToTemplate = (identifier, references) =>
+  `<p><strong>${identifier}</strong> is referencing:<p>
+<ul>
+${references
+    .map(reference => `<li><a href="#${reference}">${reference}</a></li>`)
+    .join("")}
+</ul>
+`;
+
+const ebnfTemplate = ({
+  identifier,
+  ebnf,
+  diagram,
+  referencedBy,
+  referencesTo
+}) =>
   `<section>
-  <h2 id="${identifier}">${identifier}:</h2>
+  <h4 id="${identifier}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}
   </div>
   <code>${ebnf}</code>
-  ${references.length > 0 ? referencesTemplate(identifier, references) : ""}
+  ${referencedBy.length > 0 ? referencesTemplate(identifier, referencedBy) : ""}
+  ${
+    referencesTo.length > 0
+      ? referencesToTemplate(identifier, referencesTo)
+      : ""
+  }
 </section>
 `;
 
-const PARAGRAPH = "p";
-const HEADER = "h";
-
-const commentTemplate = comment =>
-  comment
-    .split("\n")
-    .map(e => ({ type: PARAGRAPH, content: e.trim() }))
-    .reduce((acc, item, index, src) => {
-      const ahead = src[index + 1];
-      const lastAcc = acc[acc.length - 1];
-      if (
-        item.type === PARAGRAPH &&
-        item.content.length > 0 &&
-        ahead &&
-        ahead.type === PARAGRAPH &&
-        ahead.content.length === 0 &&
-        (!lastAcc || lastAcc.type !== HEADER)
-      ) {
-        return acc.concat({ type: HEADER, content: item.content });
-      }
-      if (
-        item.type === PARAGRAPH &&
-        item.content.length === 0 &&
-        lastAcc.type === HEADER
-      ) {
-        return acc;
-      }
-      return acc.concat(item);
-    }, [])
-    .map(
-      item =>
-        item.type === PARAGRAPH
-          ? `<p>${item.content}</p>`
-          : item.type === HEADER
-            ? `<h1>${item.content}</h1>`
-            : ""
-    )
-    .join("");
+const commentTemplate = comment => converter.makeHtml(dedent(comment));
 
 module.exports = {
   documentTemplate,

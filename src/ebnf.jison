@@ -4,21 +4,25 @@
 %lex
 %%
 \s+                      { /* skip whitespace */}
-[a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
-"="                      { return '='; }
-";"                      { return ';'; }
-","                      { return ','; }
-"|"                      { return '|'; }
-"-"                      { return '-'; }
-"{"                      { return '{'; }
-"}"                      { return '}'; }
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
-"("                      { return '('; }
+[a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
+[0-9]+                   { return 'DIGIT'; }
+"*"                      { return '*'; } // repetition
+"="                      { return '='; } // declaration
+";"                      { return ';'; } // end of statement
+"."                      { return ';'; } // end of statement
+","                      { return ','; } // sequence
+"|"                      { return '|'; } // alternation
+"-"                      { return '-'; } // exclusion
+"{"                      { return '{'; } // zero or more
+"}"                      { return '}'; }
+"("                      { return '('; } // group
 ")"                      { return ')'; }
-"["                      { return '['; }
+"["                      { return '['; } // optional
 "]"                      { return ']'; }
 \"[^"]+\"                { return 'STRING'; }
 \'[^']+\'                { return 'STRING'; }
+"?"[^\?]+"?"             { return 'SEQUENCE'; }
 <<EOF>>                  { return 'EOF';}
 
 /lex
@@ -27,6 +31,7 @@
 
 %left '|'
 %left ','
+%left '*'
 
 %start grammar
 
@@ -56,14 +61,17 @@ rhs
   | rhs "|" rhs
       { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
   | "{" rhs "}"
-      { $$ = { repetition: $2 } }
+      { $$ = { repetition: $2, skippable: true } }
   | "(" rhs ")"
       { $$ = { group: $2 } }
   | "[" rhs "]"
       { $$ = { optional: $2 } }
+  | DIGIT "*" rhs
+      { $$ = { repetition: $3, amount: $1 } }
   | identifier
   | terminal
   | exception
+  | specialSequence
   ;
 
 exception
@@ -78,11 +86,15 @@ identifier
         {$$ = { nonTerminal: $1.trim() }; }
     ;
 
+specialSequence
+    : SEQUENCE { $$ = { specialSequence: $1.slice(1, -1).trim() } }
+    ;
+
 terminal
     : STRING { $$ = { terminal: $1.slice(1, -1) } }
     ;
 
 comment
-    : COMMENT { $$ = {comment: $1.slice(2, -2).trim() } }
+    : COMMENT { $$ = {comment: $1.slice(2, -2) } }
     ;
 
