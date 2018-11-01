@@ -26,8 +26,6 @@ Options:
   -h, --help             output usage information
 ```
 
-this will produce a `my-definition.html` output file
-
 Check the examples folder for an example input file `ebnf.ebnf` and the
 generated result page `ebnf.html` [View online][example-doc]
 
