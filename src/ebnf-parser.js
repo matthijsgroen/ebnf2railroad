@@ -93,7 +93,7 @@ case 3:
  this.$ = [$$[$0]] 
 break;
 case 4:
- this.$ = { identifier: $$[$0-3].trim(), definition: $$[$0-1] }; 
+ this.$ = { identifier: $$[$0-3].trim(), definition: $$[$0-1], location: _$[$0-3].first_line };  
 break;
 case 6:
  this.$ = $$[$0-2].sequence ? { sequence: $$[$0-2].sequence.concat($$[$0]) } : { sequence: [$$[$0-2], $$[$0]] } 

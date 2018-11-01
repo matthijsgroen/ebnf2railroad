@@ -2,6 +2,7 @@ const {
   Choice,
   Comment,
   Diagram,
+  HorizontalChoice,
   NonTerminal,
   OneOrMore,
   OptionalSequence,
@@ -69,6 +70,8 @@ const productionToEBNF = production => {
   return "unknown construct";
 };
 
+const SHRINK_CHOICE = 10;
+
 const productionToDiagram = production => {
   if (production.identifier) {
     return Diagram(productionToDiagram(production.definition));
@@ -79,14 +82,26 @@ const productionToDiagram = production => {
   if (production.nonTerminal) {
     return NonTerminal(production.nonTerminal, `#${production.nonTerminal}`);
   }
+  if (production.skip) {
+    return Skip();
+  }
   if (production.specialSequence) {
     const sequence = Terminal(" " + production.specialSequence + " ");
     sequence.attrs.class = "special-sequence";
     return sequence;
   }
   if (production.choice) {
+    const makeChoice = items => new Choice(0, items);
     const options = production.choice.map(productionToDiagram);
-    return Choice(0, ...options);
+    const choiceLists = [];
+    while (options.length > SHRINK_CHOICE) {
+      const subList = options.splice(0, SHRINK_CHOICE);
+      choiceLists.push(makeChoice(subList));
+    }
+    choiceLists.push(makeChoice(options));
+    return choiceLists.length > 1
+      ? HorizontalChoice(...choiceLists)
+      : choiceLists[0];
   }
   if (production.sequence) {
     return Sequence(...production.sequence.map(productionToDiagram));
@@ -188,7 +203,7 @@ const createDocumentation = (ast, options) => {
       if (production.comment) {
         return commentTemplate(production.comment);
       }
-      const diagram = productionToDiagram(production);
+      const diagram = productionToDiagram(optimizeProduction(production));
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
@@ -208,6 +223,12 @@ const createDocumentation = (ast, options) => {
   });
 };
 
+const skipFirst = list =>
+  [
+    list.some(e => e === "skip") && { skip: true },
+    ...list.filter(e => e !== "skip")
+  ].filter(Boolean);
+
 const optimizeProduction = production => {
   if (production.definition) {
     return {
@@ -218,7 +239,27 @@ const optimizeProduction = production => {
   if (production.choice) {
     return {
       ...production,
-      choice: production.choice.map(optimizeProduction)
+      choice: skipFirst(
+        production.choice
+          .map((item, idx, list) => {
+            const optimizedItem = optimizeProduction(item);
+            if (optimizedItem.repetition && optimizedItem.skippable) {
+              return [
+                "skip",
+                {
+                  ...optimizedItem,
+                  skippable: false
+                }
+              ];
+            } else if (optimizedItem.optional) {
+              return ["skip", optimizedItem.optional];
+            } else {
+              return [optimizedItem];
+            }
+          })
+          .reduce((acc, item) => acc.concat(item), [])
+          .filter((item, index, list) => list.indexOf(item) === index)
+      )
     };
   }
   if (production.sequence) {
@@ -229,11 +270,21 @@ const optimizeProduction = production => {
           const ahead = list[idx + 1];
           if (ahead && ahead.repetition && ahead.skippable === true) {
             const isSame =
-              JSON.stringify(ahead.repetition) === JSON.stringify(item);
+              JSON.stringify(ahead.repetition) === JSON.stringify(item) ||
+              (item.group &&
+                JSON.stringify(ahead.repetition) ===
+                  JSON.stringify(item.group));
             if (isSame) {
-              ahead.skippable = false;
+              ahead.changeSkippable = true;
               return false;
             }
+          }
+          if (item.changeSkippable) {
+            delete item["changeSkippable"];
+            return {
+              ...optimizeProduction(item),
+              skippable: false
+            };
           }
           return optimizeProduction(item);
         })
@@ -262,9 +313,38 @@ const optimizeProduction = production => {
   return production;
 };
 
-const optimizeAst = ast => ast.map(line => optimizeProduction(line));
+const valididateEbnf = ast => {
+  const identifiers = ast.map(production => production.identifier);
+
+  const doubleDeclarations = ast
+    .map((declaration, index) => {
+      // skip comments, but keep index in array intact (filter would break index)
+      if (!declaration.identifier) return false;
+      const firstDeclaration = identifiers.indexOf(declaration.identifier);
+      if (firstDeclaration === index) return false;
+      return `${declaration.location}: Duplicate declaration: "${
+        declaration.identifier
+      }" already declared on line ${ast[firstDeclaration].location}.`;
+    })
+    .filter(Boolean);
+
+  const missingReferences = ast
+    .filter(declaration => declaration.identifier)
+    .map(declaration =>
+      getReferences(declaration)
+        .filter((item, index, list) => list.indexOf(item) === index)
+        .filter(reference => !identifiers.includes(reference))
+        .map(
+          missingReference =>
+            `${declaration.location}: Missing reference: "${missingReference}".`
+        )
+    )
+    .filter(m => m.length > 0)
+    .reduce((acc, elem) => acc.concat(elem), []);
+  return doubleDeclarations.concat(missingReferences).sort();
+};
 
 module.exports = {
   createDocumentation,
-  optimizeAst
+  valididateEbnf
 };

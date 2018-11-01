@@ -51,7 +51,7 @@ production_list
 
 production
     : IDENTIFIER "=" rhs ";"
-        { $$ = { identifier: $1.trim(), definition: $rhs }; }
+        { $$ = { identifier: $1.trim(), definition: $rhs, location: @1.first_line };  }
     | comment
     ;
 

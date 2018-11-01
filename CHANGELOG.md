@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [UNRELEASED]
+### Added
+- Show validation warnings for duplicate declarations
+- Show validation warnings for missing references
+- Option `--validate` to exit with status code 2 if document has
+  warnings
+- Option `--quite` to suppress output to console
+- Optimize EBNF syntax as `( a ), { a }` in diagram as `a+` (one or more)
+- Optimize EBNF syntax as `a | { b }` in diagram as choice with "skip",
+  "a", or one or more "b"
+- Optimize EBNF syntax as `a | [ b ]` in diagram as choice with "skip",
+  "a", or "b"
+
+### Changed
+- Long choice lists are now spread over multiple columns, if the
+  length exceeds 10.
+- Updated styling of document
+
 ## [1.1.0] - 2018-10-30
 ### Added
 - `--target` option to specify output file

@@ -3,13 +3,15 @@ const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parser } = require("./ebnf-parser");
-const { createDocumentation, optimizeAst } = require("./report-builder");
+const { createDocumentation, valididateEbnf } = require("./report-builder");
 
 program.version("1.0.0");
 
 program
   .usage("[options] <file>")
   .option("-o, --target [target]", "output the file to target destination.")
+  .option("-q, --quiet", "suppress output to STDOUT")
+  .option("--validate", "exit with status code 2 if ebnf document has warnings")
   .description(
     "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
   );
@@ -20,6 +22,7 @@ async function run(args) {
     program.outputHelp();
     return;
   }
+  const allowOutput = !program.quiet;
 
   try {
     const filename = program.args[0];
@@ -33,13 +36,21 @@ async function run(args) {
     const targetFilename = program.target || defaultOutputFilename;
 
     const ast = parser.parse(ebnf);
-    const optimizedAst = optimizeAst(ast);
-    const report = createDocumentation(optimizedAst, {
+    const warnings = valididateEbnf(ast);
+
+    warnings.length > 0 &&
+      allowOutput &&
+      warnings.forEach(warning => console.warn(warning));
+
+    const report = createDocumentation(ast, {
       title: basename
     });
     await writeFile(targetFilename, report, "utf8");
+
+    allowOutput && console.log(`📜 Document created at ${targetFilename}`);
+    warnings.length > 0 && program.validate && process.exit(2);
   } catch (e) {
-    console.error(e.message);
+    if (allowOutput) console.error(e.message);
     process.exit(1);
   }
 }

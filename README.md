@@ -14,7 +14,16 @@ npm install -g ebnf2railroad
 ## Usage
 
 ```
-ebnf2railroad my-definition.ebnf
+Usage: ebnf2railroad [options] <file>
+
+Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams
+
+Options:
+  -V, --version          output the version number
+  -o, --target [target]  output the file to target destination.
+  -q, --quiet            suppress output to STDOUT
+  --validate             exit with status code 2 if ebnf document has warnings
+  -h, --help             output usage information
 ```
 
 this will produce a `my-definition.html` output file

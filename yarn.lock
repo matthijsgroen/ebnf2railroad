@@ -279,9 +279,9 @@ pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
-"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams.git":
+"railroad-diagrams@https://github.com/matthijsgroen/railroad-diagrams.git#add-horizontal-choice":
   version "1.1.0"
-  resolved "https://github.com/tabatkins/railroad-diagrams.git#dbcb5bfc93d0826f63b4bc08b957214bebc7ffdb"
+  resolved "https://github.com/matthijsgroen/railroad-diagrams.git#9dad655cc5b0ff8eb4fc64f5a0fa08b7ed15a6e7"
 
 require-directory@^2.1.1:
   version "2.1.1"

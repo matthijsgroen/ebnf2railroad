@@ -23,8 +23,10 @@ const documentTemplate = ({ title, contents }) =>
     body {
       font: normal 12px Verdana, sans-serif;
       color: #0F0C00;
-      background: #FFFCF0;
+      background: #FFFCFC;
     }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.5em; }
     code {
       padding: 1em 1em 1em 3em;
       text-indent: -2em;
