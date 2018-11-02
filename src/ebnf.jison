@@ -81,7 +81,7 @@ exception
     : IDENTIFIER "-" IDENTIFIER
       { $$ = { include: $1.trim(), exceptNonTerminal: $3.trim() } }
     | IDENTIFIER "-" STRING
-      { $$ = { include: $1.trim(), exceptTerminal: $3 } }
+      { $$ = { include: $1.trim(), exceptTerminal: $3.slice(1, -1) } }
     ;
 
 identifier

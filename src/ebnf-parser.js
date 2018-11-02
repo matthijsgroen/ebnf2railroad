@@ -120,7 +120,7 @@ case 17:
  this.$ = { include: $$[$0-2].trim(), exceptNonTerminal: $$[$0].trim() } 
 break;
 case 18:
- this.$ = { include: $$[$0-2].trim(), exceptTerminal: $$[$0] } 
+ this.$ = { include: $$[$0-2].trim(), exceptTerminal: $$[$0].slice(1, -1) } 
 break;
 case 19:
 this.$ = { nonTerminal: $$[$0].trim() }; 

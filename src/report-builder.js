@@ -26,7 +26,7 @@ const productionToEBNF = production => {
     )};`;
   }
   if (production.terminal) {
-    return production.terminal.indexOf("\"") > -1
+    return production.terminal.indexOf('"') > -1
       ? `'${production.terminal}'`
       : `"${production.terminal}"`;
   }
@@ -65,7 +65,7 @@ const productionToEBNF = production => {
   if (production.exceptTerminal) {
     return `${productionToEBNF({
       nonTerminal: production.include
-    })} - ${production.exceptTerminal}`;
+    })} - ${productionToEBNF({ terminal: production.exceptTerminal })}`;
   }
   return "unknown construct";
 };
