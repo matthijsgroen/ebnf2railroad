@@ -32,6 +32,7 @@
 %left '|'
 %left ','
 %left '*'
+%left COMMENT
 
 %start grammar
 
@@ -68,6 +69,8 @@ rhs
       { $$ = { optional: $2 } }
   | DIGIT "*" rhs
       { $$ = { repetition: $3, amount: $1 } }
+  | rhs comment
+    { $$ = { ...$2, group: $1 } }
   | identifier
   | terminal
   | exception

@@ -1,6 +1,7 @@
 const {
   Choice,
   Comment,
+  ComplexDiagram,
   Diagram,
   HorizontalChoice,
   NonTerminal,
@@ -51,6 +52,9 @@ const productionToEBNF = production => {
   if (production.repetition && production.amount !== undefined) {
     return `${production.amount} * ${productionToEBNF(production.repetition)}`;
   }
+  if (production.comment) {
+    return `${productionToEBNF(production.group)} (* ${production.comment} *)`;
+  }
   if (production.group) {
     return `( ${productionToEBNF(production.group)} )`;
   }
@@ -74,7 +78,9 @@ const SHRINK_CHOICE = 10;
 
 const productionToDiagram = production => {
   if (production.identifier) {
-    return Diagram(productionToDiagram(production.definition));
+    return production.complex
+      ? ComplexDiagram(productionToDiagram(production.definition))
+      : Diagram(productionToDiagram(production.definition));
   }
   if (production.terminal) {
     return Terminal(production.terminal);
@@ -124,6 +130,14 @@ const productionToDiagram = production => {
   }
   if (production.optional) {
     return Choice(0, Skip(), productionToDiagram(production.optional));
+  }
+  if (production.comment) {
+    return production.group
+      ? Sequence(
+          productionToDiagram(production.group),
+          Comment(production.comment)
+        )
+      : Comment(production.comment);
   }
   if (production.group) {
     return productionToDiagram(production.group);
@@ -203,15 +217,19 @@ const createDocumentation = (ast, options) => {
       if (production.comment) {
         return commentTemplate(production.comment);
       }
-      const diagram = productionToDiagram(optimizeProduction(production));
+      const outgoingReferences = searchReferencesFromIdentifier(
+        production.identifier,
+        ast
+      );
+      const diagram = productionToDiagram({
+        ...optimizeProduction(production),
+        complex: outgoingReferences.length > 0
+      });
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production),
         referencedBy: searchReferencesToIdentifier(production.identifier, ast),
-        referencesTo: searchReferencesFromIdentifier(
-          production.identifier,
-          ast
-        ),
+        referencesTo: outgoingReferences,
         diagram: vacuum(diagram.toString())
       });
     })
@@ -263,31 +281,56 @@ const optimizeProduction = production => {
     };
   }
   if (production.sequence) {
+    const optimizeStructure = (item, idx, list) => {
+      const ahead = list[idx + 1];
+      if (ahead && ahead.repetition && ahead.skippable === true) {
+        const isSame =
+          JSON.stringify(ahead.repetition) === JSON.stringify(item) ||
+          (item.group &&
+            JSON.stringify(ahead.repetition) === JSON.stringify(item.group));
+        if (isSame) {
+          if (item.comment) {
+            // transfer potential comment
+            ahead.comment = item.comment;
+          }
+          ahead.changeSkippable = true;
+          return false;
+        }
+      }
+      if (item.changeSkippable) {
+        delete item["changeSkippable"];
+        if (item.comment) {
+          return {
+            comment: item.comment,
+            group: {
+              ...optimizeProduction(item),
+              skippable: false
+            }
+          };
+        } else {
+          return {
+            ...optimizeProduction(item),
+            skippable: false
+          };
+        }
+      }
+      return optimizeProduction(item);
+    };
+
     const optimizedSequence = {
       ...production,
       sequence: production.sequence
-        .map((item, idx, list) => {
-          const ahead = list[idx + 1];
-          if (ahead && ahead.repetition && ahead.skippable === true) {
-            const isSame =
-              JSON.stringify(ahead.repetition) === JSON.stringify(item) ||
-              (item.group &&
-                JSON.stringify(ahead.repetition) ===
-                  JSON.stringify(item.group));
-            if (isSame) {
-              ahead.changeSkippable = true;
-              return false;
-            }
-          }
-          if (item.changeSkippable) {
-            delete item["changeSkippable"];
-            return {
-              ...optimizeProduction(item),
-              skippable: false
-            };
-          }
-          return optimizeProduction(item);
-        })
+        // pass 1: optimize structure
+        .map(optimizeStructure)
+        .filter(Boolean)
+        // pass 2: unpack comments
+        .map(
+          item =>
+            item.comment ? [item.group, { comment: item.comment }] : [item]
+        )
+        .reduce((acc, item) => acc.concat(item), [])
+        // pass 3: further optimize structure
+        .map(optimizeStructure)
         .filter(Boolean)
     };
     return optimizedSequence;
