@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show different start/end indicators if diagram is 'complex' (refers to
   other definitions)
 
+### Fixed
+- Text dedenting issue in comments before sending comments to markdown parser
+
 ## [1.2.0] - 2018-11-01
 ### Added
 - Show validation warnings for duplicate declarations
