@@ -77,7 +77,7 @@ string = '"', { ? Any unicode character except " or \ or control character ?
 number = [ "-" ],
   ( "0" | ? digit 1-9 ?, { ? digit ? } ),
   [ ".", ? digit ?, { ? digit ? } ],
-  [ ( "e" | "E" ), ( "+" | "-" ), ? digit ?, { ? digit ? } ];
+  [ ( "e" | "E" ), [ "+" | "-" ], ? digit ?, { ? digit ? } ];
 
 (*
 
