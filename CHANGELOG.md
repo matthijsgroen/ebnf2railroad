@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add support for comments within statements, that will be rendered
   within the diagram
+- Option `--title` to add a title to the output document
 - Show different start/end indicators if diagram is 'complex' (refers to
   other definitions)
 

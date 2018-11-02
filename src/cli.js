@@ -12,6 +12,7 @@ program
   .option("-o, --target [target]", "output the file to target destination.")
   .option("-q, --quiet", "suppress output to STDOUT")
   .option("--validate", "exit with status code 2 if ebnf document has warnings")
+  .option("--title [title]", "title to use for HTML document")
   .description(
     "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
   );
@@ -32,6 +33,7 @@ async function run(args) {
       .slice(0, -1)
       .join(".");
     const defaultOutputFilename = basename + ".html";
+    const documentTitle = program.title || basename;
 
     const targetFilename = program.target || defaultOutputFilename;
 
@@ -43,7 +45,7 @@ async function run(args) {
       warnings.forEach(warning => console.warn(warning));
 
     const report = createDocumentation(ast, {
-      title: basename
+      title: documentTitle
     });
     await writeFile(targetFilename, report, "utf8");
 
