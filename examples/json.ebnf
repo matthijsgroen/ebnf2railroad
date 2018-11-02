@@ -43,7 +43,7 @@ array = "[", [ value, { ",", value } ], "]";
 
 *)
 
-value = string | number | object | array | "true", "false", "null";
+value = string | number | object | array | "true" | "false" | "null";
 
 (*
 

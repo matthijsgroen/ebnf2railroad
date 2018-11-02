@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Optimize EBNF syntax as `[ a | b ]` in diagram as single choice with
+  integrated skip
+
+### Fixed
+- Issue with optimizer in repeating elements `a, b, c, { d, b, c }`. the
+  repetition showed `c, b` instead of `b, c`
+
 ## [1.3.0] - 2018-11-02
 ### Added
 - Add support for comments within statements, that will be rendered

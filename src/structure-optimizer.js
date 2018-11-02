@@ -80,7 +80,7 @@ const optimizeProduction = production => {
           if (matches.length > 0) {
             return {
               clearPrevious: matches.length,
-              repetition: { sequence: matches },
+              repetition: { sequence: matches.reverse() },
               repeater: {
                 sequence: subSequence.slice(0, -matches.length).reverse()
               },
@@ -96,7 +96,7 @@ const optimizeProduction = production => {
       if (!elem) return false;
       let ahead = 1;
       if (elem.clearPrevious) {
-        elem.clearPrevious = 0;
+        delete elem["clearPrevious"];
       }
       while (list[ahead + index] !== undefined) {
         const item = list[ahead + index];
@@ -130,10 +130,17 @@ const optimizeProduction = production => {
     };
   }
   if (production.optional) {
-    return {
-      ...production,
-      optional: optimizeProduction(production.optional)
-    };
+    if (production.optional.choice) {
+      return optimizeProduction({
+        ...production.optional,
+        choice: [{ skip: true }, ...production.optional.choice]
+      });
+    } else {
+      return {
+        ...production,
+        optional: optimizeProduction(production.optional)
+      };
+    }
   }
   if (production.group) {
     return {
