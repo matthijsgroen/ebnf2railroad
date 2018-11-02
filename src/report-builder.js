@@ -6,7 +6,6 @@ const {
   HorizontalChoice,
   NonTerminal,
   OneOrMore,
-  OptionalSequence,
   Sequence,
   Skip,
   Terminal
@@ -27,7 +26,7 @@ const productionToEBNF = production => {
     )};`;
   }
   if (production.terminal) {
-    return production.terminal.indexOf('"') > -1
+    return production.terminal.indexOf("\"") > -1
       ? `'${production.terminal}'`
       : `"${production.terminal}"`;
   }

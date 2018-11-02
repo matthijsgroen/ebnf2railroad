@@ -24,6 +24,7 @@ async function run(args) {
     return;
   }
   const allowOutput = !program.quiet;
+  const output = text => allowOutput && process.stdout.write(text + "\n");
 
   try {
     const filename = program.args[0];
@@ -40,19 +41,17 @@ async function run(args) {
     const ast = parser.parse(ebnf);
     const warnings = valididateEbnf(ast);
 
-    warnings.length > 0 &&
-      allowOutput &&
-      warnings.forEach(warning => console.warn(warning));
+    warnings.length > 0 && allowOutput && warnings.forEach(output);
 
     const report = createDocumentation(ast, {
       title: documentTitle
     });
     await writeFile(targetFilename, report, "utf8");
 
-    allowOutput && console.log(`📜 Document created at ${targetFilename}`);
+    output(`📜 Document created at ${targetFilename}`);
     warnings.length > 0 && program.validate && process.exit(2);
   } catch (e) {
-    if (allowOutput) console.error(e.message);
+    output(e.message);
     process.exit(1);
   }
 }
