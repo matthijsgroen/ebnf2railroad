@@ -6,7 +6,7 @@
   JSON (JavaScript Object Notation) is a lightweight data-interchange format.
   It is easy for humans to read and write. It is easy for machines to parse and generate.
 
-  > Disclaimer: This is an example file. It's based on the specs on [http://json.org/][].
+  > Disclaimer: This is an example file. It's based on the specs on [http://json.org/](http://json.org).
 
 *)
 
