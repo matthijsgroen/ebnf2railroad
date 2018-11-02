@@ -12,6 +12,8 @@ const {
   Terminal
 } = require("railroad-diagrams");
 
+const { optimizeProduction } = require("./structure-optimizer");
+
 const {
   documentTemplate,
   ebnfTemplate,
@@ -41,16 +43,11 @@ const productionToEBNF = production => {
   if (production.specialSequence) {
     return `? ${production.specialSequence} ?`;
   }
-  if (production.repetition && production.skippable === true) {
-    return `{ ${productionToEBNF(production.repetition)} }`;
-  }
-  if (production.repetition && production.skippable === false) {
-    return `${productionToEBNF(production.repetition)} , { ${productionToEBNF(
-      production.repetition
-    )} }`;
-  }
   if (production.repetition && production.amount !== undefined) {
     return `${production.amount} * ${productionToEBNF(production.repetition)}`;
+  }
+  if (production.repetition) {
+    return `{ ${productionToEBNF(production.repetition)} }`;
   }
   if (production.comment) {
     return `${productionToEBNF(production.group)} (* ${production.comment} *)`;
@@ -92,7 +89,7 @@ const productionToDiagram = production => {
     return Skip();
   }
   if (production.specialSequence) {
-    const sequence = Terminal(" " + production.specialSequence + " ");
+    const sequence = NonTerminal(" " + production.specialSequence + " ");
     sequence.attrs.class = "special-sequence";
     return sequence;
   }
@@ -120,7 +117,12 @@ const productionToDiagram = production => {
     );
   }
   if (production.repetition && production.skippable === false) {
-    return OneOrMore(productionToDiagram(production.repetition));
+    return production.repeater
+      ? OneOrMore(
+          productionToDiagram(production.repetition),
+          productionToDiagram(production.repeater)
+        )
+      : OneOrMore(productionToDiagram(production.repetition));
   }
   if (production.repetition && production.amount !== undefined) {
     return OneOrMore(
@@ -129,7 +131,7 @@ const productionToDiagram = production => {
     );
   }
   if (production.optional) {
-    return Choice(0, Skip(), productionToDiagram(production.optional));
+    return Choice(1, Skip(), productionToDiagram(production.optional));
   }
   if (production.comment) {
     return production.group
@@ -239,121 +241,6 @@ const createDocumentation = (ast, options) => {
     title: options.title,
     contents
   });
-};
-
-const skipFirst = list =>
-  [
-    list.some(e => e === "skip") && { skip: true },
-    ...list.filter(e => e !== "skip")
-  ].filter(Boolean);
-
-const optimizeProduction = production => {
-  if (production.definition) {
-    return {
-      ...production,
-      definition: optimizeProduction(production.definition)
-    };
-  }
-  if (production.choice) {
-    return {
-      ...production,
-      choice: skipFirst(
-        production.choice
-          .map((item, idx, list) => {
-            const optimizedItem = optimizeProduction(item);
-            if (optimizedItem.repetition && optimizedItem.skippable) {
-              return [
-                "skip",
-                {
-                  ...optimizedItem,
-                  skippable: false
-                }
-              ];
-            } else if (optimizedItem.optional) {
-              return ["skip", optimizedItem.optional];
-            } else {
-              return [optimizedItem];
-            }
-          })
-          .reduce((acc, item) => acc.concat(item), [])
-          .filter((item, index, list) => list.indexOf(item) === index)
-      )
-    };
-  }
-  if (production.sequence) {
-    const optimizeStructure = (item, idx, list) => {
-      const ahead = list[idx + 1];
-      if (ahead && ahead.repetition && ahead.skippable === true) {
-        const isSame =
-          JSON.stringify(ahead.repetition) === JSON.stringify(item) ||
-          (item.group &&
-            JSON.stringify(ahead.repetition) === JSON.stringify(item.group));
-        if (isSame) {
-          if (item.comment) {
-            // transfer potential comment
-            ahead.comment = item.comment;
-          }
-          ahead.changeSkippable = true;
-          return false;
-        }
-      }
-      if (item.changeSkippable) {
-        delete item["changeSkippable"];
-        if (item.comment) {
-          return {
-            comment: item.comment,
-            group: {
-              ...optimizeProduction(item),
-              skippable: false
-            }
-          };
-        } else {
-          return {
-            ...optimizeProduction(item),
-            skippable: false
-          };
-        }
-      }
-      return optimizeProduction(item);
-    };
-
-    const optimizedSequence = {
-      ...production,
-      sequence: production.sequence
-        // pass 1: optimize structure
-        .map(optimizeStructure)
-        .filter(Boolean)
-        // pass 2: unpack comments
-        .map(
-          item =>
-            item.comment ? [item.group, { comment: item.comment }] : [item]
-        )
-        .reduce((acc, item) => acc.concat(item), [])
-        // pass 3: further optimize structure
-        .map(optimizeStructure)
-        .filter(Boolean)
-    };
-    return optimizedSequence;
-  }
-  if (production.repetition) {
-    return {
-      ...production,
-      repetition: optimizeProduction(production.repetition)
-    };
-  }
-  if (production.optional) {
-    return {
-      ...production,
-      optional: optimizeProduction(production.optional)
-    };
-  }
-  if (production.group) {
-    return {
-      ...production,
-      group: optimizeProduction(production.group)
-    };
-  }
-  return production;
 };
 
 const valididateEbnf = ast => {

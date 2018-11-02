@@ -37,7 +37,7 @@ const documentTemplate = ({ title, contents }) =>
     }
     h1 { font-size: 2em; }
     h2 { font-size: 1.5em; }
-    code {
+    code.ebnf {
       padding: 1em 1em 1em 3em;
       text-indent: -2em;
       background: rgb(255, 246, 209);
@@ -138,7 +138,7 @@ const ebnfTemplate = ({
   <div class="diagram-container">
   ${diagram}
   </div>
-  <code>${ebnf}</code>
+  <code class="ebnf">${ebnf}</code>
   ${referencedBy.length > 0 ? referencesTemplate(identifier, referencedBy) : ""}
   ${
     referencesTo.length > 0

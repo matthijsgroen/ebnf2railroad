@@ -1,0 +1,87 @@
+(*
+
+  JSON (JavaScript Object Notation)
+  =================================
+
+  JSON (JavaScript Object Notation) is a lightweight data-interchange format.
+  It is easy for humans to read and write. It is easy for machines to parse and generate.
+
+  > Disclaimer: This is an example file. It's based on the specs on [http://json.org/][].
+
+*)
+
+json = object | array;
+
+(*
+
+  An _object_ is an unordered set of name/value pairs.
+
+  An object begins with { (left brace) and ends with } (right brace).
+  Each name is followed by : (colon) and the name/value pairs are separated by , (comma).
+
+*)
+
+object = "{", [ string, ":", value, { ",", string, ":", value } ], "}";
+
+(*
+
+  An _array_ is an ordered collection of values.
+
+  An array begins with [ (left bracket) and ends with ] (right bracket).
+  Values are separated by , (comma).
+
+*)
+
+array = "[", [ value, { ",", value } ], "]";
+
+(*
+
+  A _value_ can be a _string_ in double quotes, or a _number_,
+  or `true` or `false` or `null`, or an _object_ or an _array_.
+
+  These structures can be nested.
+
+*)
+
+value = string | number | object | array | "true", "false", "null";
+
+(*
+
+  A _string_ is a sequence of zero or more Unicode characters, wrapped in double quotes,
+  using backslash escapes. A character is represented as a single character string.
+
+  A string is very much like a C or Java string.
+
+*)
+
+string = '"', { ? Any unicode character except " or \ or control character ?
+  | "\", (
+  '"' (* quotation mark *) |
+  "\" (* reverse solidus *) |
+  "/" (* solidus *) |
+  "b" (* backspace *) |
+  "f" (* formfeed *) |
+  "n" (* newline *) |
+  "r" (* carriage return *) |
+  "t" (* horizontal tab *) |
+  "u", 4 * ? hexadeximal digit ?
+  ) }, '"';
+
+(*
+
+  A _number_ is very much like a C or Java number, except that the octal
+  and hexadecimal formats are not used.
+
+*)
+
+number = [ "-" ],
+  ( "0" | ? digit 1-9 ?, { ? digit ? } ),
+  [ ".", ? digit ?, { ? digit ? } ],
+  [ ( "e" | "E" ), ( "+" | "-" ), ? digit ?, { ? digit ? } ];
+
+(*
+
+  Whitespace can be inserted between any pair of tokens.
+  Excepting a few encoding details, that completely describes the language.
+
+*)

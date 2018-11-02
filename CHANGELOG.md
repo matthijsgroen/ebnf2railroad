@@ -4,13 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2018-11-02
 ### Added
 - Add support for comments within statements, that will be rendered
   within the diagram
 - Option `--title` to add a title to the output document
 - Show different start/end indicators if diagram is 'complex' (refers to
   other definitions)
+- Better optimization of repeating elements. `a, b, c, { d, b, c }` will
+  display `a` followed by a loop containing `b, c` with `d` as repeater.
+- Extra example file, based on json.org
 
 ### Fixed
 - Text dedenting issue in comments before sending comments to markdown parser
