@@ -21,7 +21,7 @@ const optimizeProduction = production => {
       ...production,
       choice: skipFirst(
         production.choice
-          .map((item, idx, list) => {
+          .map(item => {
             const optimizedItem = optimizeProduction(item);
             if (optimizedItem.repetition && optimizedItem.skippable) {
               return [

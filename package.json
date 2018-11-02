@@ -22,7 +22,8 @@
   },
   "scripts": {
     "build-parser": "jison src/ebnf.jison -o src/ebnf-parser.js",
-    "test": "mocha"
+    "test": "mocha",
+    "lint": "eslint src/ test/"
   },
   "private": false,
   "dependencies": {
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^5.8.0",
     "jison": "^0.4.18",
     "mocha": "^5.2.0"
   }
