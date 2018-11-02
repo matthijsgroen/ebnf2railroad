@@ -23,6 +23,7 @@ Options:
   -o, --target [target]  output the file to target destination.
   -q, --quiet            suppress output to STDOUT
   --validate             exit with status code 2 if ebnf document has warnings
+  --title [title]        title to use for HTML document
   -h, --help             output usage information
 ```
 
