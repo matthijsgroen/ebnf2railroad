@@ -5,9 +5,7 @@ const { dedent } = require("../src/dedent");
 describe("EBNF parser", () => {
   describe("creates an AST structure", () => {
     it("supports comments", () => {
-      const text = dedent(`
-        (* Comment data *)
-      `);
+      const text = "(* Comment data *)";
       const result = parser.parse(text);
       expect(result).to.eql([
         {
@@ -17,9 +15,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports defintions", () => {
-      const text = dedent(`
-        foo = "bar";
-      `);
+      const text = 'foo = "bar";';
       const result = parser.parse(text);
       expect(result).to.have.lengthOf(1);
       expect(result[0])
@@ -61,18 +57,14 @@ describe("EBNF parser", () => {
     });
 
     it("supports terminals", () => {
-      const text = dedent(`
-        foo = "bar";
-      `);
+      const text = 'foo = "bar";';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({ terminal: "bar" });
     });
 
     it("supports non-terminals", () => {
-      const text = dedent(`
-        foo = bar;
-      `);
+      const text = "foo = bar;";
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({ nonTerminal: "bar" });
@@ -91,9 +83,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports choices", () => {
-      const text = dedent(`
-        foo = "a" | b;
-      `);
+      const text = 'foo = "a" | b;';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -102,9 +92,7 @@ describe("EBNF parser", () => {
     });
 
     it("choice has a higher precedence than sequence", () => {
-      const text = dedent(`
-        foo = "a" | b, c;
-      `);
+      const text = 'foo = "a" | b, c;';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -116,9 +104,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports grouping", () => {
-      const text = dedent(`
-        foo = ( "a" | b ), c;
-      `);
+      const text = 'foo = ( "a" | b ), c;';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -134,9 +120,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports optionals", () => {
-      const text = dedent(`
-        foo = [ "a" ];
-      `);
+      const text = 'foo = [ "a" ];';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -145,9 +129,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports repetition", () => {
-      const text = dedent(`
-        foo = { "a" };
-      `);
+      const text = 'foo = { "a" };';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -157,9 +139,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports repetition with multiplier", () => {
-      const text = dedent(`
-        foo = 5 * "a";
-      `);
+      const text = 'foo = 5 * "a";';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -169,9 +149,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports special sequences", () => {
-      const text = dedent(`
-        foo = ? a-z ?;
-      `);
+      const text = "foo = ? a-z ?;";
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -180,9 +158,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports nonTerminal excluding terminal", () => {
-      const text = dedent(`
-        foo = bar - "baz".
-      `);
+      const text = 'foo = bar - "baz".';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -192,9 +168,7 @@ describe("EBNF parser", () => {
     });
 
     it("supports nonTerminal excluding nonTerminal", () => {
-      const text = dedent(`
-        foo = bar - baz.
-      `);
+      const text = "foo = bar - baz.";
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
@@ -204,9 +178,7 @@ describe("EBNF parser", () => {
     });
 
     it("comments within definitions", () => {
-      const text = dedent(`
-        foo = "bar" (* baz *);
-      `);
+      const text = 'foo = "bar" (* baz *);';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
