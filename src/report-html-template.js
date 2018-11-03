@@ -1,6 +1,8 @@
 const { Converter } = require("showdown");
 const { dedent } = require("./dedent");
-const converter = new Converter();
+const converter = new Converter({
+  simplifiedAutoLink: true
+});
 
 const documentTemplate = ({ title, contents }) =>
   `<!DOCTYPE html>
@@ -108,11 +110,16 @@ const documentTemplate = ({ title, contents }) =>
 </html>
 `;
 
+const dasherize = str => str.replace(/\s+/g, "-");
+
 const referencesTemplate = (identifier, references) =>
   `<p>Items referencing <strong>${identifier}</strong>:<p>
 <ul>
 ${references
-    .map(reference => `<li><a href="#${reference}">${reference}</a></li>`)
+    .map(
+      reference =>
+        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+    )
     .join("")}
 </ul>
 `;
@@ -121,7 +128,10 @@ const referencesToTemplate = (identifier, references) =>
   `<p><strong>${identifier}</strong> is referencing:<p>
 <ul>
 ${references
-    .map(reference => `<li><a href="#${reference}">${reference}</a></li>`)
+    .map(
+      reference =>
+        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+    )
     .join("")}
 </ul>
 `;
@@ -134,7 +144,7 @@ const ebnfTemplate = ({
   referencesTo
 }) =>
   `<section>
-  <h4 id="${identifier}">${identifier}</h4>
+  <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}
   </div>

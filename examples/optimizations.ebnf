@@ -3,7 +3,55 @@
   Optimizations
   =============
 
-  This file will demonstrate all the diagram optimizations
+  This file will demonstrate all the diagram optimizations and markup.
+
+  ## Markup
+
+  The markup will be written in markdown. *Why*?
+
+    - Markdown produces clean HTML
+    - Markdown works in plain text form in the EBNF comments
+      - Its clean
+      - And still structured
+    - It prevents breaking markup
+
+  Also, links to sites, like https://github.com/matthijsgroen/ebnf2railroad
+  will be converted into a clickable link.
+
+  ### Text decration
+
+  Text markup is also a **breeze**. Using asterisks and _underscores_ to place
+  emphasis.
+
+  Linking to a [EBNF declaration](#one-or-more) is also nice
+
+  > It nice if you spend a lot of time and effort on creating a DSL  
+  > (Domain specific language). That if you formally specify it  
+  > using EBNF, you get really good looking documentation for free!
+  >
+  > -- someone
+
+  #### Code examples
+
+  Small code examples can be embedded as well.
+
+  ```
+  it(could("improve") && clarify()) {
+    your = "syntax";
+    // intentions
+  }
+  ```
+
+  Tiny tidbits to clarify `terminals` like `null` or `undefined` can help greatly.
+
+  What would a document great as html format:
+
+    1. responsive design
+      * to view on small screens as well.
+      * and make no really long run on sentences that seem to last forever on
+        really large screens, because that is really, really annoying to read.
+    2. clear nice readable text. (nice font!)
+    3. linking to different sections
 
 *)
 
@@ -38,3 +86,8 @@ comment in one or more with repeater after =
 *)
 
 html = "<h1>Danger & Risks</h1>" (* <h1> can be everywhere </h1> *);
+
+simple syntax = "a", reference, "b";
+reference = "using", small parts, big parts;
+small parts = "terminal" | "other";
+big parts = "item", { "item" };

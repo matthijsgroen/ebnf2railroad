@@ -19,6 +19,7 @@ const {
   commentTemplate
 } = require("./report-html-template");
 
+const dasherize = str => str.replace(/\s+/g, "-");
 const sanitize = str =>
   str
     .replace(/&/g, "&amp;")
@@ -39,9 +40,9 @@ const productionToEBNF = production => {
       : `<span class="ebnf-terminal">"${sanitize(production.terminal)}"</span>`;
   }
   if (production.nonTerminal) {
-    return `<a class="ebnf-non-terminal" href="#${production.nonTerminal}">${
+    return `<a class="ebnf-non-terminal" href="#${dasherize(
       production.nonTerminal
-    }</a>`;
+    )}">${production.nonTerminal}</a>`;
   }
   if (production.choice) {
     return production.choice.map(productionToEBNF).join(" <wbr />| ");
@@ -98,7 +99,10 @@ const productionToDiagram = production => {
     return Terminal(production.terminal);
   }
   if (production.nonTerminal) {
-    return NonTerminal(production.nonTerminal, `#${production.nonTerminal}`);
+    return NonTerminal(
+      production.nonTerminal,
+      `#${dasherize(production.nonTerminal)}`
+    );
   }
   if (production.skip) {
     return Skip();

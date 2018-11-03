@@ -4,13 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2018-11-03
 ### Added
 - Optimize EBNF syntax as `[ a | b ]` in diagram as single choice with
   integrated skip
 - Optimize EBNF syntax as `[ a | ( b | c ) ]` in diagram as single choice
 - Optimize EBNF syntax as `[ a | [ b | c ] ]` in diagram as single choice with
   integrated skip
+- Demo file to demontrate markup and optimizations
+- Auto linking plain links in comments
+- HTML escaping in definition inline comments
+- Syntax highlight in text presentation of EBNF
+- Improved 'breaking' of EBNF over multiple lines
 
 ### Fixed
 - Issue with optimizer in repeating elements `a, b, c, { d, b, c }`. the
