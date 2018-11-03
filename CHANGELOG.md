@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Optimize EBNF syntax as `[ a | b ]` in diagram as single choice with
   integrated skip
+- Optimize EBNF syntax as `[ a | ( b | c ) ]` in diagram as single choice
+- Optimize EBNF syntax as `[ a | [ b | c ] ]` in diagram as single choice with
+  integrated skip
 
 ### Fixed
 - Issue with optimizer in repeating elements `a, b, c, { d, b, c }`. the

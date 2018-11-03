@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="generator" content="ebnf2railroad" />
+  <title>examples/optimizations</title>
+  <style type="text/css">
+    body {
+      font: normal 12px Verdana, sans-serif;
+      color: #0F0C00;
+      background: #FFFCFC;
+    }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.5em; }
+    code.ebnf {
+      padding: 1em 1em 1em 3em;
+      text-indent: -2em;
+      background: rgb(255, 246, 209);
+      display: inline-block;
+    }
+    a,
+    a:visited,
+    a:active {
+      color: #0F0C00;
+    }
+    a:hover {
+      color: #000;
+    }
+		section h4 {
+			margin-bottom: 0;
+		}
+    svg.railroad-diagram path {
+        stroke-width: 3;
+        stroke: black;
+        fill: rgba(0,0,0,0);
+    }
+    svg.railroad-diagram text {
+        font: bold 14px monospace;
+        text-anchor: middle;
+    }
+    svg.railroad-diagram text.diagram-text {
+        font-size: 12px;
+    }
+    svg.railroad-diagram text.diagram-arrow {
+        font-size: 16px;
+    }
+    svg.railroad-diagram text.label {
+        text-anchor: start;
+    }
+    svg.railroad-diagram text.comment {
+        font: italic 12px monospace;
+    }
+    svg.railroad-diagram g.non-terminal text {
+        /*font-style: italic;*/
+    }
+    svg.railroad-diagram g.special-sequence rect {
+        fill: #FFDB4D;
+    }
+    svg.railroad-diagram g.special-sequence text {
+        font-style: italic;
+    }
+    svg.railroad-diagram rect {
+        stroke-width: 3;
+        stroke: black;
+        fill: hsl(120,100%,90%);
+    }
+    svg.railroad-diagram path.diagram-text {
+        stroke-width: 3;
+        stroke: black;
+        fill: white;
+        cursor: help;
+    }
+    svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+        fill: #eee;
+    }
+  </style>
+</head>
+<body>
+  <article>
+    <h1 id="optimizations">Optimizations</h1>
+<p>This file will demonstrate all the diagram optimizations</p><section>
+  <h4 id="choice with optional">choice with optional</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="148" height="111" viewBox="0 0 148 111"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">choice with optional = [ "a" | "b" ];</code>
+  
+  
+</section>
+<section>
+  <h4 id="nested choices with optional">nested choices with optional</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="148" height="141" viewBox="0 0 148 141"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v60a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 110h0"></path><path d="M88 110h0"></path><rect x="60" y="99" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="114">c</text></g><path d="M88 110a10 10 0 0 0 10 -10v-60a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">nested choices with optional = "a" | [ "b" | "c" ];</code>
+  
+  
+</section>
+<section>
+  <h4 id="nested choices with multiple optionals">nested choices with multiple optionals</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="148" height="201" viewBox="0 0 148 201"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v60a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 110h0"></path><path d="M88 110h0"></path><rect x="60" y="99" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="114">c</text></g><path d="M88 110a10 10 0 0 0 10 -10v-60a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v90a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 140h0"></path><path d="M88 140h0"></path><rect x="60" y="129" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="144">d</text></g><path d="M88 140a10 10 0 0 0 10 -10v-90a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v120a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 170h0"></path><path d="M88 170h0"></path><rect x="60" y="159" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="174">e</text></g><path d="M88 170a10 10 0 0 0 10 -10v-120a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">nested choices with multiple optionals = "a" | [ "b" | "c" ] | [ "d" | "e" ];</code>
+  
+  
+</section>
+<section>
+  <h4 id="nested choices">nested choices</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="148" height="122" viewBox="0 0 148 122"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M108 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h0"></path><path d="M88 61h0"></path><rect x="60" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="65">b</text></g><path d="M88 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 91h0"></path><path d="M88 91h0"></path><rect x="60" y="80" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="95">c</text></g><path d="M88 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path></g><path d="M 108 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">nested choices = "a" | ( "b" | "c" );</code>
+  
+  
+</section>
+<section>
+  <h4 id="choice with one or more">choice with one or more</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="168" height="120" viewBox="0 0 168 120"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M128 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h48"></path></g><path d="M108 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h10"></path><path d="M98 50h10"></path><rect x="70" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="84" y="54">a</text></g><path d="M108 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M108 80h0"></path><path d="M60 80h10"></path><g class="terminal"><path d="M70 80h0"></path><path d="M98 80h0"></path><rect x="70" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="84" y="84">b</text></g><path d="M98 80h10"></path><path d="M70 80a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M70 100h28"></path></g><path d="M98 100a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M108 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 128 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">choice with one or more = "a" | { "b" };</code>
+  
+  
+</section>
+<section>
+  <h4 id="one or more">one or more</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="148" height="71" viewBox="0 0 148 71"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><path d="M50 31h10"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M60 51h28"></path></g><path d="M88 51a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g></g><path d="M98 31h10"></path><path d="M 108 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">one or more = "a" , { "a" };</code>
+  
+  
+</section>
+<section>
+  <h4 id="one or more with group">one or more with group</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="188" height="100" viewBox="0 0 188 100"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M138 31h0"></path><g><path d="M50 31h0"></path><path d="M138 31h0"></path><path d="M50 31h10"></path><g><path d="M60 31h0"></path><path d="M128 31h0"></path><path d="M60 31h20"></path><g class="terminal"><path d="M80 31h0"></path><path d="M108 31h0"></path><rect x="80" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="35">a</text></g><path d="M108 31h20"></path><path d="M60 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 61h0"></path><path d="M108 61h0"></path><rect x="80" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="65">b</text></g><path d="M108 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M128 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v29a10 10 0 0 0 10 10"></path><g><path d="M60 80h68"></path></g><path d="M128 80a10 10 0 0 0 10 -10v-29a10 10 0 0 0 -10 -10"></path></g></g><path d="M138 31h10"></path><path d="M 148 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">one or more with group = ( "a" | "b" ) , { "a" | "b" };</code>
+  
+  
+</section>
+<section>
+  <h4 id="one or more with repeater">one or more with repeater</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="244" height="92" viewBox="0 0 244 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M194 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g><path d="M98 31h0"></path><path d="M194 31h0"></path><path d="M98 31h10"></path><g><path d="M108 31h0"></path><path d="M184 31h0"></path><g class="terminal"><path d="M108 31h0"></path><path d="M136 31h0"></path><rect x="108" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="35">b</text></g><path d="M136 31h10"></path><path d="M146 31h10"></path><g class="terminal"><path d="M156 31h0"></path><path d="M184 31h0"></path><rect x="156" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="35">c</text></g></g><path d="M184 31h10"></path><path d="M108 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M108 61h0"></path><path d="M184 61h0"></path><g class="terminal"><path d="M108 61h0"></path><path d="M136 61h0"></path><rect x="108" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="65">e</text></g><path d="M136 61h10"></path><path d="M146 61h10"></path><g class="terminal"><path d="M156 61h0"></path><path d="M184 61h0"></path><rect x="156" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="65">d</text></g></g><path d="M184 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g></g><path d="M194 31h10"></path><path d="M 204 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">one or more with repeater = "a" , "b" , "c" , { "d" , "e" , "b" , "c" };</code>
+  
+  
+</section>
+<h1 id="mixingcommentsin">Mixing comments in</h1><section>
+  <h4 id="comment in choice with optional">comment in choice with optional</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="241" height="111" viewBox="0 0 241 111"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M201 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h121"></path></g><path d="M181 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h46.5"></path><path d="M134.5 50h46.5"></path><rect x="106.5" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="120.5" y="54">a</text></g><path d="M181 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M181 80h0"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80h10"></path><path d="M98 80h10"></path><g><path d="M108 80h0"></path><path d="M181 80h0"></path><text x="144.5" y="85" class="comment"> comment </text></g></g><path d="M181 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 201 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in choice with optional = [ "a" | "b" (*  comment  *) ];</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in one or more before">comment in one or more before</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="319" height="80" viewBox="0 0 319 80"><g transform="translate(.5 .5)"><path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M269 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78 40h0"></path><rect x="50" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="44">a</text></g><path d="M78 40h10"></path><path d="M88 40h10"></path><g><path d="M98 40h0"></path><path d="M171 40h0"></path><text x="134.5" y="45" class="comment"> comment </text></g><path d="M171 40h10"></path><g><path d="M181 40h0"></path><path d="M269 40h0"></path><path d="M181 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M201 20h48"></path></g><path d="M249 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M181 40h20"></path><g><path d="M201 40h0"></path><path d="M249 40h0"></path><path d="M201 40h10"></path><g class="terminal"><path d="M211 40h0"></path><path d="M239 40h0"></path><rect x="211" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="225" y="44">a</text></g><path d="M239 40h10"></path><path d="M211 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M211 60h28"></path></g><path d="M239 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M249 40h20"></path></g></g><path d="M269 40h10"></path><path d="M 279 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in one or more before = "a" (*  comment  *) , { "a" };</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in one or more in">comment in one or more in</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="319" height="80" viewBox="0 0 319 80"><g transform="translate(.5 .5)"><path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M269 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78 40h0"></path><rect x="50" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="44">a</text></g><path d="M78 40h10"></path><g><path d="M88 40h0"></path><path d="M269 40h0"></path><path d="M88 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108 20h141"></path></g><path d="M249 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88 40h20"></path><g><path d="M108 40h0"></path><path d="M249 40h0"></path><path d="M108 40h10"></path><g><path d="M118 40h0"></path><path d="M239 40h0"></path><g class="terminal"><path d="M118 40h0"></path><path d="M146 40h0"></path><rect x="118" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="132" y="44">a</text></g><path d="M146 40h10"></path><path d="M156 40h10"></path><g><path d="M166 40h0"></path><path d="M239 40h0"></path><text x="202.5" y="45" class="comment"> comment </text></g></g><path d="M239 40h10"></path><path d="M118 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M118 60h121"></path></g><path d="M239 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M249 40h20"></path></g></g><path d="M269 40h10"></path><path d="M 279 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in one or more in = "a" , { "a" (*  comment  *) };</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in one or more after">comment in one or more after</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="241" height="71" viewBox="0 0 241 71"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M191 31h0"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><path d="M50 31h10"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M60 51h28"></path></g><path d="M88 51a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M98 31h10"></path><path d="M108 31h10"></path><g><path d="M118 31h0"></path><path d="M191 31h0"></path><text x="154.5" y="36" class="comment"> comment </text></g></g><path d="M191 31h10"></path><path d="M 201 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in one or more after = "a" , { "a" } (*  comment  *);</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in one or more with repeater">comment in one or more with repeater</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="433" height="92" viewBox="0 0 433 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M383 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g class="terminal"><path d="M98 31h0"></path><path d="M126 31h0"></path><rect x="98" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="112" y="35">b</text></g><path d="M126 31h10"></path><path d="M136 31h10"></path><g><path d="M146 31h0"></path><path d="M219 31h0"></path><text x="182.5" y="36" class="comment"> comment </text></g><path d="M219 31h10"></path><path d="M229 31h10"></path><g><path d="M239 31h0"></path><path d="M383 31h0"></path><path d="M239 31h10"></path><g><path d="M249 31h48"></path><path d="M325 31h48"></path><g class="terminal"><path d="M297 31h0"></path><path d="M325 31h0"></path><rect x="297" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="311" y="35">c</text></g></g><path d="M373 31h10"></path><path d="M249 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M249 61h0"></path><path d="M373 61h0"></path><g class="terminal"><path d="M249 61h0"></path><path d="M277 61h0"></path><rect x="249" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="263" y="65">b</text></g><path d="M277 61h10"></path><path d="M287 61h10"></path><g class="terminal"><path d="M297 61h0"></path><path d="M325 61h0"></path><rect x="297" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="311" y="65">e</text></g><path d="M325 61h10"></path><path d="M335 61h10"></path><g class="terminal"><path d="M345 61h0"></path><path d="M373 61h0"></path><rect x="345" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="359" y="65">d</text></g></g><path d="M373 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g></g><path d="M383 31h10"></path><path d="M 393 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in one or more with repeater = "a" , "b" (*  comment  *) , "c" , { "d" , "e" , "b" , "c" };</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in nested choices with multiple optionals">comment in nested choices with multiple optionals</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="364" height="221" viewBox="0 0 364 221"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M324 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h244"></path></g><path d="M304 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h108"></path><path d="M196 50h108"></path><rect x="168" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="54">a</text></g><path d="M304 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M304 80h0"></path><g><path d="M60 80h0"></path><path d="M221 80h0"></path><path d="M60 80h20"></path><g><path d="M80 80h121"></path></g><path d="M201 80h20"></path><path d="M60 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g><path d="M80 100h0"></path><path d="M201 100h0"></path><g class="terminal"><path d="M80 100h0"></path><path d="M108 100h0"></path><rect x="80" y="89" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="104">b</text></g><path d="M108 100h10"></path><path d="M118 100h10"></path><g><path d="M128 100h0"></path><path d="M201 100h0"></path><text x="164.5" y="105" class="comment"> comment </text></g></g><path d="M201 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M60 80a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 130h46.5"></path><path d="M154.5 130h46.5"></path><rect x="126.5" y="119" width="28" height="22" rx="10" ry="10"></rect><text x="140.5" y="134">c</text></g><path d="M201 130a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M221 80h10"></path><g><path d="M231 80h0"></path><path d="M304 80h0"></path><text x="267.5" y="85" class="comment"> comment </text></g></g><path d="M304 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v110a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 160h108"></path><path d="M196 160h108"></path><rect x="168" y="149" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="164">d</text></g><path d="M304 160a10 10 0 0 0 10 -10v-110a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v140a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 190h108"></path><path d="M196 190h108"></path><rect x="168" y="179" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="194">e</text></g><path d="M304 190a10 10 0 0 0 10 -10v-140a10 10 0 0 1 10 -10"></path></g><path d="M 324 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in nested choices with multiple optionals = "a" | [ "b" (*  comment  *) | "c" ] (*  comment  *) | [ "d" | "e" ];</code>
+  
+  
+</section>
+<section>
+  <h4 id="comment in one or more with repeater after">comment in one or more with repeater after</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="337" height="92" viewBox="0 0 337 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M287 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g><path d="M98 31h0"></path><path d="M194 31h0"></path><path d="M98 31h10"></path><g><path d="M108 31h0"></path><path d="M184 31h0"></path><g class="terminal"><path d="M108 31h0"></path><path d="M136 31h0"></path><rect x="108" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="35">b</text></g><path d="M136 31h10"></path><path d="M146 31h10"></path><g class="terminal"><path d="M156 31h0"></path><path d="M184 31h0"></path><rect x="156" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="35">c</text></g></g><path d="M184 31h10"></path><path d="M108 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M108 61h0"></path><path d="M184 61h0"></path><g class="terminal"><path d="M108 61h0"></path><path d="M136 61h0"></path><rect x="108" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="65">e</text></g><path d="M136 61h10"></path><path d="M146 61h10"></path><g class="terminal"><path d="M156 61h0"></path><path d="M184 61h0"></path><rect x="156" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="65">d</text></g></g><path d="M184 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M194 31h10"></path><path d="M204 31h10"></path><g><path d="M214 31h0"></path><path d="M287 31h0"></path><text x="250.5" y="36" class="comment"> comment </text></g></g><path d="M287 31h10"></path><path d="M 297 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+
+  </div>
+  <code class="ebnf">comment in one or more with repeater after = "a" , "b" , "c" , { "d" , "e" , "b" , "c" } (*  comment  *);</code>
+  
+  
+</section>
+
+  </article>
+</body>
+</html>

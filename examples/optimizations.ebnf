@@ -1,0 +1,33 @@
+(*
+
+  Optimizations
+  =============
+
+  This file will demonstrate all the diagram optimizations
+
+*)
+
+choice with optional = [ "a" | "b" ];
+nested choices with optional = "a" | [ "b" | "c"];
+nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
+nested choices = "a" | ( "b" | "c" );
+choice with one or more= "a" | { "b" };
+one or more = "a", { "a" };
+one or more with group = ( "a" | "b"), { "a" | "b" };
+one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
+
+(*
+  Mixing comments in
+  ==================
+*)
+
+comment in choice with optional = [ "a" | "b" (* comment *) ];
+comment in one or more before = "a" (* comment *), { "a" };
+comment in one or more in = "a", { "a" (* comment *) };
+comment in one or more after = "a", { "a" } (* comment *);
+comment in one or more with repeater = "a", "b" (* comment *), "c", { "d", "e", "b", "c" };
+comment in nested choices with multiple optionals = "a" | [ "b" (* comment *)
+  | "c"] (* comment *) | [ "d" | "e" ];
+
+comment in one or more with repeater after =
+  "a", "b", "c", { "d", "e", "b", "c" } (* comment *);

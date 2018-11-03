@@ -1,10 +1,11 @@
 const skipFirst = list =>
   [
-    list.some(e => e === "skip") && { skip: true },
-    ...list.filter(e => e !== "skip")
+    list.some(e => e === "skip" || e.skip) && { skip: true },
+    ...list.filter(e => e !== "skip" && !e.skip)
   ].filter(Boolean);
 
-const ungroup = elem => (elem.group ? ungroup(elem.group) : elem);
+const ungroup = elem =>
+  elem.group && !elem.comment ? ungroup(elem.group) : elem;
 
 const equalElements = (first, second) =>
   JSON.stringify(ungroup(first)) === JSON.stringify(ungroup(second));
@@ -22,7 +23,7 @@ const optimizeProduction = production => {
       choice: skipFirst(
         production.choice
           .map(item => {
-            const optimizedItem = optimizeProduction(item);
+            const optimizedItem = ungroup(optimizeProduction(item));
             if (optimizedItem.repetition && optimizedItem.skippable) {
               return [
                 "skip",
@@ -33,6 +34,8 @@ const optimizeProduction = production => {
               ];
             } else if (optimizedItem.optional) {
               return ["skip", optimizedItem.optional];
+            } else if (optimizedItem.choice) {
+              return optimizedItem.choice;
             } else {
               return [optimizedItem];
             }

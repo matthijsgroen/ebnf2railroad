@@ -3,7 +3,32 @@ const { parser } = require("../src/ebnf-parser");
 const { optimizeProduction } = require("../src/structure-optimizer");
 
 describe("AST structure optimizer", () => {
-  it("does not mutate the input AST");
+  it("does not mutate the input AST", () => {
+    const text = "foo = a | [ b | c ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    const inputAst = {
+      choice: [
+        { nonTerminal: "a" },
+        {
+          optional: {
+            choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+          }
+        }
+      ]
+    };
+    expect(inputDefinition).to.eql(inputAst);
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      choice: [
+        { skip: true },
+        { nonTerminal: "a" },
+        { nonTerminal: "b" },
+        { nonTerminal: "c" }
+      ]
+    });
+    expect(inputDefinition).to.eql(inputAst);
+  });
 
   it("changes `a | [ b ]` in ast to choice with skip", () => {
     const text = "foo = a | [ b ];";
@@ -35,6 +60,53 @@ describe("AST structure optimizer", () => {
         { nonTerminal: "a" },
         { repetition: { nonTerminal: "b" }, skippable: false }
       ]
+    });
+  });
+
+  it("merges multiple choices together (using optional)", () => {
+    const text = "foo = a | [ b | c ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    const inputAst = {
+      choice: [
+        { nonTerminal: "a" },
+        {
+          optional: {
+            choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+          }
+        }
+      ]
+    };
+    expect(inputDefinition).to.eql(inputAst);
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      choice: [
+        { skip: true },
+        { nonTerminal: "a" },
+        { nonTerminal: "b" },
+        { nonTerminal: "c" }
+      ]
+    });
+  });
+
+  it("merges multiple choices together (using group)", () => {
+    const text = "foo = a | ( b | c );";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    const inputAst = {
+      choice: [
+        { nonTerminal: "a" },
+        {
+          group: {
+            choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+          }
+        }
+      ]
+    };
+    expect(inputDefinition).to.eql(inputAst);
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }, { nonTerminal: "c" }]
     });
   });
 
