@@ -31,3 +31,10 @@ comment in nested choices with multiple optionals = "a" | [ "b" (* comment *)
 
 comment in one or more with repeater after =
   "a", "b", "c", { "d", "e", "b", "c" } (* comment *);
+
+(*
+  html dangerous content
+  ======================
+*)
+
+html = "<h1>Danger & Risks</h1>" (* <h1> can be everywhere </h1> *);

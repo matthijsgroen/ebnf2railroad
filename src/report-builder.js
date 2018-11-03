@@ -19,43 +19,59 @@ const {
   commentTemplate
 } = require("./report-html-template");
 
+const sanitize = str =>
+  str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
 const productionToEBNF = production => {
   if (production.identifier) {
-    return `${production.identifier} = ${productionToEBNF(
+    return `<span class="ebnf-identifier">${
+      production.identifier
+    }</span> = ${productionToEBNF(
       production.definition
-    )};`;
+    )}<span class="ebnf-end">;</span>`;
   }
   if (production.terminal) {
     return production.terminal.indexOf('"') > -1
-      ? `'${production.terminal}'`
-      : `"${production.terminal}"`;
+      ? `<span class="ebnf-terminal">'${sanitize(production.terminal)}'<span>`
+      : `<span class="ebnf-terminal">"${sanitize(production.terminal)}"</span>`;
   }
   if (production.nonTerminal) {
-    return `<a href="#${production.nonTerminal}">${production.nonTerminal}</a>`;
+    return `<a class="ebnf-non-terminal" href="#${production.nonTerminal}">${
+      production.nonTerminal
+    }</a>`;
   }
   if (production.choice) {
-    return production.choice.map(productionToEBNF).join(" | ");
+    return production.choice.map(productionToEBNF).join(" <wbr />| ");
   }
   if (production.sequence) {
     return production.sequence.map(productionToEBNF).join(" , ");
   }
   if (production.specialSequence) {
-    return `? ${production.specialSequence} ?`;
+    return `<span class="ebnf-special-sequence">? ${
+      production.specialSequence
+    } ?</span>`;
   }
   if (production.repetition && production.amount !== undefined) {
-    return `${production.amount} * ${productionToEBNF(production.repetition)}`;
+    return `<span class="ebnf-multiplier">${
+      production.amount
+    } *</span> ${productionToEBNF(production.repetition)}`;
   }
   if (production.repetition) {
-    return `{ ${productionToEBNF(production.repetition)} }`;
+    return `<wbr />{ ${productionToEBNF(production.repetition)} }`;
   }
   if (production.comment) {
-    return `${productionToEBNF(production.group)} (* ${production.comment} *)`;
+    return `${productionToEBNF(
+      production.group
+    )} <span class="ebnf-comment">(* ${sanitize(production.comment)} *)</span>`;
   }
   if (production.group) {
-    return `( ${productionToEBNF(production.group)} )`;
+    return `<wbr />( ${productionToEBNF(production.group)} )`;
   }
   if (production.optional) {
-    return `[ ${productionToEBNF(production.optional)} ]`;
+    return `<wbr />[ ${productionToEBNF(production.optional)} ]`;
   }
   if (production.exceptNonTerminal) {
     return `${productionToEBNF({

@@ -18,12 +18,6 @@ const documentTemplate = ({ title, contents }) =>
     }
     h1 { font-size: 2em; }
     h2 { font-size: 1.5em; }
-    code.ebnf {
-      padding: 1em 1em 1em 3em;
-      text-indent: -2em;
-      background: rgb(255, 246, 209);
-      display: inline-block;
-    }
     a,
     a:visited,
     a:active {
@@ -35,6 +29,31 @@ const documentTemplate = ({ title, contents }) =>
 		section h4 {
 			margin-bottom: 0;
 		}
+
+    code.ebnf {
+      padding: 1em 1em 1em 3em;
+      text-indent: -2em;
+      background: rgb(255, 246, 209);
+      font-weight: bold;
+      color: #777;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .ebnf-identifier {
+      color: #990099;
+    }
+    .ebnf-terminal {
+      color: #009900;
+    }
+    .ebnf-non-terminal {
+      font-weight: normal;
+    }
+    .ebnf-comment {
+      font-weight: normal;
+      font-style: italic;
+      color: #999;
+    }
+
     svg.railroad-diagram path {
         stroke-width: 3;
         stroke: black;
