@@ -130,23 +130,23 @@ const documentTemplate = ({
 <body>
   <nav>
     <h3>Navigation</h3>
-    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio" checked="checked">
-    <label for="nav-as-specified">As specified</label>
+    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio" checked="checked">
+    <label for="nav-hierarchical">Hierarchical</label>
     <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
     <label for="nav-alphabetical">Alphabetical</label>
-    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio">
-    <label for="nav-hierarchical">Hierarchical</label>
+    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio">
+    <label for="nav-as-specified">As specified</label>
 
-    <ul class="nav-as-specified">
-    ${specifiedToc}
+    <ul class="nav-hierarchical">
+    ${hierarchicalToc}
     </ul>
 
     <ul class="nav-alphabetical">
     ${alphabeticalToc}
     </ul>
 
-    <ul class="nav-hierarchical">
-    ${hierarchicalToc}
+    <ul class="nav-as-specified">
+    ${specifiedToc}
     </ul>
   </nav>
   <article>

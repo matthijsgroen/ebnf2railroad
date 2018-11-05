@@ -117,23 +117,23 @@
 <body>
   <nav>
     <h3>Navigation</h3>
-    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio" checked="checked">
-    <label for="nav-as-specified">As specified</label>
+    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio" checked="checked">
+    <label for="nav-hierarchical">Hierarchical</label>
     <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
     <label for="nav-alphabetical">Alphabetical</label>
-    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio">
-    <label for="nav-hierarchical">Hierarchical</label>
+    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio">
+    <label for="nav-as-specified">As specified</label>
 
-    <ul class="nav-as-specified">
-    <li><a href="#json">json</a> </li><li><a href="#object">object</a> </li><li><a href="#array">array</a> </li><li><a href="#value">value</a> </li><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li>
+    <ul class="nav-hierarchical">
+    <li><a href="#json">json</a> </li><ul><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> ↖︎</li><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> ↖︎</li></ul></ul></ul><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> ↖︎</li></ul><li><a href="#array">array</a> ↖︎</li></ul></ul></ul>
     </ul>
 
     <ul class="nav-alphabetical">
     <li><a href="#array">array</a> </li><li><a href="#json">json</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li>
     </ul>
 
-    <ul class="nav-hierarchical">
-    <li><a href="#json">json</a> </li><ul><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> ↖︎</li><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> ↖︎</li></ul></ul></ul><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> ↖︎</li></ul><li><a href="#array">array</a> ↖︎</li></ul></ul></ul>
+    <ul class="nav-as-specified">
+    <li><a href="#json">json</a> </li><li><a href="#object">object</a> </li><li><a href="#array">array</a> </li><li><a href="#value">value</a> </li><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li>
     </ul>
   </nav>
   <article>
