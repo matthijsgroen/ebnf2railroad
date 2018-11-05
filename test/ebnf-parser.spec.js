@@ -83,11 +83,16 @@ describe("EBNF parser", () => {
     });
 
     it("supports choices", () => {
-      const text = 'foo = "a" | b;';
+      const text = 'foo = "a" | b ! c / "d";';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
-        choice: [{ terminal: "a" }, { nonTerminal: "b" }]
+        choice: [
+          { terminal: "a" },
+          { nonTerminal: "b" },
+          { nonTerminal: "c" },
+          { terminal: "d" }
+        ]
       });
     });
 
@@ -120,21 +125,26 @@ describe("EBNF parser", () => {
     });
 
     it("supports optionals", () => {
-      const text = 'foo = [ "a" ];';
+      const text = 'foo = [ "a" ], (/ "b" /);';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
-        optional: { terminal: "a" }
+        sequence: [
+          { optional: { terminal: "a" } },
+          { optional: { terminal: "b" } }
+        ]
       });
     });
 
     it("supports repetition", () => {
-      const text = 'foo = { "a" };';
+      const text = 'foo = { "a" } / (: "b" :);';
       const result = parser.parse(text);
       const firstDefinition = result[0].definition;
       expect(firstDefinition).to.eql({
-        repetition: { terminal: "a" },
-        skippable: true
+        choice: [
+          { repetition: { terminal: "a" }, skippable: true },
+          { repetition: { terminal: "b" }, skippable: true }
+        ]
       });
     });
 
