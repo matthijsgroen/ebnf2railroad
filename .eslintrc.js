@@ -1,9 +1,11 @@
 module.exports = {
   env: { node: true },
   parserOptions: { ecmaVersion: 2018 },
-  plugins: ["prettier"],
+  plugins: ["prettier", "mocha"],
   extends: ["eslint:recommended"],
   rules: {
-    "prettier/prettier": ["error"]
+    "arrow-body-style": ["error", "as-needed"],
+    "prettier/prettier": "error",
+    "mocha/no-exclusive-tests": "error"
   }
 };
