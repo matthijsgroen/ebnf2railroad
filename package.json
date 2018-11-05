@@ -23,7 +23,8 @@
   "scripts": {
     "build-parser": "jison src/ebnf.jison -o src/ebnf-parser.js",
     "test": "mocha",
-    "lint": "eslint src/ test/"
+    "lint": "eslint src/ test/",
+    "update-examples": "bin/ebnf2railroad.js examples/json.ebnf --title JSON; bin/ebnf2railroad.js examples/ebnf.ebnf --title EBNF; bin/ebnf2railroad.js examples/optimizations.ebnf"
   },
   "private": false,
   "dependencies": {

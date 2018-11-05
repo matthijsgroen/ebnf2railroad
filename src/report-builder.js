@@ -36,7 +36,7 @@ const productionToEBNF = production => {
   }
   if (production.terminal) {
     return production.terminal.indexOf('"') > -1
-      ? `<span class="ebnf-terminal">'${sanitize(production.terminal)}'<span>`
+      ? `<span class="ebnf-terminal">'${sanitize(production.terminal)}'</span>`
       : `<span class="ebnf-terminal">"${sanitize(production.terminal)}"</span>`;
   }
   if (production.nonTerminal) {
