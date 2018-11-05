@@ -38,6 +38,10 @@ Check the examples folder for an example input file and the generated result pag
 
 The code is licensed under MIT (see LICENSE file).
 
+## Contributing
+
+Thanks for your interest in contributing! There are many ways to contribute to this project. [Get started here](CONTRIBUTING.md)
+
 ## Acknowledgements
 
 - All railroad diagrams are generated through: https://github.com/tabatkins/railroad-diagrams
