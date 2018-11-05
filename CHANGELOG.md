@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Closing tag for Terminals with single quotes
 
+### Added
+- Support for alternative characters: `|` -> `/`, `!`, `[ ]` -> `(/ /)`,
+  `{ }` -> `(: :)`
+
 ## [1.4.0] - 2018-11-03
 ### Added
 - Optimize EBNF syntax as `[ a | b ]` in diagram as single choice with

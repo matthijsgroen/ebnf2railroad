@@ -7,19 +7,26 @@
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
 [a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
 [0-9]+                   { return 'DIGIT'; }
+"(/"                     { return '['; } // alternative start-option-symbol
+"/)"                     { return ']'; } // alternative end-option-symbol
+"(:"                     { return '{'; } // alternative start-repeat-symbol
+":)"                     { return '}'; } // alternative end-repeat-symbol
+
 "*"                      { return '*'; } // repetition
 "="                      { return '='; } // declaration
-";"                      { return ';'; } // end of statement
-"."                      { return ';'; } // end of statement
-","                      { return ','; } // sequence
-"|"                      { return '|'; } // alternation
+";"                      { return ';'; } // terminator-symbol
+"."                      { return ';'; } // alternative terminator-symbol
+","                      { return ','; } // concatenate-symbol
+"|"                      { return '|'; } // definition-seperator-symbol
+"/"                      { return '|'; } // alternative definition-seperator-symbol
+"!"                      { return '|'; } // alternative definition-seperator-symbol
 "-"                      { return '-'; } // exclusion
 "{"                      { return '{'; } // zero or more
 "}"                      { return '}'; }
-"("                      { return '('; } // group
-")"                      { return ')'; }
-"["                      { return '['; } // optional
-"]"                      { return ']'; }
+"("                      { return '('; } // start-group-symbol
+")"                      { return ')'; } // end-group-symbol
+"["                      { return '['; } // start-option-symbol
+"]"                      { return ']'; } // end-option-symbol
 \"[^"]+\"                { return 'STRING'; }
 \'[^']+\'                { return 'STRING'; }
 "?"[^\?]+"?"             { return 'SEQUENCE'; }
