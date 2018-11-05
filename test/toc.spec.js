@@ -16,6 +16,9 @@ describe("table of contents", () => {
     root = statement | comment;
     condition = "if", condition, "then", statement, { statement };
     lowercase letter = ? letters ?;
+    second root = 'foo', branch | leaf;
+    branch = leaf | second root;
+    leaf = "leaf";
   `);
 
   const ast = parser.parse(ebnfDefinition);
@@ -24,10 +27,13 @@ describe("table of contents", () => {
     it("creates a list of links in alphabetical order", () => {
       const result = createAlphabeticalToc(ast);
       expect(result).to.eql([
+        { name: "branch" },
         { name: "comment" },
         { name: "condition" },
+        { name: "leaf" },
         { name: "lowercase letter" },
         { name: "root" },
+        { name: "second root" },
         { name: "statement" },
         { name: "string" }
       ]);
@@ -62,6 +68,19 @@ describe("table of contents", () => {
               children: [{ name: "lowercase letter" }]
             }
           ]
+        },
+        {
+          name: "second root",
+          children: [
+            {
+              name: "branch",
+              children: [
+                { name: "leaf" },
+                { name: "second root", recursive: true }
+              ]
+            },
+            { name: "leaf" }
+          ]
         }
       ]);
     });
@@ -76,7 +95,10 @@ describe("table of contents", () => {
         { name: "comment" },
         { name: "root" },
         { name: "condition" },
-        { name: "lowercase letter" }
+        { name: "lowercase letter" },
+        { name: "second root" },
+        { name: "branch" },
+        { name: "leaf" }
       ]);
     });
   });

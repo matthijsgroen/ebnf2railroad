@@ -21,6 +21,11 @@ const {
   searchReferencesFromIdentifier,
   searchReferencesToIdentifier
 } = require("./references");
+const {
+  createAlphabeticalToc,
+  createStructuralToc,
+  createToc
+} = require("./toc");
 
 const dasherize = str => str.replace(/\s+/g, "-");
 const sanitize = str =>
@@ -179,6 +184,18 @@ const productionToDiagram = production => {
 
 const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 
+const createTocStructure = tocData =>
+  tocData
+    .map(tocNode => [
+      `<li><a href="#${dasherize(tocNode.name)}">${tocNode.name}</a> ${
+        tocNode.recursive ? "↖︎" : ""
+      }</li>`,
+      tocNode.children && `<ul>${createTocStructure(tocNode.children)}</ul>`
+    ])
+    .filter(Boolean)
+    .reduce((acc, elem) => acc.concat(elem), [])
+    .join("");
+
 const createDocumentation = (ast, options) => {
   const contents = ast
     .map(production => {
@@ -203,9 +220,16 @@ const createDocumentation = (ast, options) => {
     })
     .join("");
 
+  const specifiedToc = createTocStructure(createToc(ast));
+  const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
+  const hierarchicalToc = createTocStructure(createStructuralToc(ast));
+
   return documentTemplate({
     title: options.title,
-    contents
+    contents,
+    specifiedToc,
+    alphabeticalToc,
+    hierarchicalToc
   });
 };
 

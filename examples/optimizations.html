@@ -6,6 +6,7 @@
   <meta name="generator" content="ebnf2railroad" />
   <title>examples/optimizations</title>
   <style type="text/css">
+    /* Text styling */
     body {
       font: normal 12px Verdana, sans-serif;
       color: #0F0C00;
@@ -25,6 +26,7 @@
 			margin-bottom: 0;
 		}
 
+    /* EBNF text representation styling */
     code.ebnf {
       padding: 1em 1em 1em 3em;
       text-indent: -2em;
@@ -49,6 +51,7 @@
       color: #999;
     }
 
+    /* EBNF diagram representation styling */
     svg.railroad-diagram path {
         stroke-width: 3;
         stroke: black;
@@ -82,6 +85,11 @@
     svg.railroad-diagram rect {
         stroke-width: 3;
         stroke: black;
+    }
+    svg.railroad-diagram g.non-terminal rect {
+        fill: hsl(120,100%,90%);
+    }
+    svg.railroad-diagram g.terminal rect {
         fill: hsl(120,100%,90%);
     }
     svg.railroad-diagram path.diagram-text {
@@ -93,9 +101,41 @@
     svg.railroad-diagram g.diagram-text:hover path.diagram-text {
         fill: #eee;
     }
+
+    /* Table of contents styling */
+
+    nav input { display: none; }
+    nav input + label { text-decoration: underline; cursor: pointer; }
+    nav input:checked + label { font-weight: bold; }
+
+    nav > ul { display: none; }
+    nav #nav-as-specified:checked ~ ul.nav-as-specified { display: block; }
+    nav #nav-alphabetical:checked ~ ul.nav-alphabetical { display: block; }
+    nav #nav-hierarchical:checked ~ ul.nav-hierarchical { display: block; }
   </style>
 </head>
 <body>
+  <nav>
+    <h3>Navigation</h3>
+    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio" checked="checked">
+    <label for="nav-as-specified">As specified</label>
+    <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
+    <label for="nav-alphabetical">Alphabetical</label>
+    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio">
+    <label for="nav-hierarchical">Hierarchical</label>
+
+    <ul class="nav-as-specified">
+    <li><a href="#optimizations">optimizations</a> </li><li><a href="#optimized-choices">optimized choices</a> </li><li><a href="#optimized-one-or-more">optimized one or more</a> </li><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#comments">comments</a> </li><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li><li><a href="#html">html</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><li><a href="#reference">reference</a> </li><li><a href="#small-parts">small parts</a> </li><li><a href="#big-parts">big parts</a> </li><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#alternative-main-characters">alternative main characters</a> </li>
+    </ul>
+
+    <ul class="nav-alphabetical">
+    <li><a href="#alternative-main-characters">alternative main characters</a> </li><li><a href="#big-parts">big parts</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li><li><a href="#comments">comments</a> </li><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#html">html</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#optimizations">optimizations</a> </li><li><a href="#optimized-choices">optimized choices</a> </li><li><a href="#optimized-one-or-more">optimized one or more</a> </li><li><a href="#reference">reference</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><li><a href="#small-parts">small parts</a> </li>
+    </ul>
+
+    <ul class="nav-hierarchical">
+    <li><a href="#optimizations">optimizations</a> </li><ul><li><a href="#optimized-choices">optimized choices</a> </li><ul><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li></ul><li><a href="#optimized-one-or-more">optimized one or more</a> </li><ul><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#optimizations">optimizations</a> ↖︎</li></ul></ul><li><a href="#comments">comments</a> </li><ul><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li></ul><li><a href="#html">html</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><ul><li><a href="#reference">reference</a> </li><ul><li><a href="#small-parts">small parts</a> </li><li><a href="#big-parts">big parts</a> </li></ul></ul><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#alternative-main-characters">alternative main characters</a> </li>
+    </ul>
+  </nav>
   <article>
     <h1 id="optimizations">Optimizations</h1>
 <p>This file will demonstrate all the diagram optimizations and markup.</p>
@@ -137,244 +177,294 @@ really large screens, because that is really, really annoying to read.</li></ul>
 <li>clear nice readable text. (nice font!)</li>
 <li>linking to different sections</li>
 </ol><section>
+  <h4 id="optimizations">optimizations</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="308" height="92" viewBox="0 0 308 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M268 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h16"></path><path d="M232 31h16"></path><rect x="76" y="20" width="156" height="22"></rect><a xlink:href="#optimized-choices"><text x="154" y="35">optimized choices</text></a></g><path d="M248 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h0"></path><path d="M248 61h0"></path><rect x="60" y="50" width="188" height="22"></rect><a xlink:href="#optimized-one-or-more"><text x="154" y="65">optimized one or more</text></a></g><path d="M248 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 268 31 h 20 m 0 -10 v 20"></path></g></svg>
+  </div>
+  <code class="ebnf"><span class="ebnf-identifier">optimizations</span> = <a class="ebnf-non-terminal" href="#optimized-choices">optimized choices</a> <wbr />| <a class="ebnf-non-terminal" href="#optimized-one-or-more">optimized one or more</a><span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>optimizations</strong>:<p>
+<ul>
+<li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
+  <p><strong>optimizations</strong> is referencing:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li><li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="optimized-choices">optimized choices</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="444" height="182" viewBox="0 0 444 182"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M404 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h72"></path><path d="M312 31h72"></path><rect x="132" y="20" width="180" height="22"></rect><a xlink:href="#choice-with-optional"><text x="222" y="35">choice with optional</text></a></g><path d="M384 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h40"></path><path d="M344 61h40"></path><rect x="100" y="50" width="244" height="22"></rect><a xlink:href="#nested-choices-with-optional"><text x="222" y="65">nested choices with optional</text></a></g><path d="M384 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 91h0"></path><path d="M384 91h0"></path><rect x="60" y="80" width="324" height="22"></rect><a xlink:href="#nested-choices-with-multiple-optionals"><text x="222" y="95">nested choices with multiple optionals</text></a></g><path d="M384 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 121h96"></path><path d="M288 121h96"></path><rect x="156" y="110" width="132" height="22"></rect><a xlink:href="#nested-choices"><text x="222" y="125">nested choices</text></a></g><path d="M384 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 151h60"></path><path d="M324 151h60"></path><rect x="120" y="140" width="204" height="22"></rect><a xlink:href="#choice-with-one-or-more"><text x="222" y="155">choice with one or more</text></a></g><path d="M384 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path></g><path d="M 404 31 h 20 m 0 -10 v 20"></path></g></svg>
+  </div>
+  <code class="ebnf"><span class="ebnf-identifier">optimized choices</span> = <a class="ebnf-non-terminal" href="#choice-with-optional">choice with optional</a> <wbr />| <a class="ebnf-non-terminal" href="#nested-choices-with-optional">nested choices with optional</a> <wbr />| <a class="ebnf-non-terminal" href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> <wbr />| <a class="ebnf-non-terminal" href="#nested-choices">nested choices</a> <wbr />| <a class="ebnf-non-terminal" href="#choice-with-one-or-more">choice with one or more</a><span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>optimized choices</strong>:<p>
+<ul>
+<li><a href="#optimizations">optimizations</a></li>
+</ul>
+  <p><strong>optimized choices</strong> is referencing:<p>
+<ul>
+<li><a href="#choice-with-optional">choice with optional</a></li><li><a href="#nested-choices-with-optional">nested choices with optional</a></li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a></li><li><a href="#nested-choices">nested choices</a></li><li><a href="#choice-with-one-or-more">choice with one or more</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="optimized-one-or-more">optimized one or more</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="484" height="152" viewBox="0 0 484 152"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M444 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h80"></path><path d="M344 31h80"></path><rect x="140" y="20" width="204" height="22"></rect><a xlink:href="#choice-with-one-or-more"><text x="242" y="35">choice with one or more</text></a></g><path d="M424 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h128"></path><path d="M296 61h128"></path><rect x="188" y="50" width="108" height="22"></rect><a xlink:href="#one-or-more"><text x="242" y="65">one or more</text></a></g><path d="M424 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 91h84"></path><path d="M340 91h84"></path><rect x="144" y="80" width="196" height="22"></rect><a xlink:href="#one-or-more-with-group"><text x="242" y="95">one or more with group</text></a></g><path d="M424 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g><path d="M60 121h0"></path><path d="M424 121h0"></path><g class="non-terminal"><path d="M60 121h0"></path><path d="M280 121h0"></path><rect x="60" y="110" width="220" height="22"></rect><a xlink:href="#one-or-more-with-repeater"><text x="170" y="125">one or more with repeater</text></a></g><path d="M280 121h10"></path><path d="M290 121h10"></path><g class="non-terminal"><path d="M300 121h0"></path><path d="M424 121h0"></path><rect x="300" y="110" width="124" height="22"></rect><a xlink:href="#optimizations"><text x="362" y="125">optimizations</text></a></g></g><path d="M424 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path></g><path d="M 444 31 h 20 m 0 -10 v 20"></path></g></svg>
+  </div>
+  <code class="ebnf"><span class="ebnf-identifier">optimized one or more</span> = <a class="ebnf-non-terminal" href="#choice-with-one-or-more">choice with one or more</a> <wbr />| <a class="ebnf-non-terminal" href="#one-or-more">one or more</a> <wbr />| <a class="ebnf-non-terminal" href="#one-or-more-with-group">one or more with group</a> <wbr />| <a class="ebnf-non-terminal" href="#one-or-more-with-repeater">one or more with repeater</a> , <a class="ebnf-non-terminal" href="#optimizations">optimizations</a><span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>optimized one or more</strong>:<p>
+<ul>
+<li><a href="#optimizations">optimizations</a></li>
+</ul>
+  <p><strong>optimized one or more</strong> is referencing:<p>
+<ul>
+<li><a href="#choice-with-one-or-more">choice with one or more</a></li><li><a href="#one-or-more">one or more</a></li><li><a href="#one-or-more-with-group">one or more with group</a></li><li><a href="#one-or-more-with-repeater">one or more with repeater</a></li><li><a href="#optimizations">optimizations</a></li>
+</ul>
+</section>
+<section>
   <h4 id="choice-with-optional">choice with optional</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="148" height="111" viewBox="0 0 148 111"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">choice with optional</span> = <wbr />[ <span class="ebnf-terminal">"a"</span> <wbr />| <span class="ebnf-terminal">"b"</span> ]<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>choice with optional</strong>:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li>
+</ul>
 </section>
 <section>
   <h4 id="nested-choices-with-optional">nested choices with optional</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="148" height="141" viewBox="0 0 148 141"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v60a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 110h0"></path><path d="M88 110h0"></path><rect x="60" y="99" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="114">c</text></g><path d="M88 110a10 10 0 0 0 10 -10v-60a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">nested choices with optional</span> = <span class="ebnf-terminal">"a"</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"b"</span> <wbr />| <span class="ebnf-terminal">"c"</span> ]<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>nested choices with optional</strong>:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li>
+</ul>
 </section>
 <section>
   <h4 id="nested-choices-with-multiple-optionals">nested choices with multiple optionals</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="148" height="201" viewBox="0 0 148 201"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M108 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h28"></path></g><path d="M88 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h0"></path><path d="M88 50h0"></path><rect x="60" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="54">a</text></g><path d="M88 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v60a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 110h0"></path><path d="M88 110h0"></path><rect x="60" y="99" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="114">c</text></g><path d="M88 110a10 10 0 0 0 10 -10v-60a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v90a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 140h0"></path><path d="M88 140h0"></path><rect x="60" y="129" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="144">d</text></g><path d="M88 140a10 10 0 0 0 10 -10v-90a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v120a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 170h0"></path><path d="M88 170h0"></path><rect x="60" y="159" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="174">e</text></g><path d="M88 170a10 10 0 0 0 10 -10v-120a10 10 0 0 1 10 -10"></path></g><path d="M 108 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">nested choices with multiple optionals</span> = <span class="ebnf-terminal">"a"</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"b"</span> <wbr />| <span class="ebnf-terminal">"c"</span> ] <wbr />| <wbr />[ <span class="ebnf-terminal">"d"</span> <wbr />| <span class="ebnf-terminal">"e"</span> ]<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>nested choices with multiple optionals</strong>:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li>
+</ul>
 </section>
 <section>
   <h4 id="nested-choices">nested choices</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="148" height="122" viewBox="0 0 148 122"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M108 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h0"></path><path d="M88 61h0"></path><rect x="60" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="65">b</text></g><path d="M88 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 91h0"></path><path d="M88 91h0"></path><rect x="60" y="80" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="95">c</text></g><path d="M88 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path></g><path d="M 108 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">nested choices</span> = <span class="ebnf-terminal">"a"</span> <wbr />| <wbr />( <span class="ebnf-terminal">"b"</span> <wbr />| <span class="ebnf-terminal">"c"</span> )<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>nested choices</strong>:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li>
+</ul>
 </section>
 <section>
   <h4 id="choice-with-one-or-more">choice with one or more</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="168" height="120" viewBox="0 0 168 120"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M128 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h48"></path></g><path d="M108 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h10"></path><path d="M98 50h10"></path><rect x="70" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="84" y="54">a</text></g><path d="M108 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M108 80h0"></path><path d="M60 80h10"></path><g class="terminal"><path d="M70 80h0"></path><path d="M98 80h0"></path><rect x="70" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="84" y="84">b</text></g><path d="M98 80h10"></path><path d="M70 80a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M70 100h28"></path></g><path d="M98 100a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M108 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 128 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">choice with one or more</span> = <span class="ebnf-terminal">"a"</span> <wbr />| <wbr />{ <span class="ebnf-terminal">"b"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>choice with one or more</strong>:<p>
+<ul>
+<li><a href="#optimized-choices">optimized choices</a></li><li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
 </section>
 <section>
   <h4 id="one-or-more">one or more</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="148" height="71" viewBox="0 0 148 71"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><path d="M50 31h10"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M60 51h28"></path></g><path d="M88 51a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g></g><path d="M98 31h10"></path><path d="M 108 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">one or more</span> = <span class="ebnf-terminal">"a"</span> , <wbr />{ <span class="ebnf-terminal">"a"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>one or more</strong>:<p>
+<ul>
+<li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
 </section>
 <section>
   <h4 id="one-or-more-with-group">one or more with group</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="188" height="100" viewBox="0 0 188 100"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M138 31h0"></path><g><path d="M50 31h0"></path><path d="M138 31h0"></path><path d="M50 31h10"></path><g><path d="M60 31h0"></path><path d="M128 31h0"></path><path d="M60 31h20"></path><g class="terminal"><path d="M80 31h0"></path><path d="M108 31h0"></path><rect x="80" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="35">a</text></g><path d="M108 31h20"></path><path d="M60 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 61h0"></path><path d="M108 61h0"></path><rect x="80" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="65">b</text></g><path d="M108 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M128 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v29a10 10 0 0 0 10 10"></path><g><path d="M60 80h68"></path></g><path d="M128 80a10 10 0 0 0 10 -10v-29a10 10 0 0 0 -10 -10"></path></g></g><path d="M138 31h10"></path><path d="M 148 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">one or more with group</span> = <wbr />( <span class="ebnf-terminal">"a"</span> <wbr />| <span class="ebnf-terminal">"b"</span> ) , <wbr />{ <span class="ebnf-terminal">"a"</span> <wbr />| <span class="ebnf-terminal">"b"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>one or more with group</strong>:<p>
+<ul>
+<li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
 </section>
 <section>
   <h4 id="one-or-more-with-repeater">one or more with repeater</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="244" height="92" viewBox="0 0 244 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M194 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g><path d="M98 31h0"></path><path d="M194 31h0"></path><path d="M98 31h10"></path><g><path d="M108 31h0"></path><path d="M184 31h0"></path><g class="terminal"><path d="M108 31h0"></path><path d="M136 31h0"></path><rect x="108" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="35">b</text></g><path d="M136 31h10"></path><path d="M146 31h10"></path><g class="terminal"><path d="M156 31h0"></path><path d="M184 31h0"></path><rect x="156" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="35">c</text></g></g><path d="M184 31h10"></path><path d="M108 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M108 61h0"></path><path d="M184 61h0"></path><g class="terminal"><path d="M108 61h0"></path><path d="M136 61h0"></path><rect x="108" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="65">e</text></g><path d="M136 61h10"></path><path d="M146 61h10"></path><g class="terminal"><path d="M156 61h0"></path><path d="M184 61h0"></path><rect x="156" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="65">d</text></g></g><path d="M184 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g></g><path d="M194 31h10"></path><path d="M 204 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">one or more with repeater</span> = <span class="ebnf-terminal">"a"</span> , <span class="ebnf-terminal">"b"</span> , <span class="ebnf-terminal">"c"</span> , <wbr />{ <span class="ebnf-terminal">"d"</span> , <span class="ebnf-terminal">"e"</span> , <span class="ebnf-terminal">"b"</span> , <span class="ebnf-terminal">"c"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>one or more with repeater</strong>:<p>
+<ul>
+<li><a href="#optimized-one-or-more">optimized one or more</a></li>
+</ul>
 </section>
 <h1 id="mixingcommentsin">Mixing comments in</h1><section>
+  <h4 id="comments">comments</h4>
+  <div class="diagram-container">
+  <svg class="railroad-diagram" width="532" height="242" viewBox="0 0 532 242"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M492 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h72"></path><path d="M400 31h72"></path><rect x="132" y="20" width="268" height="22"></rect><a xlink:href="#comment-in-choice-with-optional"><text x="266" y="35">comment in choice with optional</text></a></g><path d="M472 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h80"></path><path d="M392 61h80"></path><rect x="140" y="50" width="252" height="22"></rect><a xlink:href="#comment-in-one-or-more-before"><text x="266" y="65">comment in one or more before</text></a></g><path d="M472 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 91h96"></path><path d="M376 91h96"></path><rect x="156" y="80" width="220" height="22"></rect><a xlink:href="#comment-in-one-or-more-in"><text x="266" y="95">comment in one or more in</text></a></g><path d="M472 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 121h84"></path><path d="M388 121h84"></path><rect x="144" y="110" width="244" height="22"></rect><a xlink:href="#comment-in-one-or-more-after"><text x="266" y="125">comment in one or more after</text></a></g><path d="M472 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 151h52"></path><path d="M420 151h52"></path><rect x="112" y="140" width="308" height="22"></rect><a xlink:href="#comment-in-one-or-more-with-repeater"><text x="266" y="155">comment in one or more with repeater</text></a></g><path d="M472 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 181h0"></path><path d="M472 181h0"></path><rect x="60" y="170" width="412" height="22"></rect><a xlink:href="#comment-in-nested-choices-with-multiple-optionals"><text x="266" y="185">comment in nested choices with multiple optionals</text></a></g><path d="M472 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 211h28"></path><path d="M444 211h28"></path><rect x="88" y="200" width="356" height="22"></rect><a xlink:href="#comment-in-one-or-more-with-repeater-after"><text x="266" y="215">comment in one or more with repeater after</text></a></g><path d="M472 211a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path></g><path d="M 492 31 h 20 m 0 -10 v 20"></path></g></svg>
+  </div>
+  <code class="ebnf"><span class="ebnf-identifier">comments</span> = <a class="ebnf-non-terminal" href="#comment-in-choice-with-optional">comment in choice with optional</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-one-or-more-before">comment in one or more before</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-one-or-more-in">comment in one or more in</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-one-or-more-after">comment in one or more after</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> <wbr />| <a class="ebnf-non-terminal" href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a><span class="ebnf-end">;</span></code>
+  <p><strong>comments</strong> is referencing:<p>
+<ul>
+<li><a href="#comment-in-choice-with-optional">comment in choice with optional</a></li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a></li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a></li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a></li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a></li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a></li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a></li>
+</ul>
+</section>
+<section>
   <h4 id="comment-in-choice-with-optional">comment in choice with optional</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="241" height="111" viewBox="0 0 241 111"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M201 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h121"></path></g><path d="M181 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h46.5"></path><path d="M134.5 50h46.5"></path><rect x="106.5" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="120.5" y="54">a</text></g><path d="M181 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M181 80h0"></path><g class="terminal"><path d="M60 80h0"></path><path d="M88 80h0"></path><rect x="60" y="69" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="84">b</text></g><path d="M88 80h10"></path><path d="M98 80h10"></path><g><path d="M108 80h0"></path><path d="M181 80h0"></path><text x="144.5" y="85" class="comment"> comment </text></g></g><path d="M181 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M 201 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in choice with optional</span> = <wbr />[ <span class="ebnf-terminal">"a"</span> <wbr />| <span class="ebnf-terminal">"b"</span> <span class="ebnf-comment">(*  comment  *)</span> ]<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in choice with optional</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-one-or-more-before">comment in one or more before</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="319" height="80" viewBox="0 0 319 80"><g transform="translate(.5 .5)"><path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M269 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78 40h0"></path><rect x="50" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="44">a</text></g><path d="M78 40h10"></path><path d="M88 40h10"></path><g><path d="M98 40h0"></path><path d="M171 40h0"></path><text x="134.5" y="45" class="comment"> comment </text></g><path d="M171 40h10"></path><g><path d="M181 40h0"></path><path d="M269 40h0"></path><path d="M181 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M201 20h48"></path></g><path d="M249 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M181 40h20"></path><g><path d="M201 40h0"></path><path d="M249 40h0"></path><path d="M201 40h10"></path><g class="terminal"><path d="M211 40h0"></path><path d="M239 40h0"></path><rect x="211" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="225" y="44">a</text></g><path d="M239 40h10"></path><path d="M211 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M211 60h28"></path></g><path d="M239 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M249 40h20"></path></g></g><path d="M269 40h10"></path><path d="M 279 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in one or more before</span> = <span class="ebnf-terminal">"a"</span> <span class="ebnf-comment">(*  comment  *)</span> , <wbr />{ <span class="ebnf-terminal">"a"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in one or more before</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-one-or-more-in">comment in one or more in</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="319" height="80" viewBox="0 0 319 80"><g transform="translate(.5 .5)"><path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M269 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78 40h0"></path><rect x="50" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="44">a</text></g><path d="M78 40h10"></path><g><path d="M88 40h0"></path><path d="M269 40h0"></path><path d="M88 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108 20h141"></path></g><path d="M249 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88 40h20"></path><g><path d="M108 40h0"></path><path d="M249 40h0"></path><path d="M108 40h10"></path><g><path d="M118 40h0"></path><path d="M239 40h0"></path><g class="terminal"><path d="M118 40h0"></path><path d="M146 40h0"></path><rect x="118" y="29" width="28" height="22" rx="10" ry="10"></rect><text x="132" y="44">a</text></g><path d="M146 40h10"></path><path d="M156 40h10"></path><g><path d="M166 40h0"></path><path d="M239 40h0"></path><text x="202.5" y="45" class="comment"> comment </text></g></g><path d="M239 40h10"></path><path d="M118 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M118 60h121"></path></g><path d="M239 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M249 40h20"></path></g></g><path d="M269 40h10"></path><path d="M 279 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in one or more in</span> = <span class="ebnf-terminal">"a"</span> , <wbr />{ <span class="ebnf-terminal">"a"</span> <span class="ebnf-comment">(*  comment  *)</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in one or more in</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-one-or-more-after">comment in one or more after</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="241" height="71" viewBox="0 0 241 71"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M191 31h0"></path><g><path d="M50 31h0"></path><path d="M98 31h0"></path><path d="M50 31h10"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88 31h0"></path><rect x="60" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="74" y="35">a</text></g><path d="M88 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M60 51h28"></path></g><path d="M88 51a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M98 31h10"></path><path d="M108 31h10"></path><g><path d="M118 31h0"></path><path d="M191 31h0"></path><text x="154.5" y="36" class="comment"> comment </text></g></g><path d="M191 31h10"></path><path d="M 201 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in one or more after</span> = <span class="ebnf-terminal">"a"</span> , <wbr />{ <span class="ebnf-terminal">"a"</span> } <span class="ebnf-comment">(*  comment  *)</span><span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in one or more after</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-one-or-more-with-repeater">comment in one or more with repeater</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="433" height="92" viewBox="0 0 433 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M383 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g class="terminal"><path d="M98 31h0"></path><path d="M126 31h0"></path><rect x="98" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="112" y="35">b</text></g><path d="M126 31h10"></path><path d="M136 31h10"></path><g><path d="M146 31h0"></path><path d="M219 31h0"></path><text x="182.5" y="36" class="comment"> comment </text></g><path d="M219 31h10"></path><path d="M229 31h10"></path><g><path d="M239 31h0"></path><path d="M383 31h0"></path><path d="M239 31h10"></path><g><path d="M249 31h48"></path><path d="M325 31h48"></path><g class="terminal"><path d="M297 31h0"></path><path d="M325 31h0"></path><rect x="297" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="311" y="35">c</text></g></g><path d="M373 31h10"></path><path d="M249 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M249 61h0"></path><path d="M373 61h0"></path><g class="terminal"><path d="M249 61h0"></path><path d="M277 61h0"></path><rect x="249" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="263" y="65">b</text></g><path d="M277 61h10"></path><path d="M287 61h10"></path><g class="terminal"><path d="M297 61h0"></path><path d="M325 61h0"></path><rect x="297" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="311" y="65">e</text></g><path d="M325 61h10"></path><path d="M335 61h10"></path><g class="terminal"><path d="M345 61h0"></path><path d="M373 61h0"></path><rect x="345" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="359" y="65">d</text></g></g><path d="M373 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g></g><path d="M383 31h10"></path><path d="M 393 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in one or more with repeater</span> = <span class="ebnf-terminal">"a"</span> , <span class="ebnf-terminal">"b"</span> <span class="ebnf-comment">(*  comment  *)</span> , <span class="ebnf-terminal">"c"</span> , <wbr />{ <span class="ebnf-terminal">"d"</span> , <span class="ebnf-terminal">"e"</span> , <span class="ebnf-terminal">"b"</span> , <span class="ebnf-terminal">"c"</span> }<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in one or more with repeater</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="364" height="221" viewBox="0 0 364 221"><g transform="translate(.5 .5)"><path d="M 20 20 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 30h0"></path><path d="M324 30h0"></path><path d="M40 30h20"></path><g><path d="M60 30h244"></path></g><path d="M304 30h20"></path><path d="M40 30a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 50h108"></path><path d="M196 50h108"></path><rect x="168" y="39" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="54">a</text></g><path d="M304 50a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g><path d="M60 80h0"></path><path d="M304 80h0"></path><g><path d="M60 80h0"></path><path d="M221 80h0"></path><path d="M60 80h20"></path><g><path d="M80 80h121"></path></g><path d="M201 80h20"></path><path d="M60 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g><path d="M80 100h0"></path><path d="M201 100h0"></path><g class="terminal"><path d="M80 100h0"></path><path d="M108 100h0"></path><rect x="80" y="89" width="28" height="22" rx="10" ry="10"></rect><text x="94" y="104">b</text></g><path d="M108 100h10"></path><path d="M118 100h10"></path><g><path d="M128 100h0"></path><path d="M201 100h0"></path><text x="164.5" y="105" class="comment"> comment </text></g></g><path d="M201 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M60 80a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 130h46.5"></path><path d="M154.5 130h46.5"></path><rect x="126.5" y="119" width="28" height="22" rx="10" ry="10"></rect><text x="140.5" y="134">c</text></g><path d="M201 130a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M221 80h10"></path><g><path d="M231 80h0"></path><path d="M304 80h0"></path><text x="267.5" y="85" class="comment"> comment </text></g></g><path d="M304 80a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v110a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 160h108"></path><path d="M196 160h108"></path><rect x="168" y="149" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="164">d</text></g><path d="M304 160a10 10 0 0 0 10 -10v-110a10 10 0 0 1 10 -10"></path><path d="M40 30a10 10 0 0 1 10 10v140a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 190h108"></path><path d="M196 190h108"></path><rect x="168" y="179" width="28" height="22" rx="10" ry="10"></rect><text x="182" y="194">e</text></g><path d="M304 190a10 10 0 0 0 10 -10v-140a10 10 0 0 1 10 -10"></path></g><path d="M 324 30 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in nested choices with multiple optionals</span> = <span class="ebnf-terminal">"a"</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"b"</span> <span class="ebnf-comment">(*  comment  *)</span> <wbr />| <span class="ebnf-terminal">"c"</span> ] <span class="ebnf-comment">(*  comment  *)</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"d"</span> <wbr />| <span class="ebnf-terminal">"e"</span> ]<span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in nested choices with multiple optionals</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <section>
   <h4 id="comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="337" height="92" viewBox="0 0 337 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M287 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g><path d="M98 31h0"></path><path d="M194 31h0"></path><path d="M98 31h10"></path><g><path d="M108 31h0"></path><path d="M184 31h0"></path><g class="terminal"><path d="M108 31h0"></path><path d="M136 31h0"></path><rect x="108" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="35">b</text></g><path d="M136 31h10"></path><path d="M146 31h10"></path><g class="terminal"><path d="M156 31h0"></path><path d="M184 31h0"></path><rect x="156" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="35">c</text></g></g><path d="M184 31h10"></path><path d="M108 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M108 61h0"></path><path d="M184 61h0"></path><g class="terminal"><path d="M108 61h0"></path><path d="M136 61h0"></path><rect x="108" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="122" y="65">e</text></g><path d="M136 61h10"></path><path d="M146 61h10"></path><g class="terminal"><path d="M156 61h0"></path><path d="M184 61h0"></path><rect x="156" y="50" width="28" height="22" rx="10" ry="10"></rect><text x="170" y="65">d</text></g></g><path d="M184 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M194 31h10"></path><path d="M204 31h10"></path><g><path d="M214 31h0"></path><path d="M287 31h0"></path><text x="250.5" y="36" class="comment"> comment </text></g></g><path d="M287 31h10"></path><path d="M 297 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">comment in one or more with repeater after</span> = <span class="ebnf-terminal">"a"</span> , <span class="ebnf-terminal">"b"</span> , <span class="ebnf-terminal">"c"</span> , <wbr />{ <span class="ebnf-terminal">"d"</span> , <span class="ebnf-terminal">"e"</span> , <span class="ebnf-terminal">"b"</span> , <span class="ebnf-terminal">"c"</span> } <span class="ebnf-comment">(*  comment  *)</span><span class="ebnf-end">;</span></code>
-  
-  
+  <p>Items referencing <strong>comment in one or more with repeater after</strong>:<p>
+<ul>
+<li><a href="#comments">comments</a></li>
+</ul>
 </section>
 <h1 id="htmldangerouscontent">html dangerous content</h1><section>
   <h4 id="html">html</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="544" height="62" viewBox="0 0 544 62"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M494 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M254 31h0"></path><rect x="50" y="20" width="204" height="22" rx="10" ry="10"></rect><text x="152" y="35">&#60;h1>Danger &#38; Risks&#60;/h1></text></g><path d="M254 31h10"></path><path d="M264 31h10"></path><g><path d="M274 31h0"></path><path d="M494 31h0"></path><text x="384" y="36" class="comment"> &#60;h1> can be everywhere &#60;/h1></text></g></g><path d="M494 31h10"></path><path d="M 504 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">html</span> = <span class="ebnf-terminal">"&lt;h1&gt;Danger &amp; Risks&lt;/h1&gt;"</span> <span class="ebnf-comment">(*  &lt;h1&gt; can be everywhere &lt;/h1&gt;  *)</span><span class="ebnf-end">;</span></code>
-  
-  
 </section>
 <section>
   <h4 id="simple-syntax">simple syntax</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="288" height="62" viewBox="0 0 288 62"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M238 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78 31h0"></path><rect x="50" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="64" y="35">a</text></g><path d="M78 31h10"></path><path d="M88 31h10"></path><g class="non-terminal"><path d="M98 31h0"></path><path d="M190 31h0"></path><rect x="98" y="20" width="92" height="22"></rect><a xlink:href="#reference"><text x="144" y="35">reference</text></a></g><path d="M190 31h10"></path><path d="M200 31h10"></path><g class="terminal"><path d="M210 31h0"></path><path d="M238 31h0"></path><rect x="210" y="20" width="28" height="22" rx="10" ry="10"></rect><text x="224" y="35">b</text></g></g><path d="M238 31h10"></path><path d="M 248 31 h 20 m 0 -10 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">simple syntax</span> = <span class="ebnf-terminal">"a"</span> , <a class="ebnf-non-terminal" href="#reference">reference</a> , <span class="ebnf-terminal">"b"</span><span class="ebnf-end">;</span></code>
-  
   <p><strong>simple syntax</strong> is referencing:<p>
 <ul>
 <li><a href="#reference">reference</a></li>
 </ul>
-
 </section>
 <section>
   <h4 id="reference">reference</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="400" height="62" viewBox="0 0 400 62"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 0 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M350 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M110 31h0"></path><rect x="50" y="20" width="60" height="22" rx="10" ry="10"></rect><text x="80" y="35">using</text></g><path d="M110 31h10"></path><path d="M120 31h10"></path><g class="non-terminal"><path d="M130 31h0"></path><path d="M238 31h0"></path><rect x="130" y="20" width="108" height="22"></rect><a xlink:href="#small-parts"><text x="184" y="35">small parts</text></a></g><path d="M238 31h10"></path><path d="M248 31h10"></path><g class="non-terminal"><path d="M258 31h0"></path><path d="M350 31h0"></path><rect x="258" y="20" width="92" height="22"></rect><a xlink:href="#big-parts"><text x="304" y="35">big parts</text></a></g></g><path d="M350 31h10"></path><path d="M 360 31 h 20 m 0 -10 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">reference</span> = <span class="ebnf-terminal">"using"</span> , <a class="ebnf-non-terminal" href="#small-parts">small parts</a> , <a class="ebnf-non-terminal" href="#big-parts">big parts</a><span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>reference</strong>:<p>
 <ul>
 <li><a href="#simple-syntax">simple syntax</a></li>
 </ul>
-
   <p><strong>reference</strong> is referencing:<p>
 <ul>
 <li><a href="#small-parts">small parts</a></li><li><a href="#big-parts">big parts</a></li>
 </ul>
-
 </section>
 <section>
   <h4 id="small-parts">small parts</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="204" height="92" viewBox="0 0 204 92"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M164 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M144 31h0"></path><rect x="60" y="20" width="84" height="22" rx="10" ry="10"></rect><text x="102" y="35">terminal</text></g><path d="M144 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h12"></path><path d="M132 61h12"></path><rect x="72" y="50" width="60" height="22" rx="10" ry="10"></rect><text x="102" y="65">other</text></g><path d="M144 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 164 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">small parts</span> = <span class="ebnf-terminal">"terminal"</span> <wbr />| <span class="ebnf-terminal">"other"</span><span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>small parts</strong>:<p>
 <ul>
 <li><a href="#reference">reference</a></li>
 </ul>
-
-  
 </section>
 <section>
   <h4 id="big-parts">big parts</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="172" height="71" viewBox="0 0 172 71"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M122 31h0"></path><g><path d="M50 31h0"></path><path d="M122 31h0"></path><path d="M50 31h10"></path><g class="terminal"><path d="M60 31h0"></path><path d="M112 31h0"></path><rect x="60" y="20" width="52" height="22" rx="10" ry="10"></rect><text x="86" y="35">item</text></g><path d="M112 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M60 51h52"></path></g><path d="M112 51a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g></g><path d="M122 31h10"></path><path d="M 132 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">big parts</span> = <span class="ebnf-terminal">"item"</span> , <wbr />{ <span class="ebnf-terminal">"item"</span> }<span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>big parts</strong>:<p>
 <ul>
 <li><a href="#reference">reference</a></li>
 </ul>
-
-  
 </section>
 <h1 id="altenativeisocharacters">Altenative ISO characters</h1><section>
   <h4 id="definition-main-characters">definition main characters</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="388" height="140" viewBox="0 0 388 140"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M348 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h108"></path><path d="M220 31h108"></path><rect x="168" y="20" width="52" height="22" rx="10" ry="10"></rect><text x="194" y="35">item</text></g><path d="M328 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h104"></path><path d="M224 61h104"></path><rect x="164" y="50" width="60" height="22" rx="10" ry="10"></rect><text x="194" y="65">item2</text></g><path d="M328 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v49a10 10 0 0 0 10 10"></path><g><path d="M60 100h0"></path><path d="M328 100h0"></path><g><path d="M60 100h0"></path><path d="M184 100h0"></path><path d="M60 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M80 80h84"></path></g><path d="M164 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M60 100h20"></path><g class="terminal"><path d="M80 100h0"></path><path d="M164 100h0"></path><rect x="80" y="89" width="84" height="22" rx="10" ry="10"></rect><text x="122" y="104">optional</text></g><path d="M164 100h20"></path></g><g><path d="M184 100h0"></path><path d="M328 100h0"></path><path d="M184 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M204 80h104"></path></g><path d="M308 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M184 100h20"></path><g><path d="M204 100h0"></path><path d="M308 100h0"></path><path d="M204 100h10"></path><g class="terminal"><path d="M214 100h0"></path><path d="M298 100h0"></path><rect x="214" y="89" width="84" height="22" rx="10" ry="10"></rect><text x="256" y="104">repeater</text></g><path d="M298 100h10"></path><path d="M214 100a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M214 120h84"></path></g><path d="M298 120a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M308 100h20"></path></g></g><path d="M328 100a10 10 0 0 0 10 -10v-49a10 10 0 0 1 10 -10"></path></g><path d="M 348 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">definition main characters</span> = <span class="ebnf-terminal">"item"</span> <wbr />| <span class="ebnf-terminal">"item2"</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"optional"</span> ] , <wbr />{ <span class="ebnf-terminal">"repeater"</span> }<span class="ebnf-end">;</span></code>
-  
-  
 </section>
 <section>
   <h4 id="alternative-main-characters">alternative main characters</h4>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="388" height="140" viewBox="0 0 388 140"><g transform="translate(.5 .5)"><path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path><g><path d="M40 31h0"></path><path d="M348 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h108"></path><path d="M220 31h108"></path><rect x="168" y="20" width="52" height="22" rx="10" ry="10"></rect><text x="194" y="35">item</text></g><path d="M328 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h104"></path><path d="M224 61h104"></path><rect x="164" y="50" width="60" height="22" rx="10" ry="10"></rect><text x="194" y="65">item2</text></g><path d="M328 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v49a10 10 0 0 0 10 10"></path><g><path d="M60 100h0"></path><path d="M328 100h0"></path><g><path d="M60 100h0"></path><path d="M184 100h0"></path><path d="M60 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M80 80h84"></path></g><path d="M164 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M60 100h20"></path><g class="terminal"><path d="M80 100h0"></path><path d="M164 100h0"></path><rect x="80" y="89" width="84" height="22" rx="10" ry="10"></rect><text x="122" y="104">optional</text></g><path d="M164 100h20"></path></g><g><path d="M184 100h0"></path><path d="M328 100h0"></path><path d="M184 100a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M204 80h104"></path></g><path d="M308 80a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M184 100h20"></path><g><path d="M204 100h0"></path><path d="M308 100h0"></path><path d="M204 100h10"></path><g class="terminal"><path d="M214 100h0"></path><path d="M298 100h0"></path><rect x="214" y="89" width="84" height="22" rx="10" ry="10"></rect><text x="256" y="104">repeater</text></g><path d="M298 100h10"></path><path d="M214 100a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M214 120h84"></path></g><path d="M298 120a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M308 100h20"></path></g></g><path d="M328 100a10 10 0 0 0 10 -10v-49a10 10 0 0 1 10 -10"></path></g><path d="M 348 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
-
   </div>
   <code class="ebnf"><span class="ebnf-identifier">alternative main characters</span> = <span class="ebnf-terminal">"item"</span> <wbr />| <span class="ebnf-terminal">"item2"</span> <wbr />| <wbr />[ <span class="ebnf-terminal">"optional"</span> ] , <wbr />{ <span class="ebnf-terminal">"repeater"</span> }<span class="ebnf-end">;</span></code>
-  
-  
 </section>
 
   </article>

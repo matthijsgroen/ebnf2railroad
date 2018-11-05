@@ -55,6 +55,14 @@
 
 *)
 
+optimizations = optimized choices | optimized one or more;
+
+optimized choices = choice with optional | nested choices with optional | nested choices with multiple optionals
+  | nested choices | choice with one or more;
+
+optimized one or more = choice with one or more | one or more | one or more with group | one or more with repeater,
+  optimizations;
+
 choice with optional = [ "a" | "b" ];
 nested choices with optional = "a" | [ "b" | "c"];
 nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
@@ -68,6 +76,10 @@ one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
   Mixing comments in
   ==================
 *)
+
+comments = comment in choice with optional | comment in one or more before | comment in one or more in
+  | comment in one or more after | comment in one or more with repeater
+  | comment in nested choices with multiple optionals | comment in one or more with repeater after;
 
 comment in choice with optional = [ "a" | "b" (* comment *) ];
 comment in one or more before = "a" (* comment *), { "a" };
