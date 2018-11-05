@@ -91,3 +91,11 @@ simple syntax = "a", reference, "b";
 reference = "using", small parts, big parts;
 small parts = "terminal" | "other";
 big parts = "item", { "item" };
+
+(*
+  Altenative ISO characters
+  =========================
+*)
+
+definition main characters = "item" | "item2" | ["optional"], { "repeater" };
+alternative main characters = "item" / "item2" ! (/ "optional" /), (:  "repeater" :).
