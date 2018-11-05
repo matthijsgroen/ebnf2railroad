@@ -25,7 +25,7 @@ On mac, using [homebrew](https://brew.sh/): `brew install node yarn watch`
 The easiest development flow for browser related work is:
 
 ```
-watch -n 'yarn build-parser; yarn build-examples'
+watch -n 1 'yarn build-parser; yarn update-examples'
 ```
 
 This will continuously rebuild the parser and update the examples every second.
