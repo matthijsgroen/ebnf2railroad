@@ -17,6 +17,7 @@ const {
   commentTemplate
 } = require("./report-html-template");
 const {
+  getReferences,
   searchReferencesFromIdentifier,
   searchReferencesToIdentifier
 } = require("./references");
