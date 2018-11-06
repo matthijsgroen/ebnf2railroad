@@ -114,44 +114,27 @@ const documentTemplate = ({
     svg.railroad-diagram g.diagram-text:hover path.diagram-text {
         fill: #eee;
     }
-
-    /* Table of contents styling */
-
-    nav input { display: none; }
-    nav input + label { text-decoration: underline; cursor: pointer; }
-    nav input:checked + label { font-weight: bold; }
-
-    nav > ul { display: none; }
-    nav #nav-as-specified:checked ~ ul.nav-as-specified { display: block; }
-    nav #nav-alphabetical:checked ~ ul.nav-alphabetical { display: block; }
-    nav #nav-hierarchical:checked ~ ul.nav-hierarchical { display: block; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>${title}</h1>
+  </header>
   <nav>
-    <h3>Navigation</h3>
-    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio" checked="checked">
-    <label for="nav-hierarchical">Hierarchical</label>
-    <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
-    <label for="nav-alphabetical">Alphabetical</label>
-    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio">
-    <label for="nav-as-specified">As specified</label>
-
-    <ul class="nav-hierarchical">
-    ${hierarchicalToc}
-    </ul>
-
+    <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
     ${alphabeticalToc}
-    </ul>
-
-    <ul class="nav-as-specified">
-    ${specifiedToc}
     </ul>
   </nav>
   <article>
     ${contents}
   </article>
+  <nav>
+    <h3>Language overview</h3>
+    <ul class="nav-hierarchical">
+    ${hierarchicalToc}
+    </ul>
+  </nav>
 </body>
 </html>
 `;

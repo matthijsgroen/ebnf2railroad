@@ -101,39 +101,16 @@
     svg.railroad-diagram g.diagram-text:hover path.diagram-text {
         fill: #eee;
     }
-
-    /* Table of contents styling */
-
-    nav input { display: none; }
-    nav input + label { text-decoration: underline; cursor: pointer; }
-    nav input:checked + label { font-weight: bold; }
-
-    nav > ul { display: none; }
-    nav #nav-as-specified:checked ~ ul.nav-as-specified { display: block; }
-    nav #nav-alphabetical:checked ~ ul.nav-alphabetical { display: block; }
-    nav #nav-hierarchical:checked ~ ul.nav-hierarchical { display: block; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>JSON</h1>
+  </header>
   <nav>
-    <h3>Navigation</h3>
-    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio" checked="checked">
-    <label for="nav-hierarchical">Hierarchical</label>
-    <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
-    <label for="nav-alphabetical">Alphabetical</label>
-    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio">
-    <label for="nav-as-specified">As specified</label>
-
-    <ul class="nav-hierarchical">
-    <li><a href="#json">json</a> </li><ul><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> ↖︎</li><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> ↖︎</li></ul></ul></ul><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> ↖︎</li></ul><li><a href="#array">array</a> ↖︎</li></ul></ul></ul>
-    </ul>
-
+    <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
     <li><a href="#array">array</a> </li><li><a href="#json">json</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li>
-    </ul>
-
-    <ul class="nav-as-specified">
-    <li><a href="#json">json</a> </li><li><a href="#object">object</a> </li><li><a href="#array">array</a> </li><li><a href="#value">value</a> </li><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li>
     </ul>
   </nav>
   <article>
@@ -232,5 +209,11 @@ and hexadecimal formats are not used.</p><section>
 <p>Whitespace can be inserted between any pair of tokens.
 Excepting a few encoding details, that completely describes the language.</p>
   </article>
+  <nav>
+    <h3>Language overview</h3>
+    <ul class="nav-hierarchical">
+    <li><a href="#json">json</a> </li><ul><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> ↖︎</li><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> ↖︎</li></ul></ul></ul><li><a href="#array">array</a> </li><ul><li><a href="#value">value</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#number">number</a> </li><li><a href="#object">object</a> </li><ul><li><a href="#string">string</a> </li><li><a href="#value">value</a> ↖︎</li></ul><li><a href="#array">array</a> ↖︎</li></ul></ul></ul>
+    </ul>
+  </nav>
 </body>
 </html>

@@ -101,39 +101,16 @@
     svg.railroad-diagram g.diagram-text:hover path.diagram-text {
         fill: #eee;
     }
-
-    /* Table of contents styling */
-
-    nav input { display: none; }
-    nav input + label { text-decoration: underline; cursor: pointer; }
-    nav input:checked + label { font-weight: bold; }
-
-    nav > ul { display: none; }
-    nav #nav-as-specified:checked ~ ul.nav-as-specified { display: block; }
-    nav #nav-alphabetical:checked ~ ul.nav-alphabetical { display: block; }
-    nav #nav-hierarchical:checked ~ ul.nav-hierarchical { display: block; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>examples/optimizations</h1>
+  </header>
   <nav>
-    <h3>Navigation</h3>
-    <input id="nav-hierarchical" name="viewmode" value="hierarchical" type="radio" checked="checked">
-    <label for="nav-hierarchical">Hierarchical</label>
-    <input id="nav-alphabetical" name="viewmode" value="alphabetical" type="radio">
-    <label for="nav-alphabetical">Alphabetical</label>
-    <input id="nav-as-specified" name="viewmode" value="as-specified" type="radio">
-    <label for="nav-as-specified">As specified</label>
-
-    <ul class="nav-hierarchical">
-    <li><a href="#optimizations">optimizations</a> </li><ul><li><a href="#optimized-choices">optimized choices</a> </li><ul><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li></ul><li><a href="#optimized-one-or-more">optimized one or more</a> </li><ul><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#optimizations">optimizations</a> ↖︎</li></ul></ul><li><a href="#comments">comments</a> </li><ul><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li></ul><li><a href="#html">html</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><ul><li><a href="#reference">reference</a> </li><ul><li><a href="#small-parts">small parts</a> </li><li><a href="#big-parts">big parts</a> </li></ul></ul><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#alternative-main-characters">alternative main characters</a> </li>
-    </ul>
-
+    <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
     <li><a href="#alternative-main-characters">alternative main characters</a> </li><li><a href="#big-parts">big parts</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li><li><a href="#comments">comments</a> </li><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#html">html</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#optimizations">optimizations</a> </li><li><a href="#optimized-choices">optimized choices</a> </li><li><a href="#optimized-one-or-more">optimized one or more</a> </li><li><a href="#reference">reference</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><li><a href="#small-parts">small parts</a> </li>
-    </ul>
-
-    <ul class="nav-as-specified">
-    <li><a href="#optimizations">optimizations</a> </li><li><a href="#optimized-choices">optimized choices</a> </li><li><a href="#optimized-one-or-more">optimized one or more</a> </li><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#comments">comments</a> </li><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li><li><a href="#html">html</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><li><a href="#reference">reference</a> </li><li><a href="#small-parts">small parts</a> </li><li><a href="#big-parts">big parts</a> </li><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#alternative-main-characters">alternative main characters</a> </li>
     </ul>
   </nav>
   <article>
@@ -468,5 +445,11 @@ really large screens, because that is really, really annoying to read.</li></ul>
 </section>
 
   </article>
+  <nav>
+    <h3>Language overview</h3>
+    <ul class="nav-hierarchical">
+    <li><a href="#optimizations">optimizations</a> </li><ul><li><a href="#optimized-choices">optimized choices</a> </li><ul><li><a href="#choice-with-optional">choice with optional</a> </li><li><a href="#nested-choices-with-optional">nested choices with optional</a> </li><li><a href="#nested-choices-with-multiple-optionals">nested choices with multiple optionals</a> </li><li><a href="#nested-choices">nested choices</a> </li><li><a href="#choice-with-one-or-more">choice with one or more</a> </li></ul><li><a href="#optimized-one-or-more">optimized one or more</a> </li><ul><li><a href="#choice-with-one-or-more">choice with one or more</a> </li><li><a href="#one-or-more">one or more</a> </li><li><a href="#one-or-more-with-group">one or more with group</a> </li><li><a href="#one-or-more-with-repeater">one or more with repeater</a> </li><li><a href="#optimizations">optimizations</a> ↖︎</li></ul></ul><li><a href="#comments">comments</a> </li><ul><li><a href="#comment-in-choice-with-optional">comment in choice with optional</a> </li><li><a href="#comment-in-one-or-more-before">comment in one or more before</a> </li><li><a href="#comment-in-one-or-more-in">comment in one or more in</a> </li><li><a href="#comment-in-one-or-more-after">comment in one or more after</a> </li><li><a href="#comment-in-one-or-more-with-repeater">comment in one or more with repeater</a> </li><li><a href="#comment-in-nested-choices-with-multiple-optionals">comment in nested choices with multiple optionals</a> </li><li><a href="#comment-in-one-or-more-with-repeater-after">comment in one or more with repeater after</a> </li></ul><li><a href="#html">html</a> </li><li><a href="#simple-syntax">simple syntax</a> </li><ul><li><a href="#reference">reference</a> </li><ul><li><a href="#small-parts">small parts</a> </li><li><a href="#big-parts">big parts</a> </li></ul></ul><li><a href="#definition-main-characters">definition main characters</a> </li><li><a href="#alternative-main-characters">alternative main characters</a> </li>
+    </ul>
+  </nav>
 </body>
 </html>

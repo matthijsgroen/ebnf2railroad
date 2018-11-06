@@ -186,14 +186,18 @@ const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 
 const createTocStructure = tocData =>
   tocData
-    .map(tocNode => [
-      `<li><a href="#${dasherize(tocNode.name)}">${tocNode.name}</a> ${
-        tocNode.recursive ? "↖︎" : ""
-      }</li>`,
-      tocNode.children && `<ul>${createTocStructure(tocNode.children)}</ul>`
-    ])
-    .filter(Boolean)
-    .reduce((acc, elem) => acc.concat(elem), [])
+    .map(
+      tocNode =>
+        `<li><a href="#${dasherize(tocNode.name)}">${tocNode.name} ${
+          tocNode.recursive ? "↖︎" : ""
+        }</a>
+      ${
+        tocNode.children
+          ? `<ul>${createTocStructure(tocNode.children)}</ul>`
+          : ""
+      }
+      </li>`
+    )
     .join("");
 
 const createDocumentation = (ast, options) => {

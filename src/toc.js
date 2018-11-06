@@ -70,7 +70,7 @@ const createStructuralToc = ast => {
     )
     // The trees left are now
     // a -> b -> c -> a, vs.
-    // b -> c -> a -> b vs.
+    // b -> c -> a -> b, vs.
     // c -> a -> b -> c. Check which one is defined first, that one wins
     .filter((root, index, list) => {
       const childIndex = Math.min(
