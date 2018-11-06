@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for alternative characters: `|` -> `/`, `!`, `[ ]` -> `(/ /)`,
   `{ }` -> `(: :)`
+- Table of contents, showing structure in alphabet, or as
+  hierarchy overview at the bottom.
 
 ## [1.4.0] - 2018-11-03
 ### Added

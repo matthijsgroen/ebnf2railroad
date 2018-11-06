@@ -10,14 +10,18 @@ const {
   Skip,
   Terminal
 } = require("railroad-diagrams");
-
 const { optimizeProduction } = require("./structure-optimizer");
-
 const {
   documentTemplate,
   ebnfTemplate,
   commentTemplate
 } = require("./report-html-template");
+const {
+  getReferences,
+  searchReferencesFromIdentifier,
+  searchReferencesToIdentifier
+} = require("./references");
+const { createAlphabeticalToc, createStructuralToc } = require("./toc");
 
 const dasherize = str => str.replace(/\s+/g, "-");
 const sanitize = str =>
@@ -174,63 +178,23 @@ const productionToDiagram = production => {
   return "unknown construct";
 };
 
-const getReferences = production => {
-  if (production.definition) {
-    return getReferences(production.definition);
-  }
-  if (production.terminal) {
-    return [];
-  }
-  if (production.nonTerminal) {
-    return [production.nonTerminal];
-  }
-  if (production.choice) {
-    return production.choice
-      .map(item => getReferences(item))
-      .reduce((acc, item) => acc.concat(item), [])
-      .filter(Boolean);
-  }
-  if (production.sequence) {
-    return production.sequence
-      .map(item => getReferences(item))
-      .reduce((acc, item) => acc.concat(item), [])
-      .filter(Boolean);
-  }
-  if (production.repetition) {
-    return getReferences(production.repetition);
-  }
-  if (production.optional) {
-    return getReferences(production.optional);
-  }
-  if (production.group) {
-    return getReferences(production.group);
-  }
-  if (production.exceptNonTerminal) {
-    return [production.exceptNonTerminal, production.include];
-  }
-  if (production.exceptTerminal) {
-    return [production.include];
-  }
-  return [];
-};
-
 const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 
-const searchReferencesToIdentifier = (identifier, ast) =>
-  ast
-    .filter(production => production.identifier !== identifier)
-    .filter(production =>
-      getReferences(production).some(ref => ref === identifier)
+const createTocStructure = tocData =>
+  tocData
+    .map(
+      tocNode =>
+        `<li><a href="#${dasherize(tocNode.name)}">${tocNode.name} ${
+          tocNode.recursive ? "↖︎" : ""
+        }</a>
+      ${
+        tocNode.children
+          ? `<ul>${createTocStructure(tocNode.children)}</ul>`
+          : ""
+      }
+      </li>`
     )
-    .map(production => production.identifier);
-
-const searchReferencesFromIdentifier = (identifier, ast) =>
-  ast
-    .filter(production => production.identifier === identifier)
-    .map(production => getReferences(production))
-    .reduce((acc, item) => acc.concat(item), [])
-    .filter(Boolean)
-    .filter((item, index, list) => list.indexOf(item) === index);
+    .join("");
 
 const createDocumentation = (ast, options) => {
   const contents = ast
@@ -256,9 +220,14 @@ const createDocumentation = (ast, options) => {
     })
     .join("");
 
+  const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
+  const hierarchicalToc = createTocStructure(createStructuralToc(ast));
+
   return documentTemplate({
     title: options.title,
-    contents
+    contents,
+    alphabeticalToc,
+    hierarchicalToc
   });
 };
 

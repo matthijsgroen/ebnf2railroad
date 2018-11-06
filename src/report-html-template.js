@@ -4,7 +4,12 @@ const converter = new Converter({
   simplifiedAutoLink: true
 });
 
-const documentTemplate = ({ title, contents }) =>
+const documentTemplate = ({
+  title,
+  contents,
+  alphabeticalToc,
+  hierarchicalToc
+}) =>
   `<!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +18,7 @@ const documentTemplate = ({ title, contents }) =>
   <meta name="generator" content="ebnf2railroad" />
   <title>${title}</title>
   <style type="text/css">
+    /* Text styling */
     body {
       font: normal 12px Verdana, sans-serif;
       color: #0F0C00;
@@ -32,6 +38,7 @@ const documentTemplate = ({ title, contents }) =>
 			margin-bottom: 0;
 		}
 
+    /* EBNF text representation styling */
     code.ebnf {
       padding: 1em 1em 1em 3em;
       text-indent: -2em;
@@ -56,6 +63,7 @@ const documentTemplate = ({ title, contents }) =>
       color: #999;
     }
 
+    /* EBNF diagram representation styling */
     svg.railroad-diagram path {
         stroke-width: 3;
         stroke: black;
@@ -89,6 +97,11 @@ const documentTemplate = ({ title, contents }) =>
     svg.railroad-diagram rect {
         stroke-width: 3;
         stroke: black;
+    }
+    svg.railroad-diagram g.non-terminal rect {
+        fill: hsl(120,100%,90%);
+    }
+    svg.railroad-diagram g.terminal rect {
         fill: hsl(120,100%,90%);
     }
     svg.railroad-diagram path.diagram-text {
@@ -103,9 +116,26 @@ const documentTemplate = ({ title, contents }) =>
   </style>
 </head>
 <body>
+  <header>
+    <h1>${title}</h1>
+  </header>
+  <main>
+  <nav>
+    <h3>Quick navigation:</h3>
+    <ul class="nav-alphabetical">
+    ${alphabeticalToc}
+    </ul>
+  </nav>
   <article>
     ${contents}
   </article>
+  <nav>
+    <h3>Language overview</h3>
+    <ul class="nav-hierarchical">
+    ${hierarchicalToc}
+    </ul>
+  </nav>
+  </main>
 </body>
 </html>
 `;
@@ -121,8 +151,7 @@ ${references
         `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
     )
     .join("")}
-</ul>
-`;
+</ul>`;
 
 const referencesToTemplate = (identifier, references) =>
   `<p><strong>${identifier}</strong> is referencing:<p>
@@ -133,8 +162,7 @@ ${references
         `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
     )
     .join("")}
-</ul>
-`;
+</ul>`;
 
 const ebnfTemplate = ({
   identifier,
@@ -146,15 +174,13 @@ const ebnfTemplate = ({
   `<section>
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
-  ${diagram}
-  </div>
-  <code class="ebnf">${ebnf}</code>
-  ${referencedBy.length > 0 ? referencesTemplate(identifier, referencedBy) : ""}
-  ${
-    referencesTo.length > 0
-      ? referencesToTemplate(identifier, referencesTo)
-      : ""
-  }
+  ${diagram}  </div>
+  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
+    ? "\n  " + referencesTemplate(identifier, referencedBy)
+    : "") +
+    (referencesTo.length > 0
+      ? "\n  " + referencesToTemplate(identifier, referencesTo)
+      : "")}
 </section>
 `;
 
