@@ -1,6 +1,7 @@
 import "./index.css";
 
 const ace = require("brace");
+const EditSession = ace.EditSession;
 require("brace/mode/plain_text");
 require("brace/theme/monokai");
 const {
@@ -10,36 +11,9 @@ const {
   documentStyle
 } = require("ebnf2railroad");
 
-const styleElem = document.createElement("style");
-styleElem.setAttribute("type", "text/css");
-styleElem.innerHTML = documentStyle();
-const headSection = document.getElementsByTagName("head")[0];
-headSection.appendChild(styleElem);
+const CONTENT_KEY = "ebnf2railroad-content";
 
 const editor = ace.edit("editor");
-editor.getSession().setMode("ace/mode/plain_text");
-editor.setTheme("ace/theme/monokai");
-editor.getSession().on("change", () => {
-  const newValue = editor.getValue();
-  try {
-    const ast = parseEbnf(newValue);
-    validateAst(ast);
-    updateAst(ast);
-  } catch (e) {
-    if (e.hash) {
-      const { expected, line, token } = e.hash;
-      editor.getSession().clearAnnotations();
-      editor.getSession().setAnnotations([
-        {
-          text: `Parse error: Expected ${expected}, got ${token}`,
-          type: "error",
-          column: 0,
-          row: line
-        }
-      ]);
-    }
-  }
-});
 
 let lastValidAst = [];
 const updateAst = ast => {
@@ -61,3 +35,50 @@ const validateAst = ast => {
     }))
   );
 };
+
+const updateDocument = content => {
+  try {
+    window.localStorage.setItem(CONTENT_KEY, content);
+  } catch (e) {}
+
+  try {
+    const ast = parseEbnf(content);
+    validateAst(ast);
+    updateAst(ast);
+  } catch (e) {
+    if (e.hash) {
+      const { expected, line, token } = e.hash;
+      editor.getSession().clearAnnotations();
+      editor.getSession().setAnnotations([
+        {
+          text: `Parse error: Expected ${expected}, got ${token}`,
+          type: "error",
+          column: 0,
+          row: line
+        }
+      ]);
+    } else {
+      console.error(e);
+    }
+  }
+};
+
+const content = window.localStorage.getItem(CONTENT_KEY) || "";
+const session = new EditSession(content);
+
+const styleElem = document.createElement("style");
+styleElem.setAttribute("type", "text/css");
+styleElem.innerHTML = documentStyle();
+const headSection = document.getElementsByTagName("head")[0];
+headSection.appendChild(styleElem);
+
+editor.setSession(session);
+editor.getSession().setMode("ace/mode/plain_text");
+editor.setTheme("ace/theme/monokai");
+editor.getSession().setUseWrapMode(true);
+updateDocument(content);
+
+editor.getSession().on("change", () => {
+  const newValue = editor.getValue();
+  updateDocument(newValue);
+});
