@@ -1,0 +1,10 @@
+{
+  "name": "ebnf2railroad-online",
+  "version": "1.0.0",
+  "description": "Online ebnf2railroad converter",
+  "main": "index.js",
+  "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
+  "author": "Matthijs Groen <matthijs.groen@gmail.com",
+  "license": "MIT",
+  "private": false
+}
