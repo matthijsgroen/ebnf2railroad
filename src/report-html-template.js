@@ -119,6 +119,7 @@ const documentTemplate = ({
   <header>
     <h1>${title}</h1>
   </header>
+  <main>
   <nav>
     <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
@@ -134,6 +135,7 @@ const documentTemplate = ({
     ${hierarchicalToc}
     </ul>
   </nav>
+  </main>
 </body>
 </html>
 `;
