@@ -21,11 +21,7 @@ const {
   searchReferencesFromIdentifier,
   searchReferencesToIdentifier
 } = require("./references");
-const {
-  createAlphabeticalToc,
-  createStructuralToc,
-  createToc
-} = require("./toc");
+const { createAlphabeticalToc, createStructuralToc } = require("./toc");
 
 const dasherize = str => str.replace(/\s+/g, "-");
 const sanitize = str =>
@@ -224,14 +220,12 @@ const createDocumentation = (ast, options) => {
     })
     .join("");
 
-  const specifiedToc = createTocStructure(createToc(ast));
   const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
   const hierarchicalToc = createTocStructure(createStructuralToc(ast));
 
   return documentTemplate({
     title: options.title,
     contents,
-    specifiedToc,
     alphabeticalToc,
     hierarchicalToc
   });

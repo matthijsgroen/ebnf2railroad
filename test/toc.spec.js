@@ -1,11 +1,7 @@
 const { expect } = require("chai");
 const { parser } = require("../src/ebnf-parser");
 const { dedent } = require("../src/dedent");
-const {
-  createAlphabeticalToc,
-  createStructuralToc,
-  createToc
-} = require("../src/toc");
+const { createAlphabeticalToc, createStructuralToc } = require("../src/toc");
 
 describe("table of contents", () => {
   const ebnfDefinition = dedent(`
@@ -82,23 +78,6 @@ describe("table of contents", () => {
             { name: "leaf" }
           ]
         }
-      ]);
-    });
-  });
-
-  describe("createToc", () => {
-    it("creates a list of links in original defined order", () => {
-      const result = createToc(ast);
-      expect(result).to.eql([
-        { name: "string" },
-        { name: "statement" },
-        { name: "comment" },
-        { name: "root" },
-        { name: "condition" },
-        { name: "lowercase letter" },
-        { name: "second root" },
-        { name: "branch" },
-        { name: "leaf" }
       ]);
     });
   });

@@ -89,16 +89,7 @@ const createStructuralToc = ast => {
     );
 };
 
-const createToc = ast =>
-  ast
-    .filter(production => production.identifier)
-    .map(production => production.identifier)
-    .reduce((acc, item) => acc.concat(item), [])
-    .filter((item, index, list) => list.indexOf(item) === index)
-    .map(node => ({ name: node }));
-
 module.exports = {
   createAlphabeticalToc,
-  createStructuralToc,
-  createToc
+  createStructuralToc
 };

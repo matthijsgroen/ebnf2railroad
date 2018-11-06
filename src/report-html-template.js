@@ -7,7 +7,6 @@ const converter = new Converter({
 const documentTemplate = ({
   title,
   contents,
-  specifiedToc,
   alphabeticalToc,
   hierarchicalToc
 }) =>
