@@ -3,7 +3,18 @@ import "./index.css";
 const ace = require("brace");
 require("brace/mode/plain_text");
 require("brace/theme/monokai");
-const { parseEbnf, validateEbnf } = require("ebnf2railroad");
+const {
+  parseEbnf,
+  validateEbnf,
+  createDocumentation,
+  documentStyle
+} = require("ebnf2railroad");
+
+const styleElem = document.createElement("style");
+styleElem.setAttribute("type", "text/css");
+styleElem.innerHTML = documentStyle();
+const headSection = document.getElementsByTagName("head")[0];
+headSection.appendChild(styleElem);
 
 const editor = ace.edit("editor");
 editor.getSession().setMode("ace/mode/plain_text");
@@ -30,6 +41,14 @@ editor.getSession().on("change", () => {
   }
 });
 
+let lastValidAst = [];
+const updateAst = ast => {
+  lastValidAst = ast;
+  const contents = createDocumentation(ast, { title: "Demo", full: false });
+  const elem = document.getElementById("result");
+  elem.innerHTML = contents;
+};
+
 const validateAst = ast => {
   const result = validateEbnf(ast);
   editor.getSession().clearAnnotations();
@@ -38,9 +57,7 @@ const validateAst = ast => {
       text: `${warning.type}: ${warning.message}`,
       type: "warning",
       column: 0,
-      row: warning.line
+      row: warning.line - 1
     }))
   );
 };
-
-const updateAst = ast => {};
