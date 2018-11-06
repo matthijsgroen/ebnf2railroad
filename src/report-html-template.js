@@ -4,12 +4,7 @@ const converter = new Converter({
   simplifiedAutoLink: true
 });
 
-const documentTemplate = ({
-  title,
-  contents,
-  alphabeticalToc,
-  hierarchicalToc
-}) =>
+const documentFrame = ({ head, body, title }) =>
   `<!DOCTYPE html>
 <html>
 <head>
@@ -17,106 +12,21 @@ const documentTemplate = ({
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta name="generator" content="ebnf2railroad" />
   <title>${title}</title>
-  <style type="text/css">
-    /* Text styling */
-    body {
-      font: normal 12px Verdana, sans-serif;
-      color: #0F0C00;
-      background: #FFFCFC;
-    }
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.5em; }
-    a,
-    a:visited,
-    a:active {
-      color: #0F0C00;
-    }
-    a:hover {
-      color: #000;
-    }
-		section h4 {
-			margin-bottom: 0;
-		}
-
-    /* EBNF text representation styling */
-    code.ebnf {
-      padding: 1em 1em 1em 3em;
-      text-indent: -2em;
-      background: rgb(255, 246, 209);
-      font-weight: bold;
-      color: #777;
-      white-space: nowrap;
-      display: inline-block;
-    }
-    .ebnf-identifier {
-      color: #990099;
-    }
-    .ebnf-terminal {
-      color: #009900;
-    }
-    .ebnf-non-terminal {
-      font-weight: normal;
-    }
-    .ebnf-comment {
-      font-weight: normal;
-      font-style: italic;
-      color: #999;
-    }
-
-    /* EBNF diagram representation styling */
-    svg.railroad-diagram path {
-        stroke-width: 3;
-        stroke: black;
-        fill: rgba(0,0,0,0);
-    }
-    svg.railroad-diagram text {
-        font: bold 14px monospace;
-        text-anchor: middle;
-    }
-    svg.railroad-diagram text.diagram-text {
-        font-size: 12px;
-    }
-    svg.railroad-diagram text.diagram-arrow {
-        font-size: 16px;
-    }
-    svg.railroad-diagram text.label {
-        text-anchor: start;
-    }
-    svg.railroad-diagram text.comment {
-        font: italic 12px monospace;
-    }
-    svg.railroad-diagram g.non-terminal text {
-        /*font-style: italic;*/
-    }
-    svg.railroad-diagram g.special-sequence rect {
-        fill: #FFDB4D;
-    }
-    svg.railroad-diagram g.special-sequence text {
-        font-style: italic;
-    }
-    svg.railroad-diagram rect {
-        stroke-width: 3;
-        stroke: black;
-    }
-    svg.railroad-diagram g.non-terminal rect {
-        fill: hsl(120,100%,90%);
-    }
-    svg.railroad-diagram g.terminal rect {
-        fill: hsl(120,100%,90%);
-    }
-    svg.railroad-diagram path.diagram-text {
-        stroke-width: 3;
-        stroke: black;
-        fill: white;
-        cursor: help;
-    }
-    svg.railroad-diagram g.diagram-text:hover path.diagram-text {
-        fill: #eee;
-    }
-  </style>
+  ${head}
 </head>
 <body>
-  <header>
+${body}
+</body>
+</html>
+`;
+
+const documentContent = ({
+  title,
+  contents,
+  alphabeticalToc,
+  hierarchicalToc
+}) =>
+  `<header>
     <h1>${title}</h1>
   </header>
   <main>
@@ -135,9 +45,104 @@ const documentTemplate = ({
     ${hierarchicalToc}
     </ul>
   </nav>
-  </main>
-</body>
-</html>
+  </main>`;
+
+const documentStyle = () =>
+  `/* Text styling */
+  body {
+    font: normal 12px Verdana, sans-serif;
+    color: #0F0C00;
+    background: #FFFCFC;
+  }
+  h1 { font-size: 2em; }
+  h2 { font-size: 1.5em; }
+  a,
+  a:visited,
+  a:active {
+    color: #0F0C00;
+  }
+  a:hover {
+    color: #000;
+  }
+  section h4 {
+    margin-bottom: 0;
+  }
+
+  /* EBNF text representation styling */
+  code.ebnf {
+    padding: 1em 1em 1em 3em;
+    text-indent: -2em;
+    background: rgb(255, 246, 209);
+    font-weight: bold;
+    color: #777;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .ebnf-identifier {
+    color: #990099;
+  }
+  .ebnf-terminal {
+    color: #009900;
+  }
+  .ebnf-non-terminal {
+    font-weight: normal;
+  }
+  .ebnf-comment {
+    font-weight: normal;
+    font-style: italic;
+    color: #999;
+  }
+
+  /* EBNF diagram representation styling */
+  svg.railroad-diagram path {
+      stroke-width: 3;
+      stroke: black;
+      fill: rgba(0,0,0,0);
+  }
+  svg.railroad-diagram text {
+      font: bold 14px monospace;
+      text-anchor: middle;
+  }
+  svg.railroad-diagram text.diagram-text {
+      font-size: 12px;
+  }
+  svg.railroad-diagram text.diagram-arrow {
+      font-size: 16px;
+  }
+  svg.railroad-diagram text.label {
+      text-anchor: start;
+  }
+  svg.railroad-diagram text.comment {
+      font: italic 12px monospace;
+  }
+  svg.railroad-diagram g.non-terminal text {
+      /*font-style: italic;*/
+  }
+  svg.railroad-diagram g.special-sequence rect {
+      fill: #FFDB4D;
+  }
+  svg.railroad-diagram g.special-sequence text {
+      font-style: italic;
+  }
+  svg.railroad-diagram rect {
+      stroke-width: 3;
+      stroke: black;
+  }
+  svg.railroad-diagram g.non-terminal rect {
+      fill: hsl(120,100%,90%);
+  }
+  svg.railroad-diagram g.terminal rect {
+      fill: hsl(120,100%,90%);
+  }
+  svg.railroad-diagram path.diagram-text {
+      stroke-width: 3;
+      stroke: black;
+      fill: white;
+      cursor: help;
+  }
+  svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+      fill: #eee;
+  }
 `;
 
 const dasherize = str => str.replace(/\s+/g, "-");
@@ -187,7 +192,9 @@ const ebnfTemplate = ({
 const commentTemplate = comment => converter.makeHtml(dedent(comment));
 
 module.exports = {
-  documentTemplate,
+  documentContent,
+  documentFrame,
+  documentStyle,
   ebnfTemplate,
   commentTemplate
 };

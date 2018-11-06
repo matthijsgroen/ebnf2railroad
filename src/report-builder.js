@@ -12,7 +12,9 @@ const {
 } = require("railroad-diagrams");
 const { optimizeProduction } = require("./structure-optimizer");
 const {
-  documentTemplate,
+  documentContent,
+  documentFrame,
+  documentStyle,
   ebnfTemplate,
   commentTemplate
 } = require("./report-html-template");
@@ -223,15 +225,22 @@ const createDocumentation = (ast, options) => {
   const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
   const hierarchicalToc = createTocStructure(createStructuralToc(ast));
 
-  return documentTemplate({
+  const htmlContent = documentContent({
     title: options.title,
     contents,
     alphabeticalToc,
     hierarchicalToc
   });
+  return options.full !== false
+    ? documentFrame({
+        body: htmlContent,
+        head: `<style type="text/css">${documentStyle()}</style>`,
+        title: options.title
+      })
+    : htmlContent;
 };
 
-const valididateEbnf = ast => {
+const validateEbnf = ast => {
   const identifiers = ast.map(production => production.identifier);
 
   const doubleDeclarations = ast
@@ -264,5 +273,6 @@ const valididateEbnf = ast => {
 
 module.exports = {
   createDocumentation,
-  valididateEbnf
+  validateEbnf,
+  documentStyle
 };
