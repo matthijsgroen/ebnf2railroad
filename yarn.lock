@@ -1178,7 +1178,7 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 
 "ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad#node-usage":
   version "1.4.0"
-  resolved "https://github.com/matthijsgroen/ebnf2railroad#f5c5729ee3a54ec3c410dd7513c91fb93f489aa8"
+  resolved "https://github.com/matthijsgroen/ebnf2railroad#4d563084a91042643f99b26fa5c5b3c79c160dd9"
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/matthijsgroen/railroad-diagrams.git#add-horizontal-choice"
