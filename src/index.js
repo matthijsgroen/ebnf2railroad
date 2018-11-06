@@ -15,26 +15,32 @@ editor.getSession().on("change", () => {
     validateAst(ast);
     updateAst(ast);
   } catch (e) {
-    const { expected, line, token } = e.hash;
-    editor.getSession().clearAnnotations();
-    editor.getSession().setAnnotations([
-      {
-        text: `Expected ${expected}, got ${token}`,
-        type: "error",
-        column: 0,
-        row: line
-      }
-    ]);
+    if (e.hash) {
+      const { expected, line, token } = e.hash;
+      editor.getSession().clearAnnotations();
+      editor.getSession().setAnnotations([
+        {
+          text: `Parse error: Expected ${expected}, got ${token}`,
+          type: "error",
+          column: 0,
+          row: line
+        }
+      ]);
+    }
   }
 });
 
 const validateAst = ast => {
-  try {
-    const result = validateEbnf(ast);
-    console.log(result);
-  } catch (e) {
-    console.log(e);
-  }
+  const result = validateEbnf(ast);
+  editor.getSession().clearAnnotations();
+  editor.getSession().setAnnotations(
+    result.map(warning => ({
+      text: `${warning.type}: ${warning.message}`,
+      type: "warning",
+      column: 0,
+      row: warning.line
+    }))
+  );
 };
 
 const updateAst = ast => {};
