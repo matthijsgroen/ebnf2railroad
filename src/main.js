@@ -1,4 +1,4 @@
-const { parser } = require("./ebnf-parser");
+const { parse } = require("./ebnf-parser");
 const {
   createDocumentation,
   documentStyle,
@@ -8,7 +8,7 @@ const { version } = require("../package.json");
 
 module.exports = {
   version,
-  parseEbnf: parser,
+  parseEbnf: parse,
   createDocumentation,
   documentStyle,
   validateEbnf

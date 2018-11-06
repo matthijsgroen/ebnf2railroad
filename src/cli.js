@@ -2,7 +2,7 @@ const program = require("commander");
 const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
-const { parser } = require("./ebnf-parser");
+const { parse } = require("./ebnf-parser");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
 
@@ -39,7 +39,7 @@ async function run(args) {
 
     const targetFilename = program.target || defaultOutputFilename;
 
-    const ast = parser.parse(ebnf);
+    const ast = parse(ebnf);
     const warnings = validateEbnf(ast);
 
     warnings.length > 0 && allowOutput && warnings.forEach(output);
