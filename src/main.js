@@ -8,6 +8,7 @@ const { version } = require("../package.json");
 
 module.exports = {
   version,
+  parseEbnf: parser,
   createDocumentation,
   documentStyle,
   validateEbnf
