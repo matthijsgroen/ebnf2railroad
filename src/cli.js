@@ -4,8 +4,9 @@ const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parser } = require("./ebnf-parser");
 const { createDocumentation, valididateEbnf } = require("./report-builder");
+const { version } = require("../package.json");
 
-program.version("1.0.0");
+program.version(version);
 
 program
   .usage("[options] <file>")

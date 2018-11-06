@@ -13,7 +13,7 @@
     "generator",
     "cli"
   ],
-  "main": "index.js",
+  "main": "src/main.js",
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
   "author": "Matthijs Groen <matthijs@kabisa.nl>",
   "license": "MIT",
