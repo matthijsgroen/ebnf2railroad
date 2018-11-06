@@ -1,9 +1,18 @@
 html, body { height: 100%; padding: 0; margin: 0; }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#header {
+  flex: 2em 0 0;
+}
+
 #main {
-  height: 100%;
   display: flex;
   flex-direction: row;
+  flex: 1 1 0;
 }
 
 #editor-container {
@@ -18,4 +27,5 @@ html, body { height: 100%; padding: 0; margin: 0; }
 
 #result {
   flex: 1 1 0;
+  overflow-y: scroll;
 }
