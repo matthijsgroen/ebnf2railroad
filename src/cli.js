@@ -2,10 +2,11 @@ const program = require("commander");
 const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
-const { parser } = require("./ebnf-parser");
-const { createDocumentation, valididateEbnf } = require("./report-builder");
+const { parse } = require("./ebnf-parser");
+const { createDocumentation, validateEbnf } = require("./report-builder");
+const { version } = require("../package.json");
 
-program.version("1.0.0");
+program.version(version);
 
 program
   .usage("[options] <file>")
@@ -25,6 +26,12 @@ async function run(args) {
   }
   const allowOutput = !program.quiet;
   const output = text => allowOutput && process.stdout.write(text + "\n");
+  const outputError = text => allowOutput && process.stderr.write(text + "\n");
+  const outputErrorStruct = struct =>
+    allowOutput &&
+    process.stderr.write(
+      `${struct.type} on line ${struct.line}: ${struct.message}\n`
+    );
 
   try {
     const filename = program.args[0];
@@ -38,10 +45,12 @@ async function run(args) {
 
     const targetFilename = program.target || defaultOutputFilename;
 
-    const ast = parser.parse(ebnf);
-    const warnings = valididateEbnf(ast);
+    const ast = parse(ebnf);
+    const warnings = validateEbnf(ast);
 
-    warnings.length > 0 && allowOutput && warnings.forEach(output);
+    warnings.length > 0 &&
+      allowOutput &&
+      warnings.forEach(warning => outputErrorStruct(warning));
 
     const report = createDocumentation(ast, {
       title: documentTitle
@@ -51,7 +60,16 @@ async function run(args) {
     output(`📜 Document created at ${targetFilename}`);
     warnings.length > 0 && program.validate && process.exit(2);
   } catch (e) {
-    output(e.message);
+    if (e.hash) {
+      const { line, expected, token } = e.hash;
+      outputErrorStruct({
+        line,
+        type: "Parse error",
+        message: `Expected ${expected}, got ${token}`
+      });
+    } else {
+      outputError(e.message);
+    }
     process.exit(1);
   }
 }

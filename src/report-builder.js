@@ -12,7 +12,9 @@ const {
 } = require("railroad-diagrams");
 const { optimizeProduction } = require("./structure-optimizer");
 const {
-  documentTemplate,
+  documentContent,
+  documentFrame,
+  documentStyle,
   ebnfTemplate,
   commentTemplate
 } = require("./report-html-template");
@@ -223,16 +225,25 @@ const createDocumentation = (ast, options) => {
   const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
   const hierarchicalToc = createTocStructure(createStructuralToc(ast));
 
-  return documentTemplate({
+  const htmlContent = documentContent({
     title: options.title,
     contents,
     alphabeticalToc,
     hierarchicalToc
   });
+  return options.full !== false
+    ? documentFrame({
+        body: htmlContent,
+        head: `<style type="text/css">${documentStyle()}</style>`,
+        title: options.title
+      })
+    : htmlContent;
 };
 
-const valididateEbnf = ast => {
-  const identifiers = ast.map(production => production.identifier);
+const validateEbnf = ast => {
+  const identifiers = ast.map(
+    production => production && production.identifier
+  );
 
   const doubleDeclarations = ast
     .map((declaration, index) => {
@@ -240,9 +251,13 @@ const valididateEbnf = ast => {
       if (!declaration.identifier) return false;
       const firstDeclaration = identifiers.indexOf(declaration.identifier);
       if (firstDeclaration === index) return false;
-      return `${declaration.location}: Duplicate declaration: "${
-        declaration.identifier
-      }" already declared on line ${ast[firstDeclaration].location}.`;
+      return {
+        line: declaration.location,
+        type: "Duplicate declaration",
+        message: `"${declaration.identifier}" already declared on line ${
+          ast[firstDeclaration].location
+        }`
+      };
     })
     .filter(Boolean);
 
@@ -252,17 +267,21 @@ const valididateEbnf = ast => {
       getReferences(declaration)
         .filter((item, index, list) => list.indexOf(item) === index)
         .filter(reference => !identifiers.includes(reference))
-        .map(
-          missingReference =>
-            `${declaration.location}: Missing reference: "${missingReference}".`
-        )
+        .map(missingReference => ({
+          line: declaration.location,
+          type: "Missing reference",
+          message: `"${missingReference}" is not declared`
+        }))
     )
     .filter(m => m.length > 0)
     .reduce((acc, elem) => acc.concat(elem), []);
-  return doubleDeclarations.concat(missingReferences).sort();
+  return doubleDeclarations
+    .concat(missingReferences)
+    .sort((a, b) => a.line - b.line);
 };
 
 module.exports = {
   createDocumentation,
-  valididateEbnf
+  validateEbnf,
+  documentStyle
 };

@@ -20,16 +20,16 @@ const createPath = (production, ast, path) => {
     leaf.recursive = true;
   } else {
     const subPath = path.concat(production.identifier);
-    const children = searchReferencesFromIdentifier(
-      production.identifier,
-      ast
-    ).map(child =>
-      createPath(
-        ast.find(production => production.identifier === child),
-        ast,
-        subPath
-      )
-    );
+    const children = searchReferencesFromIdentifier(production.identifier, ast)
+      // Protect against missing references
+      .filter(child => ast.find(production => production.identifier === child))
+      .map(child =>
+        createPath(
+          ast.find(production => production.identifier === child),
+          ast,
+          subPath
+        )
+      );
     if (children.length > 0) {
       leaf.children = children;
     }

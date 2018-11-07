@@ -13,7 +13,7 @@ diagrams based on the ISO/IEC 14977 specification
 npm install -g ebnf2railroad
 ```
 
-## Usage
+## Usage from command line
 
 ```
 Usage: ebnf2railroad [options] <file>
@@ -33,6 +33,16 @@ Check the examples folder for an example input file and the generated result pag
 
 - EBNF `ebnf2railroad examples/ebnf.ebnf --title EBNF` [View online][example-ebnf]
 - JSON `ebnf2railroad examples/json.ebnf --title JSON` [View online][example-json]
+
+## Usage as module
+
+```javascript
+const { parseEbnf, createDocumentation } = require("ebnf2railroad");
+
+const ebnf = "definition = 'a', other, { other } | item, 'b';";
+const ast = parseEbnf(ebnf); // can throw parse error exceptions
+const htmlOutput = createDocumentation(ast);
+```
 
 ## Licence
 

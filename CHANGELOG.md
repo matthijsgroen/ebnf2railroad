@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Closing tag for Terminals with single quotes
 
 ### Added
+- Support to use package as library within other projects
 - Support for alternative characters: `|` -> `/`, `!`, `[ ]` -> `(/ /)`,
   `{ }` -> `(: :)`
 - Table of contents, showing structure in alphabet, or as
