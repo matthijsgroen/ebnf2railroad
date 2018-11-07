@@ -9,7 +9,18 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "ebnf2railroad-online.js"
   },
-  plugins: [new HtmlWebpackPlugin({ template: "./src/index.html" })],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "index.html",
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/try-yourself.html",
+      filename: "try-yourself.html",
+      inject: "body"
+    })
+  ],
   module: {
     rules: [
       {

@@ -1,4 +1,4 @@
-import "./index.css";
+import "./try-yourself.css";
 
 const ace = require("brace");
 const EditSession = ace.EditSession;
@@ -75,6 +75,9 @@ headSection.appendChild(styleElem);
 editor.setSession(session);
 editor.getSession().setMode("ace/mode/plain_text");
 editor.setTheme("ace/theme/monokai");
+editor.session.setTabSize(2);
+editor.session.setUseSoftTabs(true);
+editor.setHighlightActiveLine(true);
 editor.getSession().setUseWrapMode(true);
 updateDocument(content);
 
