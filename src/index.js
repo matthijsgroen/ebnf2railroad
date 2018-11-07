@@ -1,12 +1,14 @@
 import "./try-yourself.css";
 
 const ace = require("brace");
+require("brace/ext/language_tools");
 
 ace.define(
   "ace/mode/ebnf_highlight_rules",
   ["require", "exports", "ace/lib/oop", "ace/mode/text_highlight_rules"],
   function(getDep, result) {
     function SyntaxHighlighter() {
+      const identifier = "[a-z][a-z\\s]*";
       this.$rules = {
         start: [
           {
@@ -15,8 +17,24 @@ ace.define(
             next: "comment"
           },
           {
+            token: "keyword.operator",
+            regex: "[,|/!]"
+          },
+          {
+            token: "constant.language",
+            regex: "[=;]"
+          },
+          {
             token: "paren.lparen",
             regex: "[({[]"
+          },
+          {
+            token: "paren.rparen",
+            regex: "[)}\\]]"
+          },
+          {
+            token: ["entity.name.function", "constant.language"],
+            regex: `(${identifier})(=)`
           },
           {
             statename: "qstring",
@@ -106,6 +124,7 @@ ace.define(
 
 const EditSession = ace.EditSession;
 require("brace/theme/twilight");
+
 const {
   parseEbnf,
   validateEbnf,
@@ -116,6 +135,10 @@ const {
 const CONTENT_KEY = "ebnf2railroad-content";
 
 const editor = ace.edit("editor");
+editor.setOptions({
+  enableLiveAutocompletion: true,
+  enableBasicAutocompletion: false
+});
 
 let lastValidAst = [];
 const updateAst = ast => {
@@ -174,6 +197,34 @@ styleElem.innerHTML = documentStyle();
 const headSection = document.getElementsByTagName("head")[0];
 headSection.appendChild(styleElem);
 
+editor.completers = [
+  {
+    getCompletions: function(editor, session, pos, prefix, callback) {
+      const text = session.getValue();
+      const line = text.split("\n")[pos.row];
+      const preLine = line.slice(0, pos.column);
+      const preText =
+        text
+          .split("\n")
+          .slice(0, pos.row)
+          .join("\n") +
+        "\n" +
+        preLine;
+      const identifierNaming = /(^|;)[^=]*$/.test(preText);
+
+      const definitions = lastValidAst
+        .filter(production => production.identifier)
+        .map(production => ({
+          value: production.identifier,
+          meta: "identifier"
+        }));
+
+      const missingReferences = [];
+
+      callback(null, identifierNaming ? missingReferences : definitions);
+    }
+  }
+];
 editor.setSession(session);
 editor.getSession().setMode("ace/mode/ebnf");
 editor.setTheme("ace/theme/twilight");
