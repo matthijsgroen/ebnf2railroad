@@ -9,7 +9,7 @@
   "private": false,
   "dependencies": {
     "brace": "^0.11.1",
-    "ebnf2railroad": "https://github.com/matthijsgroen/ebnf2railroad#node-usage"
+    "ebnf2railroad": "https://github.com/matthijsgroen/ebnf2railroad#add-references-to-interface"
   },
   "devDependencies": {
     "css-loader": "^1.0.1",

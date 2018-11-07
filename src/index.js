@@ -129,7 +129,8 @@ const {
   parseEbnf,
   validateEbnf,
   createDocumentation,
-  documentStyle
+  documentStyle,
+  searchReferencesFromIdentifier
 } = require("ebnf2railroad");
 
 const CONTENT_KEY = "ebnf2railroad-content";
@@ -212,19 +213,38 @@ editor.completers = [
         preLine;
       const identifierNaming = /(^|;)[^=]*$/.test(preText);
 
-      const definitions = lastValidAst
+      const definitions = lastValidAst.filter(
+        production => production.identifier
+      );
+
+      const definitionSuggestions = definitions.map(production => ({
+        value: production.identifier,
+        meta: "identifier"
+      }));
+
+      const missingReferences = lastValidAst
         .filter(production => production.identifier)
-        .map(production => ({
-          value: production.identifier,
-          meta: "identifier"
+        .map(production =>
+          searchReferencesFromIdentifier(production.identifier, lastValidAst)
+        )
+        .filter(reference => !definitions.includes(reference))
+        .filter((item, index, list) => list.indexOf(item) === index)
+        .reduce((acc, item) => acc.concat(item), [])
+        .map(reference => ({
+          value: reference,
+          meta: "missing reference"
         }));
 
-      const missingReferences = [];
-
-      callback(null, identifierNaming ? missingReferences : definitions);
+      callback(
+        null,
+        identifierNaming
+          ? missingReferences
+          : definitionSuggestions.concat(missingReferences)
+      );
     }
   }
 ];
+editor.$blockScrolling = Infinity;
 editor.setSession(session);
 editor.getSession().setMode("ace/mode/ebnf");
 editor.setTheme("ace/theme/twilight");
@@ -232,6 +252,19 @@ editor.session.setTabSize(2);
 editor.session.setUseSoftTabs(true);
 editor.setHighlightActiveLine(true);
 editor.getSession().setUseWrapMode(true);
+editor.commands.addCommand({
+  name: "Create terminal choices",
+  bindKey: { win: "Ctrl-Shift-C", mac: "Command-Shift-C" },
+  exec: function(editor) {
+    const range = editor.getSelectionRange();
+    const selection = editor.session.getTextRange(range);
+    const choices = selection
+      .split("")
+      .map(c => `"${c}"`)
+      .join(" | ");
+    editor.session.replace(range, choices);
+  }
+});
 updateDocument(content);
 
 editor.getSession().on("change", () => {
