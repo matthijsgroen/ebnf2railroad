@@ -265,6 +265,15 @@ editor.commands.addCommand({
     editor.session.replace(range, choices);
   }
 });
+editor.commands.addCommand({
+  name: "Make markdown text bold",
+  bindKey: { win: "Ctrl-B", mac: "Command-B" },
+  exec: function(editor) {
+    const range = editor.getSelectionRange();
+    const selection = editor.session.getTextRange(range);
+    editor.session.replace(range, `**${selection}**`);
+  }
+});
 updateDocument(content);
 
 editor.getSession().on("change", () => {
