@@ -7,7 +7,7 @@
   "author": "Matthijs Groen <matthijs.groen@gmail.com",
   "license": "MIT",
   "private": false,
-  "script": {
+  "scripts": {
     "build": "webpack"
   },
   "dependencies": {
