@@ -14,6 +14,7 @@
   "devDependencies": {
     "css-loader": "^1.0.1",
     "html-webpack-plugin": "^3.2.0",
+    "raw-loader": "^0.5.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",

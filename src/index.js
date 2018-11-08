@@ -1,129 +1,12 @@
 import "./try-yourself.css";
+import defaultDocument from "./default-document.txt";
 
 const ace = require("brace");
 require("brace/ext/language_tools");
-
-ace.define(
-  "ace/mode/ebnf_highlight_rules",
-  ["require", "exports", "ace/lib/oop", "ace/mode/text_highlight_rules"],
-  function(getDep, result) {
-    function SyntaxHighlighter() {
-      const identifier = "[a-z][a-z\\s]*";
-      this.$rules = {
-        start: [
-          {
-            token: "comment",
-            regex: "\\(\\*",
-            next: "comment"
-          },
-          {
-            token: "keyword.operator",
-            regex: "[,|/!]"
-          },
-          {
-            token: "constant.language",
-            regex: "[=;]"
-          },
-          {
-            token: "paren.lparen",
-            regex: "[({[]"
-          },
-          {
-            token: "paren.rparen",
-            regex: "[)}\\]]"
-          },
-          {
-            token: ["entity.name.function", "constant.language"],
-            regex: `(${identifier})(=)`
-          },
-          {
-            statename: "qstring",
-            token: "string.start",
-            regex: "'",
-            next: [
-              {
-                token: "string.end",
-                regex: "'",
-                next: "start"
-              },
-              {
-                defaultToken: "string"
-              }
-            ]
-          },
-          {
-            statename: "qqstring",
-            token: "string.start",
-            regex: '"',
-            next: [
-              {
-                token: "string.end",
-                regex: '"',
-                next: "start"
-              },
-              {
-                defaultToken: "string"
-              }
-            ]
-          }
-        ],
-        comment: [
-          {
-            token: "comment",
-            regex: "\\*\\)",
-            next: "start"
-          },
-          {
-            defaultToken: "comment"
-          }
-        ]
-      };
-      this.normalizeRules();
-    }
-    const oop = getDep("../lib/oop");
-    const parent = getDep("./text_highlight_rules").TextHighlightRules;
-    oop.inherits(SyntaxHighlighter, parent);
-    result.EBNFHighlightRules = SyntaxHighlighter;
-  }
-);
-
-ace.define(
-  "ace/mode/ebnf",
-  [
-    "require",
-    "exports",
-    "module",
-    "ace/mode/ebnf_highlight_rules",
-    "ace/mode/text",
-    "ace/lib/oop"
-  ],
-  function(getDep, result) {
-    const highlighter = getDep("./ebnf_highlight_rules").EBNFHighlightRules;
-
-    const Mode = function() {
-      // constructor
-      this.HighlightRules = highlighter;
-    };
-
-    const oop = getDep("../lib/oop");
-    const parent = getDep("./text").Mode;
-
-    oop.inherits(Mode, parent);
-    (function() {
-      // overrides after inheritance
-      this.$id = "ace/mode/ebnf";
-      this.blockComment = {
-        start: "(*",
-        end: "*)"
-      };
-    }.call(Mode.prototype));
-
-    result.Mode = Mode;
-  }
-);
+require("./ace-ebnf-mode");
 
 const EditSession = ace.EditSession;
-require("brace/theme/twilight");
+require("brace/theme/iplastic");
 
 const {
   parseEbnf,
@@ -133,15 +16,14 @@ const {
   searchReferencesFromIdentifier
 } = require("ebnf2railroad");
 
-const CONTENT_KEY = "ebnf2railroad-content";
-
-const editor = ace.edit("editor");
-editor.setOptions({
-  enableLiveAutocompletion: true,
-  enableBasicAutocompletion: false
-});
+const styleElem = document.createElement("style");
+styleElem.setAttribute("type", "text/css");
+styleElem.innerHTML = documentStyle();
+const headSection = document.getElementsByTagName("head")[0];
+headSection.appendChild(styleElem);
 
 let lastValidAst = [];
+
 const updateAst = ast => {
   lastValidAst = ast;
   const contents = createDocumentation(ast, { title: "Demo", full: false });
@@ -149,7 +31,7 @@ const updateAst = ast => {
   elem.innerHTML = contents;
 };
 
-const validateAst = ast => {
+const validateAst = (editor, ast) => {
   const result = validateEbnf(ast);
   editor.getSession().clearAnnotations();
   editor.getSession().setAnnotations(
@@ -162,14 +44,19 @@ const validateAst = ast => {
   );
 };
 
-const updateDocument = content => {
-  try {
-    window.localStorage.setItem(CONTENT_KEY, content);
-  } catch (e) {}
+const CONTENT_KEY = "ebnf2railroad-content";
+
+const updateDocument = (editor, store = true) => {
+  const content = editor.getValue();
+  if (store) {
+    try {
+      window.localStorage.setItem(CONTENT_KEY, content);
+    } catch (e) {}
+  }
 
   try {
-    const ast = parseEbnf(content);
-    validateAst(ast);
+    const ast = content.trim() === "" ? [] : parseEbnf(content);
+    validateAst(editor, ast);
     updateAst(ast);
   } catch (e) {
     if (e.hash) {
@@ -189,36 +76,50 @@ const updateDocument = content => {
   }
 };
 
-const content = window.localStorage.getItem(CONTENT_KEY) || "";
+const content = window.localStorage.getItem(CONTENT_KEY) || defaultDocument;
+
 const session = new EditSession(content);
 
-const styleElem = document.createElement("style");
-styleElem.setAttribute("type", "text/css");
-styleElem.innerHTML = documentStyle();
-const headSection = document.getElementsByTagName("head")[0];
-headSection.appendChild(styleElem);
+const editor = ace.edit("editor");
+editor.setOptions({
+  enableLiveAutocompletion: true,
+  enableBasicAutocompletion: false
+});
+
+const getCursorInfo = (session, pos) => {
+  const text = session.getValue();
+  const line = text.split("\n")[pos.row];
+  const preLine = line.slice(0, pos.column);
+  const preLineText =
+    text
+      .split("\n")
+      .slice(0, pos.row)
+      .join("\n") + "\n";
+  const preText = preLineText + preLine;
+  const identifierNaming = /(^|;)[^=]*$/.test(preText);
+  const preTextInclusive = preLineText + line;
+
+  const currentIdentifierMatch = preTextInclusive.match(
+    /(?:^|;|\*\))\s*([a-zA-Z0-9\s]+)=[^=]*$/
+  );
+
+  return {
+    identifierNaming,
+    currentIdentifierName: currentIdentifierMatch && currentIdentifierMatch[1]
+  };
+};
 
 editor.completers = [
   {
     getCompletions: function(editor, session, pos, prefix, callback) {
-      const text = session.getValue();
-      const line = text.split("\n")[pos.row];
-      const preLine = line.slice(0, pos.column);
-      const preText =
-        text
-          .split("\n")
-          .slice(0, pos.row)
-          .join("\n") +
-        "\n" +
-        preLine;
-      const identifierNaming = /(^|;)[^=]*$/.test(preText);
+      const { identifierNaming } = getCursorInfo(session, pos);
 
-      const definitions = lastValidAst.filter(
-        production => production.identifier
-      );
+      const definitions = lastValidAst
+        .filter(production => production.identifier)
+        .map(production => production.identifier);
 
-      const definitionSuggestions = definitions.map(production => ({
-        value: production.identifier,
+      const definitionSuggestions = definitions.map(identifier => ({
+        value: identifier,
         meta: "identifier"
       }));
 
@@ -227,9 +128,9 @@ editor.completers = [
         .map(production =>
           searchReferencesFromIdentifier(production.identifier, lastValidAst)
         )
-        .filter(reference => !definitions.includes(reference))
-        .filter((item, index, list) => list.indexOf(item) === index)
         .reduce((acc, item) => acc.concat(item), [])
+        .filter((item, index, list) => list.indexOf(item) === index)
+        .filter(reference => !definitions.includes(reference))
         .map(reference => ({
           value: reference,
           meta: "missing reference"
@@ -247,7 +148,7 @@ editor.completers = [
 editor.$blockScrolling = Infinity;
 editor.setSession(session);
 editor.getSession().setMode("ace/mode/ebnf");
-editor.setTheme("ace/theme/twilight");
+editor.setTheme("ace/theme/iplastic");
 editor.session.setTabSize(2);
 editor.session.setUseSoftTabs(true);
 editor.setHighlightActiveLine(true);
@@ -274,9 +175,20 @@ editor.commands.addCommand({
     editor.session.replace(range, `**${selection}**`);
   }
 });
-updateDocument(content);
 
+updateDocument(editor, false);
 editor.getSession().on("change", () => {
-  const newValue = editor.getValue();
-  updateDocument(newValue);
+  updateDocument(editor);
+});
+
+editor.session.selection.on("changeCursor", function() {
+  const cursorPosition = editor.selection.getCursor();
+  const info = getCursorInfo(editor.getSession(), cursorPosition);
+  if (info.currentIdentifierName) {
+    const header = document.querySelector(
+      `h4[id=${info.currentIdentifierName}]`
+    );
+    const result = document.getElementById("result");
+    if (header && result) result.scrollTop = header.offsetTop - 300;
+  }
 });
