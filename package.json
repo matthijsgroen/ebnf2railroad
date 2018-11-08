@@ -7,6 +7,9 @@
   "author": "Matthijs Groen <matthijs.groen@gmail.com",
   "license": "MIT",
   "private": false,
+  "script": {
+    "build": "webpack"
+  },
   "dependencies": {
     "brace": "^0.11.1",
     "ebnf2railroad": "https://github.com/matthijsgroen/ebnf2railroad#add-references-to-interface"
