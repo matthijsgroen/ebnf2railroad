@@ -1,3 +1,7 @@
+env:
+  global:
+  - secure: nb09w7kY1LpeeW5HAig5xvmLRqRNbqsMHtZBmMYhmPdZ7tgzUglyQvhq/NwYvF90XygGK5JlSxgQxKwUp9jd70G5T+gWex7S7Avr1ibP1OdF63dfhbEYBPOJ9jDxQ8T+Tv2rdWHLVyng0I9BB5iWXtyjltRO58fHveenihLM+IVtwk+OIP84/Urek/oV5ywW+u1poAfL7CcHSmzE1Vjci1MUW+EmFE0TwSUCFTy7B6B2NhEwvTGSZtAqtoA/3jP1JRteFUhhYfPY+dao6vDC/0bP3JRBSvzrwuyYBLTuyH6IPClPvi/ETRWtioke00zvn/cC2KNzQjCP3p38N0Z4lBof5Z58D4zUzQy2xvtQWmiQMuc5qR56/V4I3sF24Yf5ITv5VyLWd/ui1XvvDfExU+22YKsJZ8PtMAcdGADc2dPB00mfE6X2HIVSRUAfoDvbtpr4jARbBxX2iAmGPpzmAk4Dce4/fjd691Ix+gaBL+/sHDdAD++A+mVGR7C5pRESGWZ5ke6oi98tGoKvPPGUJnejbvr3Qu1VBtlXSGe23b3jbSnCmtSm9YU2aq2m7sjO3dHOGIkPuKpShG7HCg5jWhh00+3nFo3xWk9ou91Bv2DsBiRoHBWB7lsU3OkNPcAwgpjwWv1dPpuW753N412gwwVGkH3pUsk2rPeJfsUJn90=
+
 language: node_js
 cache: yarn
 node_js:
@@ -8,17 +12,13 @@ script:
 
 branches:
   only:
-    - website
+  - website
 
 deploy:
   provider: pages
   skip-cleanup: true
   github-token: "$GITHUB_TOKEN"
   keep-history: false
-  local-dir: dist/
+  local-dir: dist
   on:
     branch: website
-
-env:
-  global:
-    secure: sWVJoy5tuFOgazzwpj1h4st9Te8gqL9HkIAdZmutLcohWHYRX6rmhXI3g2qJbwgfUIW5ukDX1V/QTljo0eAD9iavTGMyi0zMuU770W3p1qAjMrDc+p9Y4RuBJqOsducYys0H9u97iguj45EwgzuF4kE2XicFMQD0i0YSgrbpJA+Cu2gDKM6xhbZjtdCdZr8WxGRXyPBYOyJKp3gutDj9kRtDE2L3PRATV4b8jJB1C4hS9jRBXWoxW9CVr3HccE6wReu0/4MMsgXOQBu89Y/Wa78IyvUyO9Rbu9LX1MFbeNnYT2ROq3XLrZ5v7EFhnozuxlhjcDZZuc1NGk1QLKhQipjWjZyzmRYGWkOF8AF4EJhn2MdEb8moOioZaxf1FosLmF2+jb8chowEGM//YaQ+VyGmaAb01NaUKItgzBErwJgU4gSMQcPhts+Ge7Ui3DIVgx0IS/XkNvwP/H9GF6vxf9xQ6rOxehWUcdL04I4ooIMucJUGl9w8yNsTkENZFGVz6ir4ydgrYifhZ2MNbo+MrIGKhoqJwpQXmkkNm8Cl2AVVSOCPc/zrsdU35T+16HJ/aWscgBJvJCi/0PlakDt80/TpYx3dkJ/otIlDffYfcswRFugDyGaPCZ33OSADmJcnfSqoqKAMhikE//0FYtXg5TOpXxYFB0v0D+PyWj243yg=
