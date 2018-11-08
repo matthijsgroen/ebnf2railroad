@@ -1176,9 +1176,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad#add-references-to-interface":
+"ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad#styling-preview":
   version "1.5.0-pre"
-  resolved "https://github.com/matthijsgroen/ebnf2railroad#872abb120bf8a9e728a8ea4cbf8e67a367ad8d21"
+  resolved "https://github.com/matthijsgroen/ebnf2railroad#7e37139aa07099844cf46dd7287ecebbaa759594"
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams"

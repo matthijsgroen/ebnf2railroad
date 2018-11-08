@@ -2,15 +2,53 @@
 <html lang="en">
   <head>
     <title>EBNF 2 Railroad</title>
+    <style type="text/css">
+      html, body {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      main {
+        text-align: center;
+        flex: 0 0 auto;
+      }
+    </style>
   </head>
   <body>
-    <p>Under construction</p>
-    <ul>
-      <li>What is EBNF</li>
-      <li>Where can you use it for?</li>
-      <li>What does EBNF 2 railroad?</li>
-      <li>Github repo</li>
-      <li><a href="try-yourself.html">Try it online</a></li>
-    </ul>
+    <main>
+      <article>
+        <header>
+          <h1>EBNF 2 Railroad</h1>
+          <p>Make beautiful documentation for your DSL grammar</p>
+        </header>
+        <section>
+          <h2>What is EBNF?</h2>
+          <blockquote>
+            <p>EBNF is a code that expresses the grammar of a formal language.</p>
+            <cite><a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form">
+                Extended Backus–Naur form</a>, Wikipedia</cite>
+          </blockquote>
+          <p>You can use EBNF to describe the syntax of a programming laguage, or a
+          domain specific language.<br />EBNF 2 Railroad converts a EBNF file with comments into
+          a readable HTML page with <a href="https://en.wikipedia.org/wiki/Syntax_diagram">railroad diagrams</a>.</p>
+        </section>
+        <section>
+          <h2>
+            <a href="try-yourself.html">Try online!</a>
+            or use the command line tool
+          </h2>
+          <code><pre>npm install -g <a href="https://www.npmjs.com/package/ebnf2railroad">ebnf2railroad</a></pre></code>
+        </section>
+        <footer>
+          © 2018 Matthijs Groen - <a href="https://github.com/matthijsgroen/ebnf2railroad/blob/master/LICENSE">MIT Licence</a> - <a href="https://github.com/matthijsgroen/ebnf2railroad">Github Repo</a>
+        </footer>
+        </ul>
+    </main>
   </body>
 </html>

@@ -25,7 +25,7 @@
   digit = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0";
   ```
 
-The EBNF syntax is as follows: 
+  The EBNF syntax is as follows:
 
 *)
 

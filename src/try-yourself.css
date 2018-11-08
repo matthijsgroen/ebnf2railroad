@@ -6,7 +6,22 @@ body {
 }
 
 #header {
-  flex: 2em 0 0;
+  flex: 1rem 0 0;
+  padding: 0 1em;
+}
+
+a.collapse {
+  text-decoration: none;
+  display: inline-block;
+  padding-right: 1rem;
+}
+
+.greyed {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+#header h1 {
+  font-size: 1rem;
 }
 
 #main {
@@ -15,8 +30,22 @@ body {
   flex: 1 1 0;
 }
 
-#editor-container {
-  flex: .5 1 0;
+body.collapsed a.collapse {
+  transform: rotate(180deg);
+}
+
+a.collapse {
+  transform-origin: 30%;
+  transition: transform .5s;
+}
+
+body.collapsed #editor-pane {
+  flex-grow: 0.00001;
+}
+
+#editor-pane {
+  flex: 1 1 0;
+  /*transition: flex .5s;*/
   display: flex;
   flex-direction: column;
 }

@@ -1,18 +1,12 @@
 import "./try-yourself.css";
 import defaultDocument from "./default-document.txt";
 
-const ace = require("brace");
-require("brace/ext/language_tools");
-require("./ace-ebnf-mode");
-
-const EditSession = ace.EditSession;
-require("brace/theme/iplastic");
-
 const {
   parseEbnf,
   validateEbnf,
   createDocumentation,
   documentStyle,
+  version,
   searchReferencesFromIdentifier
 } = require("ebnf2railroad");
 
@@ -21,6 +15,25 @@ styleElem.setAttribute("type", "text/css");
 styleElem.innerHTML = documentStyle();
 const headSection = document.getElementsByTagName("head")[0];
 headSection.appendChild(styleElem);
+
+const ace = require("brace");
+require("brace/ext/language_tools");
+require("./ace-ebnf-mode");
+
+const EditSession = ace.EditSession;
+require("brace/theme/iplastic");
+
+// Toggle collapse/expand
+
+const collapseExpand = document.querySelector("a.collapse");
+collapseExpand.addEventListener("click", event => {
+  event.preventDefault();
+  if (document.body.classList.contains("collapsed")) {
+    document.body.classList.remove("collapsed");
+  } else {
+    document.body.classList.add("collapsed");
+  }
+});
 
 let lastValidAst = [];
 
@@ -184,14 +197,18 @@ editor.getSession().on("change", () => {
 
 const dasherize = text => text.replace(/\s+/g, "-");
 
+const result = document.getElementById("result");
+const siteHeader = document.getElementById("header");
+const versionSpan = document.querySelector("#header h1 span");
+versionSpan && (versionSpan.innerText = `- Version ${version}`);
+
 editor.session.selection.on("changeCursor", function() {
   const cursorPosition = editor.selection.getCursor();
   const info = getCursorInfo(editor.getSession(), cursorPosition);
   if (info.currentIdentifierName) {
-    const header = document.querySelector(
-      `h4[id=${dasherize(info.currentIdentifierName)}]`
-    );
-    const result = document.getElementById("result");
-    if (header && result) result.scrollTop = header.offsetTop - 100;
+    const query = `h4[id=${dasherize(info.currentIdentifierName.trim())}]`;
+    const header = document.querySelector(query);
+    if (header && result)
+      result.scrollTop = header.offsetTop - siteHeader.clientHeight;
   }
 });
