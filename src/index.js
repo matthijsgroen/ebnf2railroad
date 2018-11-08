@@ -181,14 +181,16 @@ editor.getSession().on("change", () => {
   updateDocument(editor);
 });
 
+const dasherize = text => text.replace(/\s+/g, "-");
+
 editor.session.selection.on("changeCursor", function() {
   const cursorPosition = editor.selection.getCursor();
   const info = getCursorInfo(editor.getSession(), cursorPosition);
   if (info.currentIdentifierName) {
     const header = document.querySelector(
-      `h4[id=${info.currentIdentifierName}]`
+      `h4[id=${dasherize(info.currentIdentifierName)}]`
     );
     const result = document.getElementById("result");
-    if (header && result) result.scrollTop = header.offsetTop - 300;
+    if (header && result) result.scrollTop = header.offsetTop - 100;
   }
 });
