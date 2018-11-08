@@ -1,23 +1,19 @@
 env:
   global:
-  - secure: nb09w7kY1LpeeW5HAig5xvmLRqRNbqsMHtZBmMYhmPdZ7tgzUglyQvhq/NwYvF90XygGK5JlSxgQxKwUp9jd70G5T+gWex7S7Avr1ibP1OdF63dfhbEYBPOJ9jDxQ8T+Tv2rdWHLVyng0I9BB5iWXtyjltRO58fHveenihLM+IVtwk+OIP84/Urek/oV5ywW+u1poAfL7CcHSmzE1Vjci1MUW+EmFE0TwSUCFTy7B6B2NhEwvTGSZtAqtoA/3jP1JRteFUhhYfPY+dao6vDC/0bP3JRBSvzrwuyYBLTuyH6IPClPvi/ETRWtioke00zvn/cC2KNzQjCP3p38N0Z4lBof5Z58D4zUzQy2xvtQWmiQMuc5qR56/V4I3sF24Yf5ITv5VyLWd/ui1XvvDfExU+22YKsJZ8PtMAcdGADc2dPB00mfE6X2HIVSRUAfoDvbtpr4jARbBxX2iAmGPpzmAk4Dce4/fjd691Ix+gaBL+/sHDdAD++A+mVGR7C5pRESGWZ5ke6oi98tGoKvPPGUJnejbvr3Qu1VBtlXSGe23b3jbSnCmtSm9YU2aq2m7sjO3dHOGIkPuKpShG7HCg5jWhh00+3nFo3xWk9ou91Bv2DsBiRoHBWB7lsU3OkNPcAwgpjwWv1dPpuW753N412gwwVGkH3pUsk2rPeJfsUJn90=
-
+  - secure: ZJX/nNNQGR6RdYPPqXpN0+IVv6QSGqW7sIa5JkVr7ZkWzbwkkwdHMCJwiqNb2TnNC67cci7GM4a8FGHtvlb62BxngnF3doEL+obNsZ15RS5atsmR9U5WIjStMMsd1SLzUFUyj7tlVaCcOGMatS8fuK9N2EfvKiMO6pSiS0AaTEQEsPzwyH9vzgKMaxOTg1iQRyWGWZxATmAW1m0Y/ZOTz9qIkaUYIfVLfAuVqF1dW0iEAKpt6HX0tUz353xx1GAh/dtLmpFojtK666hGyIazyZfYJClLHyqun9KAj7bZJTIQ76eyhnLyqDkvifooAE9bwJCk4sowGiYSsDxda9f8go7YOOSBQQK4yp+ABKtnd4nP5WhyWcabLAWBrTSRRMBgg//5Mk8ObiS7oUe9VfFSojrsMIkOhyGq6WWnY/gRxcEJqzxGf3ZGdFrEJKIf+7rfClb+icgdDgaaNd+VCHTBWdebF+Vxv+KxuUGBU81NDMnLiYpJgsY4BOYnzdioIbApRe6M/Eo6+Zb54K/NN1nWpa0uYsh2chKLS5RBLYZzD1pvQN4bifiU8MGXJ413nqWOTKIuUyS7XVtqitntnkMdc1pNhtCTHFdDfxKpnt6mATeAhh2VSDSzRpB0n3xvM1Oyi9y3ucz4dmiaUCW2jsr8700opwl6fY+hp6lIOZKkQj8=
 language: node_js
 cache: yarn
 node_js:
 - node
-
 script:
 - yarn build
-
 branches:
   only:
   - website
-
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token: "$GITHUB_TOKEN"
+  github-token: $GITHUB_TOKEN
   keep-history: false
   local-dir: dist
   on:
