@@ -79,6 +79,7 @@ const updateDocument = (editor, store = true) => {
 const content = window.localStorage.getItem(CONTENT_KEY) || defaultDocument;
 
 const session = new EditSession(content);
+session.setUndoManager(new ace.UndoManager());
 
 const editor = ace.edit("editor");
 editor.setOptions({
