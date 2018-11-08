@@ -48,101 +48,182 @@ const documentContent = ({
   </main>`;
 
 const documentStyle = () =>
-  `/* Text styling */
-  body {
-    font: normal 12px Verdana, sans-serif;
-    color: #0F0C00;
-    background: #FFFCFC;
-  }
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.5em; }
-  a,
-  a:visited,
-  a:active {
-    color: #0F0C00;
-  }
-  a:hover {
-    color: #000;
-  }
-  section h4 {
-    margin-bottom: 0;
-  }
+  `
+/* Dev-only CSS */
+nav:last-child {
+    display: none;
+}
 
-  /* EBNF text representation styling */
-  code.ebnf {
-    padding: 1em 1em 1em 3em;
-    text-indent: -2em;
-    background: rgb(255, 246, 209);
-    font-weight: bold;
-    color: #777;
+/* Proper CSS */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+:root {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --diagramBackground: #f8f8f8;
+}
+
+html {
+    font-family: sans-serif;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: inherit;
+}
+
+a:visited {
+    color: var(--subtleText);
+}
+
+a:active, a:focus, a:hover {
+    color: var(--highlightText);
+}
+
+header {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
+}
+
+main {
+    display: flex;
+}
+
+nav {
+    padding: 1rem 2rem 1rem 1rem;
+}
+
+nav h3 {
     white-space: nowrap;
-    display: inline-block;
-  }
-  .ebnf-identifier {
-    color: #990099;
-  }
-  .ebnf-terminal {
-    color: #009900;
-  }
-  .ebnf-non-terminal {
-    font-weight: normal;
-  }
-  .ebnf-comment {
-    font-weight: normal;
-    font-style: italic;
-    color: #999;
-  }
+}
 
-  /* EBNF diagram representation styling */
-  svg.railroad-diagram path {
-      stroke-width: 3;
-      stroke: black;
-      fill: rgba(0,0,0,0);
-  }
-  svg.railroad-diagram text {
-      font: bold 14px monospace;
-      text-anchor: middle;
-  }
-  svg.railroad-diagram text.diagram-text {
-      font-size: 12px;
-  }
-  svg.railroad-diagram text.diagram-arrow {
-      font-size: 16px;
-  }
-  svg.railroad-diagram text.label {
-      text-anchor: start;
-  }
-  svg.railroad-diagram text.comment {
-      font: italic 12px monospace;
-  }
-  svg.railroad-diagram g.non-terminal text {
-      /*font-style: italic;*/
-  }
-  svg.railroad-diagram g.special-sequence rect {
-      fill: #FFDB4D;
-  }
-  svg.railroad-diagram g.special-sequence text {
-      font-style: italic;
-  }
-  svg.railroad-diagram rect {
-      stroke-width: 3;
-      stroke: black;
-  }
-  svg.railroad-diagram g.non-terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram g.terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram path.diagram-text {
-      stroke-width: 3;
-      stroke: black;
-      fill: white;
-      cursor: help;
-  }
-  svg.railroad-diagram g.diagram-text:hover path.diagram-text {
-      fill: #eee;
-  }
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+}
+
+nav a {
+    display: inline-block;
+    color: var(--subtleText);
+    text-decoration: none;
+    padding: 0.33rem 0;
+}
+
+article {
+    padding: 1rem 2rem;
+    margin-left: 1rem;
+    border-left: 1px solid #ccc;
+}
+
+code {
+    width: 100%;
+}
+
+h4 {
+    padding: 2rem;
+    margin: 4rem -2rem 1rem -2rem;
+    background: var(--itemHeadingBackground);
+    font-size: 125%;
+}
+
+.diagram-container {
+    background: var(--diagramBackground);
+    margin-bottom: 0.25rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* EBNF text representation styling */
+code.ebnf {
+  padding: 1em 1em 1em 3em;
+  text-indent: -2em;
+  background: rgb(255, 246, 209);
+  font-weight: bold;
+  color: #777;
+  white-space: nowrap;
+  display: inline-block;
+}
+.ebnf-identifier {
+  color: #990099;
+}
+.ebnf-terminal {
+  color: #009900;
+}
+.ebnf-non-terminal {
+  font-weight: normal;
+}
+.ebnf-comment {
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}
+
+/* EBNF diagram representation styling */
+svg.railroad-diagram path {
+    stroke-width: 3;
+    stroke: black;
+    fill: rgba(0,0,0,0);
+}
+svg.railroad-diagram text {
+    font: bold 14px monospace;
+    text-anchor: middle;
+}
+svg.railroad-diagram text.diagram-text {
+    font-size: 12px;
+}
+svg.railroad-diagram text.diagram-arrow {
+    font-size: 16px;
+}
+svg.railroad-diagram text.label {
+    text-anchor: start;
+}
+svg.railroad-diagram text.comment {
+    font: italic 12px monospace;
+}
+svg.railroad-diagram g.non-terminal text {
+    /*font-style: italic;*/
+}
+svg.railroad-diagram g.special-sequence rect {
+    fill: #FFDB4D;
+}
+svg.railroad-diagram g.special-sequence text {
+    font-style: italic;
+}
+svg.railroad-diagram rect {
+    stroke-width: 3;
+    stroke: black;
+}
+svg.railroad-diagram g.non-terminal rect {
+    fill: hsl(120,100%,90%);
+}
+svg.railroad-diagram g.terminal rect {
+    fill: hsl(120,100%,90%);
+}
+svg.railroad-diagram path.diagram-text {
+    stroke-width: 3;
+    stroke: black;
+    fill: white;
+    cursor: help;
+}
+svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+    fill: #eee;
+}
+
 `;
 
 const dasherize = str => str.replace(/\s+/g, "-");
