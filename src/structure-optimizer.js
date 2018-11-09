@@ -221,14 +221,24 @@ const optimizeProduction = production => {
           } while (keepLooking);
 
           if (matches.length > 0) {
-            return {
+            const repeaterSequence = subSequence
+              .slice(0, -matches.length)
+              .reverse();
+
+            const resultObject = {
               clearPrevious: matches.length,
               repetition: { sequence: matches.reverse() },
-              repeater: {
-                sequence: subSequence.slice(0, -matches.length).reverse()
-              },
               skippable: false
             };
+
+            if (repeaterSequence.length > 0) {
+              const repeater =
+                repeaterSequence.length > 1
+                  ? { sequence: repeaterSequence }
+                  : repeaterSequence[0];
+              resultObject.repeater = repeater;
+            }
+            return resultObject;
           }
         }
       }
