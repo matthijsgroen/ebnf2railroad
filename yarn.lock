@@ -1178,7 +1178,7 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 
 "ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad#styling-preview":
   version "1.5.0-pre"
-  resolved "https://github.com/matthijsgroen/ebnf2railroad#7e37139aa07099844cf46dd7287ecebbaa759594"
+  resolved "https://github.com/matthijsgroen/ebnf2railroad#2db5bebbc6d4b5af024d3035b3b168e28138d574"
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams"
@@ -3176,7 +3176,7 @@ querystringify@^2.0.0:
 
 "railroad-diagrams@https://github.com/tabatkins/railroad-diagrams":
   version "1.1.0"
-  resolved "https://github.com/tabatkins/railroad-diagrams#821720335a9a5e96eafc92ccee38d2f6de637674"
+  resolved "https://github.com/tabatkins/railroad-diagrams#fc0c1b8f8f320e92183953431a6de3db61d3f73d"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
