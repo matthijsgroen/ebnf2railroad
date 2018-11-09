@@ -1178,7 +1178,7 @@ duplexify@^3.4.2, duplexify@^3.6.0:
 
 "ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad#styling-preview":
   version "1.5.0-pre"
-  resolved "https://github.com/matthijsgroen/ebnf2railroad#2db5bebbc6d4b5af024d3035b3b168e28138d574"
+  resolved "https://github.com/matthijsgroen/ebnf2railroad#e10dca8ec25bd2bcc27ced54b30d57ffd29b06da"
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams"
