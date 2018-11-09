@@ -153,7 +153,9 @@ const referencesTemplate = (identifier, references) =>
 ${references
     .map(
       reference =>
-        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+        `<li><a href="#${dasherize(
+          reference.trim()
+        )}">${reference.trim()}</a></li>`
     )
     .join("")}
 </ul>`;
@@ -164,7 +166,9 @@ const referencesToTemplate = (identifier, references) =>
 ${references
     .map(
       reference =>
-        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+        `<li><a href="#${dasherize(
+          reference.trim()
+        )}">${reference.trim()}</a></li>`
     )
     .join("")}
 </ul>`;

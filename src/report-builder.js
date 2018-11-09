@@ -186,14 +186,13 @@ const createTocStructure = tocData =>
   tocData
     .map(
       tocNode =>
-        `<li><a href="#${dasherize(tocNode.name)}">${tocNode.name} ${
-          tocNode.recursive ? "↖︎" : ""
-        }</a>
-      ${
-        tocNode.children
-          ? `<ul>${createTocStructure(tocNode.children)}</ul>`
-          : ""
-      }
+        `<li><a href="#${dasherize(
+          tocNode.name.trim()
+        )}">${tocNode.name.trim()} ${tocNode.recursive ? "↖︎" : ""}</a>${
+          tocNode.children
+            ? `<ul>${createTocStructure(tocNode.children)}</ul>`
+            : ""
+        }
       </li>`
     )
     .join("");

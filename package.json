@@ -1,6 +1,6 @@
 {
   "name": "ebnf2railroad",
-  "version": "1.5.0-pre",
+  "version": "1.5.0",
   "description": "EBNF to Railroad diagram",
   "keywords": [
     "ebnf",
@@ -15,7 +15,7 @@
   ],
   "main": "src/main.js",
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
-  "author": "Matthijs Groen <matthijs@kabisa.nl>",
+  "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "license": "MIT",
   "bin": {
     "ebnf2railroad": "./bin/ebnf2railroad.js"
