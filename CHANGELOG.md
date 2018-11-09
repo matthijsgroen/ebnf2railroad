@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show validation warnings for missing references
 - Option `--validate` to exit with status code 2 if document has
   warnings
-- Option `--quite` to suppress output to console
+- Option `--quiet` to suppress output to console
 - Optimize EBNF syntax as `( a ), { a }` in diagram as `a+` (one or more)
 - Optimize EBNF syntax as `a | { b }` in diagram as choice with "skip",
   "a", or one or more "b"
