@@ -191,8 +191,11 @@ editor.commands.addCommand({
 });
 
 updateDocument(editor, false);
+let updateTimeout;
+const UPDATE_THROTTLE = 200;
 editor.getSession().on("change", () => {
-  updateDocument(editor);
+  clearTimeout(updateTimeout);
+  updateTimeout = setTimeout(() => updateDocument(editor), UPDATE_THROTTLE);
 });
 
 const dasherize = text => text.replace(/\s+/g, "-");
