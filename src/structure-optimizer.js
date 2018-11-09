@@ -18,6 +18,146 @@ const optimizeProduction = production => {
     };
   }
   if (production.choice) {
+    // Check if rewrites are possible.
+    const allChoicesTheSame = production.choice
+      .map(elem => ungroup(optimizeProduction(elem)))
+      .every(
+        (item, idx, list) => JSON.stringify(item) === JSON.stringify(list[0])
+      );
+    if (allChoicesTheSame) {
+      return ungroup(optimizeProduction(production.choice[0]));
+    }
+
+    const isCertain = elem =>
+      (elem.terminal && elem) || (elem.nonTerminal && elem);
+
+    const groupElements = elements => {
+      const allSet = elements.every(f => f);
+      if (!allSet) return {};
+      return elements.reduce((acc, elem) => {
+        const key = JSON.stringify(elem);
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+    };
+    const countSame = groupElements => {
+      const amounts = Object.values(groupElements);
+      return Math.max(...amounts);
+    };
+
+    const collectCertainFirstElements = production.choice.map(
+      elem =>
+        isCertain(elem) ||
+        (elem.sequence && isCertain(optimizeProduction(elem.sequence[0])))
+    );
+    const collectCertainLastElements = production.choice.map(
+      elem =>
+        isCertain(elem) ||
+        (elem.sequence && isCertain(elem.sequence[elem.sequence.length - 1]))
+    );
+    const groupFirsts = groupElements(collectCertainFirstElements);
+    const groupLasts = groupElements(collectCertainLastElements);
+
+    // most wins, optimize, repeat
+    const maxFirstsEqual = countSame(groupFirsts);
+    const maxLastsEqual = countSame(groupLasts);
+    if (Math.max(maxFirstsEqual, maxLastsEqual) > 1) {
+      if (maxFirstsEqual >= maxLastsEqual) {
+        const leftOverChoices = [];
+
+        const firstElement = Object.entries(groupFirsts).find(
+          ([, value]) => value === maxFirstsEqual
+        )[0];
+
+        // now filter all choices that have this as first element, placing
+        // the others in 'leftOverChoices'
+        let hasEmpty = false;
+        const newChoices = collectCertainFirstElements
+          .map((elem, index) => {
+            // if not match, add production choice to leftOverChoices.
+            if (JSON.stringify(elem) === firstElement) {
+              // strip off element of chain.
+              const choice = production.choice[index];
+              if (choice.sequence) {
+                return { ...choice, sequence: choice.sequence.slice(1) };
+              } else {
+                hasEmpty = true;
+              }
+            } else {
+              leftOverChoices.push(production.choice[index]);
+            }
+          })
+          .filter(Boolean);
+        const newElements = [
+          JSON.parse(firstElement),
+          newChoices.length > 0 &&
+            hasEmpty && {
+              optional:
+                newChoices.length == 1 ? newChoices[0] : { choice: newChoices }
+            },
+          newChoices.length > 0 &&
+            !hasEmpty &&
+            (newChoices.length == 1 ? newChoices[0] : { choice: newChoices })
+        ].filter(Boolean);
+        const replacementElement =
+          newElements.length > 1 ? { sequence: newElements } : newElements[0];
+
+        const finalResult =
+          leftOverChoices.length > 0
+            ? { choice: [replacementElement].concat(leftOverChoices) }
+            : replacementElement;
+
+        return optimizeProduction(finalResult);
+      } else {
+        const leftOverChoices = [];
+
+        const lastElement = Object.entries(groupLasts).find(
+          ([, value]) => value === maxLastsEqual
+        )[0];
+
+        // now filter all choices that have this as first element, placing
+        // the others in 'leftOverChoices'
+        let hasEmpty = false;
+        const newChoices = collectCertainLastElements
+          .map((elem, index) => {
+            // if not match, add production choice to leftOverChoices.
+            if (JSON.stringify(elem) === lastElement) {
+              // strip off element of chain.
+              const choice = production.choice[index];
+              if (choice.sequence) {
+                return { ...choice, sequence: choice.sequence.slice(0, -1) };
+              } else {
+                hasEmpty = true;
+              }
+            } else {
+              leftOverChoices.push(production.choice[index]);
+            }
+          })
+          .filter(Boolean);
+        const newElements = [
+          newChoices.length > 0 &&
+            hasEmpty && {
+              optional:
+                newChoices.length == 1 ? newChoices[0] : { choice: newChoices }
+            },
+          newChoices.length > 0 &&
+            !hasEmpty &&
+            (newChoices.length == 1 ? newChoices[0] : { choice: newChoices }),
+          JSON.parse(lastElement)
+        ].filter(Boolean);
+        const replacementElement =
+          newElements.length > 1 ? { sequence: newElements } : newElements[0];
+
+        const finalResult =
+          leftOverChoices.length > 0
+            ? { choice: [replacementElement].concat(leftOverChoices) }
+            : replacementElement;
+
+        return optimizeProduction(finalResult);
+      }
+    }
+
+    // Merge remaining choices
     return {
       ...production,
       choice: skipFirst(
@@ -123,8 +263,12 @@ const optimizeProduction = production => {
         // pass 2: optimize structure
         .map(optimizeStructure)
         .filter(vacuumResults)
+        .map(elem => (elem.sequence ? elem.sequence : [elem]))
+        .reduce((acc, elem) => acc.concat(elem), [])
     };
-    return optimizedSequence;
+    return optimizedSequence.sequence.length == 1
+      ? optimizedSequence.sequence[0]
+      : optimizedSequence;
   }
   if (production.repetition) {
     return {

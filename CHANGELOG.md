@@ -5,15 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Fixed
-- Closing tag for Terminals with single quotes
-
 ### Added
 - Support to use package as library within other projects
 - Support for alternative characters: `|` -> `/`, `!`, `[ ]` -> `(/ /)`,
   `{ }` -> `(: :)`
 - Table of contents, showing structure in alphabet, or as
   hierarchy overview at the bottom.
+- Optimize EBNF syntax as `a | a` into `a`
+- Optimize EBNF syntax as `a | a, b` into `a, [ b ]`
+- Optimize EBNF syntax as `a, b, c, g | a, b, d, g` into `a, b, ( c | d ), g`
+
+### Fixed
+- Closing tag for Terminals with single quotes
 
 ## [1.4.0] - 2018-11-03
 ### Added

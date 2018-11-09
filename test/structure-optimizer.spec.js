@@ -146,7 +146,8 @@ describe("AST structure optimizer", () => {
     });
     const optimizedDefinition = optimizeProduction(inputDefinition);
     expect(optimizedDefinition).to.eql({
-      sequence: [{ repetition: { nonTerminal: "a" }, skippable: false }]
+      repetition: { nonTerminal: "a" },
+      skippable: false
     });
   });
 
@@ -162,7 +163,8 @@ describe("AST structure optimizer", () => {
     });
     const optimizedDefinition = optimizeProduction(inputDefinition);
     expect(optimizedDefinition).to.eql({
-      sequence: [{ repetition: { nonTerminal: "a" }, skippable: false }]
+      repetition: { nonTerminal: "a" },
+      skippable: false
     });
   });
 
@@ -203,6 +205,121 @@ describe("AST structure optimizer", () => {
               sequence: [{ nonTerminal: "e" }, { nonTerminal: "d" }]
             },
             skippable: false
+          }
+        ]
+      });
+    }
+  );
+
+  it("changes `a | a` into " + "`a`", () => {
+    const text = "foo = a | a;";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      choice: [{ nonTerminal: "a" }, { nonTerminal: "a" }]
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({ nonTerminal: "a" });
+  });
+
+  it("changes `a, b, c | a` into " + "`a, [ b, c ]`", () => {
+    const text = "foo = a, b, c | a;";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      choice: [
+        {
+          sequence: [
+            { nonTerminal: "a" },
+            { nonTerminal: "b" },
+            { nonTerminal: "c" }
+          ]
+        },
+        { nonTerminal: "a" }
+      ]
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      sequence: [
+        { nonTerminal: "a" },
+        {
+          optional: {
+            sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+          }
+        }
+      ]
+    });
+  });
+
+  it(
+    "changes `a, b, c | a, d, e | a, f, e` into " +
+      "`a, ( b, c | ( d | f ), e )`",
+    () => {
+      const text = "foo = x, y, z | a, b, c | a, b, d, e | a, b, f, e;";
+      const result = parser.parse(text);
+      const inputDefinition = result[0].definition;
+      expect(inputDefinition).to.eql({
+        choice: [
+          {
+            sequence: [
+              { nonTerminal: "x" },
+              { nonTerminal: "y" },
+              { nonTerminal: "z" }
+            ]
+          },
+          {
+            sequence: [
+              { nonTerminal: "a" },
+              { nonTerminal: "b" },
+              { nonTerminal: "c" }
+            ]
+          },
+          {
+            sequence: [
+              { nonTerminal: "a" },
+              { nonTerminal: "b" },
+              { nonTerminal: "d" },
+              { nonTerminal: "e" }
+            ]
+          },
+          {
+            sequence: [
+              { nonTerminal: "a" },
+              { nonTerminal: "b" },
+              { nonTerminal: "f" },
+              { nonTerminal: "e" }
+            ]
+          }
+        ]
+      });
+      const optimizedDefinition = optimizeProduction(inputDefinition);
+      expect(optimizedDefinition).to.eql({
+        choice: [
+          {
+            sequence: [
+              { nonTerminal: "a" },
+              { nonTerminal: "b" },
+              {
+                choice: [
+                  {
+                    sequence: [
+                      {
+                        choice: [{ nonTerminal: "d" }, { nonTerminal: "f" }]
+                      },
+                      { nonTerminal: "e" }
+                    ]
+                  },
+                  { nonTerminal: "c" }
+                ]
+              }
+            ]
+          },
+          {
+            sequence: [
+              { nonTerminal: "x" },
+              { nonTerminal: "y" },
+              { nonTerminal: "z" }
+            ]
           }
         ]
       });
