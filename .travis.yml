@@ -6,6 +6,7 @@ cache: yarn
 node_js:
 - node
 script:
+- yarn upgrade ebnf2railroad
 - yarn build
 branches:
   only:
