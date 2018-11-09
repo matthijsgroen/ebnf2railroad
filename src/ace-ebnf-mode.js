@@ -5,21 +5,38 @@ ace.define(
   ["require", "exports", "ace/lib/oop", "ace/mode/text_highlight_rules"],
   function(aceRequire, aceExports) {
     function SyntaxHighlighter() {
-      const identifier = "[a-z][a-z\\s]*";
+      const identifier = "[a-zA-Z][a-zA-Z0-9\\s]*";
       this.$rules = {
         start: [
           {
             token: "comment",
             regex: "\\(\\*",
-            next: "comment"
+            next: "outerComment"
+          },
+          {
+            token: "support.function",
+            regex: identifier
+          },
+          {
+            token: "constant.language",
+            regex: "=",
+            next: "definition"
+          }
+        ],
+        definition: [
+          {
+            token: "constant.language",
+            regex: ";",
+            next: "start"
           },
           {
             token: "keyword.operator",
             regex: "[,|/!]"
           },
           {
-            token: "constant.language",
-            regex: "[=;]"
+            token: "comment",
+            regex: "\\(\\*",
+            next: "innerComment"
           },
           {
             token: "paren.lparen",
@@ -30,8 +47,8 @@ ace.define(
             regex: "[)}\\]]"
           },
           {
-            token: ["entity.name.function", "constant.language"],
-            regex: `(${identifier})(=)`
+            token: "function",
+            regex: identifier
           },
           {
             statename: "qstring",
@@ -41,7 +58,7 @@ ace.define(
               {
                 token: "string.end",
                 regex: "'",
-                next: "start"
+                next: "definition"
               },
               {
                 defaultToken: "string"
@@ -56,7 +73,7 @@ ace.define(
               {
                 token: "string.end",
                 regex: '"',
-                next: "start"
+                next: "definition"
               },
               {
                 defaultToken: "string"
@@ -64,12 +81,23 @@ ace.define(
             ]
           }
         ],
-        comment: [
+        innerComment: [
+          {
+            token: "comment",
+            regex: "\\*\\)",
+            next: "definition"
+          },
+          {
+            defaultToken: "comment"
+          }
+        ],
+        outerComment: [
           {
             token: "comment",
             regex: "\\*\\)",
             next: "start"
           },
+          // Markdown could be supported here
           {
             defaultToken: "comment"
           }
