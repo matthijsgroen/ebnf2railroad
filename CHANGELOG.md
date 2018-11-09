@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Closing tag for Terminals with single quotes
+- Issue when the chain was optimized without repeater `a, b, c, { b, c
+  }`.
 
 ## [1.4.0] - 2018-11-03
 ### Added

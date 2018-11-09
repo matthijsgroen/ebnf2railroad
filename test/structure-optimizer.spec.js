@@ -228,6 +228,40 @@ describe("AST structure optimizer", () => {
     }
   );
 
+  it(
+    "changes `a, b, c, { b, c }` in ast to " + "`a, (b, c)+` without repeater",
+    () => {
+      const text = "foo = a, b, c, { b, c };";
+      const result = parser.parse(text);
+      const inputDefinition = result[0].definition;
+      expect(inputDefinition).to.eql({
+        sequence: [
+          { nonTerminal: "a" },
+          { nonTerminal: "b" },
+          { nonTerminal: "c" },
+          {
+            repetition: {
+              sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+            },
+            skippable: true
+          }
+        ]
+      });
+      const optimizedDefinition = optimizeProduction(inputDefinition);
+      expect(optimizedDefinition).to.eql({
+        sequence: [
+          { nonTerminal: "a" },
+          {
+            repetition: {
+              sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+            },
+            skippable: false
+          }
+        ]
+      });
+    }
+  );
+
   it("changes `a | a` into " + "`a`", () => {
     const text = "foo = a | a;";
     const result = parser.parse(text);
