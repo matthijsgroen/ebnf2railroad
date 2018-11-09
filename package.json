@@ -28,6 +28,7 @@
     "publish": ".travis/publish-site.sh"
   },
   "private": false,
+  "files": ["src/*", "bin/*"],
   "dependencies": {
     "commander": "^2.19.0",
     "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams",
