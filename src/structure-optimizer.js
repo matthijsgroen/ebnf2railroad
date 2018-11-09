@@ -21,9 +21,7 @@ const optimizeProduction = production => {
     // Check if rewrites are possible.
     const allChoicesTheSame = production.choice
       .map(elem => ungroup(optimizeProduction(elem)))
-      .every(
-        (item, idx, list) => JSON.stringify(item) === JSON.stringify(list[0])
-      );
+      .every((item, idx, list) => equalElements(item, list[0]));
     if (allChoicesTheSame) {
       return ungroup(optimizeProduction(production.choice[0]));
     }
@@ -181,7 +179,9 @@ const optimizeProduction = production => {
             }
           })
           .reduce((acc, item) => acc.concat(item), [])
+          .map(e => JSON.stringify(e))
           .filter((item, index, list) => list.indexOf(item) === index)
+          .map(e => JSON.parse(e))
       )
     };
   }

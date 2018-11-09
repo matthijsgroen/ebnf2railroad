@@ -43,6 +43,23 @@ describe("AST structure optimizer", () => {
     });
   });
 
+  it("changes `a | b | [ b ]` in ast to choice with skip without duplicates", () => {
+    const text = "foo = a | b | [ b ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      choice: [
+        { nonTerminal: "a" },
+        { nonTerminal: "b" },
+        { optional: { nonTerminal: "b" } }
+      ]
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      choice: [{ skip: true }, { nonTerminal: "a" }, { nonTerminal: "b" }]
+    });
+  });
+
   it("changes `a | { b }` in ast to choice with skip, a and b+", () => {
     const text = "foo = a | { b };";
     const result = parser.parse(text);
