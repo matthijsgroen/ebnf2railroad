@@ -57,6 +57,8 @@
 
 optimizations
   = optimized choices
+  | optimized one or more
+  | (optimized one or more)
   | optimized one or more;
 
 optimized choices
@@ -131,3 +133,5 @@ big parts = "item", { "item" };
 
 definition main characters = "item" | "item2" | ["optional"], { "repeater" };
 alternative main characters = "item" / "item2" ! (/ "optional" /), (:  "repeater" :).
+
+lowercase letter = "a" | "b" | "c" | "d" | "e" | "f" | "ghij" | "k" | "l" | "m" | "n" | "o" | "pqr" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";

@@ -70,13 +70,15 @@ const documentStyle = () =>
 
   /* EBNF text representation styling */
   code.ebnf {
-    padding: 1em 1em 1em 3em;
-    text-indent: -2em;
+    padding: 1em 1em 1em 1em;
     background: rgb(255, 246, 209);
     font-weight: bold;
     color: #777;
     white-space: nowrap;
     display: inline-block;
+  }
+  code.ebnf pre {
+    margin: 0;
   }
   .ebnf-identifier {
     color: #990099;
@@ -184,7 +186,7 @@ const ebnfTemplate = ({
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}  </div>
-  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
+  <code class="ebnf"><pre>${ebnf}</pre></code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +
     (referencesTo.length > 0
