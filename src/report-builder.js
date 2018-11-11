@@ -24,75 +24,9 @@ const {
   searchReferencesToIdentifier
 } = require("./references");
 const { createAlphabeticalToc, createStructuralToc } = require("./toc");
+const { productionToEBNF } = require("./ebnf-builder");
 
 const dasherize = str => str.replace(/\s+/g, "-");
-const sanitize = str =>
-  str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-
-const productionToEBNF = production => {
-  if (production.identifier) {
-    return `<span class="ebnf-identifier">${
-      production.identifier
-    }</span> = ${productionToEBNF(
-      production.definition
-    )}<span class="ebnf-end">;</span>`;
-  }
-  if (production.terminal) {
-    return production.terminal.indexOf('"') > -1
-      ? `<span class="ebnf-terminal">'${sanitize(production.terminal)}'</span>`
-      : `<span class="ebnf-terminal">"${sanitize(production.terminal)}"</span>`;
-  }
-  if (production.nonTerminal) {
-    return `<a class="ebnf-non-terminal" href="#${dasherize(
-      production.nonTerminal
-    )}">${production.nonTerminal}</a>`;
-  }
-  if (production.choice) {
-    return production.choice.map(productionToEBNF).join(" <wbr />| ");
-  }
-  if (production.sequence) {
-    return production.sequence.map(productionToEBNF).join(" , ");
-  }
-  if (production.specialSequence) {
-    return `<span class="ebnf-special-sequence">? ${
-      production.specialSequence
-    } ?</span>`;
-  }
-  if (production.repetition && production.amount !== undefined) {
-    return `<span class="ebnf-multiplier">${
-      production.amount
-    } *</span> ${productionToEBNF(production.repetition)}`;
-  }
-  if (production.repetition) {
-    return `<wbr />{ ${productionToEBNF(production.repetition)} }`;
-  }
-  if (production.comment) {
-    return `${productionToEBNF(
-      production.group
-    )} <span class="ebnf-comment">(* ${sanitize(production.comment)} *)</span>`;
-  }
-  if (production.group) {
-    return `<wbr />( ${productionToEBNF(production.group)} )`;
-  }
-  if (production.optional) {
-    return `<wbr />[ ${productionToEBNF(production.optional)} ]`;
-  }
-  if (production.exceptNonTerminal) {
-    return `${productionToEBNF({
-      nonTerminal: production.include
-    })} - ${productionToEBNF({ nonTerminal: production.exceptNonTerminal })}`;
-  }
-  if (production.exceptTerminal) {
-    return `${productionToEBNF({
-      nonTerminal: production.include
-    })} - ${productionToEBNF({ terminal: production.exceptTerminal })}`;
-  }
-  return "unknown construct";
-};
-
 const SHRINK_CHOICE = 10;
 
 const productionToDiagram = production => {
@@ -207,13 +141,18 @@ const createDocumentation = (ast, options) => {
         production.identifier,
         ast
       );
+      const renderProduction =
+        options.optimizeDiagrams === false
+          ? production
+          : optimizeProduction(production);
+
       const diagram = productionToDiagram({
-        ...optimizeProduction(production),
+        ...renderProduction,
         complex: outgoingReferences.length > 0
       });
       return ebnfTemplate({
         identifier: production.identifier,
-        ebnf: productionToEBNF(production),
+        ebnf: productionToEBNF(production, { markup: true, format: true }),
         referencedBy: searchReferencesToIdentifier(production.identifier, ast),
         referencesTo: outgoingReferences,
         diagram: vacuum(diagram.toString())
