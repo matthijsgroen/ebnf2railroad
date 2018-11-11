@@ -12,7 +12,7 @@ program
   .usage("[options] <file>")
   .option("-o, --target [target]", "output the file to target destination.")
   .option("-q, --quiet", "suppress output to STDOUT")
-  .option("--title [title]", "title to use for HTML document")
+  .option("-t, --title [title]", "title to use for HTML document")
   .option("--validate", "exit with status code 2 if ebnf document has warnings")
   .option("--no-optimizations", "does not try to optimize the diagrams")
   .option(
