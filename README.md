@@ -12,7 +12,7 @@ diagrams based on the ISO/IEC 14977 specification
 - Creates optimized visual syntax diagrams based on the EBNF syntax
 - Quick navigation using references of used declarations
 - Nice comment markup using markdown
-- Validates if document is complete and hasn't duplicate declarations
+- Validates if document is complete and has no duplicate declarations
 - Shows pretty printed text syntax in the document
 
 ## Installation
