@@ -12,9 +12,13 @@ program
   .usage("[options] <file>")
   .option("-o, --target [target]", "output the file to target destination.")
   .option("-q, --quiet", "suppress output to STDOUT")
+  .option("--title [title]", "title to use for HTML document")
   .option("--validate", "exit with status code 2 if ebnf document has warnings")
   .option("--no-optimizations", "does not try to optimize the diagrams")
-  .option("--title [title]", "title to use for HTML document")
+  .option(
+    "--no-text-formatting",
+    "does not format the output text version (becomes single line)"
+  )
   .description(
     "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
   );
@@ -27,6 +31,7 @@ async function run(args) {
   }
   const allowOutput = !program.quiet;
   const optimizeDiagrams = program.optimizations;
+  const textFormatting = program.textFormatting;
   const output = text => allowOutput && process.stdout.write(text + "\n");
   const outputError = text => allowOutput && process.stderr.write(text + "\n");
   const outputErrorStruct = struct =>
@@ -56,7 +61,8 @@ async function run(args) {
 
     const report = createDocumentation(ast, {
       title: documentTitle,
-      optimizeDiagrams
+      optimizeDiagrams,
+      textFormatting
     });
     await writeFile(targetFilename, report, "utf8");
 

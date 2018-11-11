@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Long sequences will wrap over multiple lines
 - Choice lists between 3 and 6 items will be displayed under eachother
 - Choice lists over 6 items will be displayed as a grid
+- Option `--no-text-formatting` to write all text on a single line
+- Option `--no-optimizations` to write diagrams as-is
 
 ## [1.5.0] - 2018-11-10
 ### Added
