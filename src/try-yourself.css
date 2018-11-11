@@ -31,15 +31,41 @@ a.collapse {
 }
 
 body a.collapse {
-  transform: rotate(90deg);
+  color: transparent;
+  position: relative;
+  width: 3rem;
+  font-size: 1.5rem;
+}
+body a.collapse::before {
+  transition: left 0.5s;
+  content: '📝';
+  color: black;
+  position: absolute;
+  top: 0.2rem;
+  left: 0rem;
+}
+body a.collapse::after {
+  transition: left 0.5s;
+  content: '📔';
+  color: black;
+  position: absolute;
+  top: 0.2rem;
+  left: 1.5rem;
 }
 
-body.collapsed a.collapse {
-  transform: rotate(0deg);
+body.collapsed a.collapse::before {
+  left: 0.5rem;
+}
+body.collapsed a.collapse::after {
+  left: 0.8rem;
 }
 
-body.expanded a.collapse {
-  transform: rotate(180deg);
+body.expanded a.collapse::before {
+  left: 0.5rem;
+  z-index: 1;
+}
+body.expanded a.collapse::after {
+  left: 0.8rem;
 }
 
 a.collapse {
