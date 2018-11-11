@@ -1,7 +1,10 @@
 const { Converter } = require("showdown");
 const { dedent } = require("./dedent");
 const converter = new Converter({
-  simplifiedAutoLink: true
+  simplifiedAutoLink: true,
+  strikethrough: true,
+  tasklists: true,
+  tables: true
 });
 
 const documentFrame = ({ head, body, title }) =>
