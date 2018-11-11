@@ -30,7 +30,15 @@ a.collapse {
   flex: 1 1 0;
 }
 
+body a.collapse {
+  transform: rotate(90deg);
+}
+
 body.collapsed a.collapse {
+  transform: rotate(0deg);
+}
+
+body.expanded a.collapse {
   transform: rotate(180deg);
 }
 
@@ -42,10 +50,13 @@ a.collapse {
 body.collapsed #editor-pane {
   flex-grow: 0.00001;
 }
+body.expanded #result {
+  flex-grow: 0.00001;
+}
 
 #editor-pane {
   flex: 1 1 0;
-  /*transition: flex .5s;*/
+  transition: flex .5s;
   display: flex;
   flex-direction: column;
 }
@@ -56,5 +67,6 @@ body.collapsed #editor-pane {
 
 #result {
   flex: 1 1 0;
+  transition: flex .5s;
   overflow-y: scroll;
 }

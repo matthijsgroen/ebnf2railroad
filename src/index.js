@@ -25,21 +25,40 @@ require("brace/theme/iplastic");
 
 // Toggle collapse/expand
 
-const collapseExpand = document.querySelector("a.collapse");
-collapseExpand.addEventListener("click", event => {
-  event.preventDefault();
-  if (document.body.classList.contains("collapsed")) {
+// 1 = middle, 2 = doc, 3 = middle, 0 = expand
+let position = 1;
+const updatePosition = newPosition => {
+  position = newPosition % 4;
+  if (position !== 2) {
     document.body.classList.remove("collapsed");
   } else {
     document.body.classList.add("collapsed");
   }
+  if (position !== 0) {
+    document.body.classList.remove("expanded");
+  } else {
+    document.body.classList.add("expanded");
+  }
+};
+
+const collapseExpand = document.querySelector("a.collapse");
+collapseExpand.addEventListener("click", event => {
+  event.preventDefault();
+  updatePosition(position + 1);
 });
 
 let lastValidAst = [];
+let textFormatting = true;
+let optimizeDiagrams = true;
 
 const updateAst = ast => {
   lastValidAst = ast;
-  const contents = createDocumentation(ast, { title: "Demo", full: false });
+  const contents = createDocumentation(ast, {
+    title: "Demo",
+    full: false,
+    optimizeDiagrams,
+    textFormatting
+  });
   const elem = document.getElementById("result");
   elem.innerHTML = contents;
 };
@@ -181,6 +200,23 @@ editor.commands.addCommand({
   }
 });
 editor.commands.addCommand({
+  name: "Prettify text",
+  bindKey: { win: "Ctrl-Shift-P", mac: "Command-Shift-P" },
+  exec: function(editor) {
+    textFormatting = !textFormatting;
+    invalidateDocument();
+  }
+});
+editor.commands.addCommand({
+  name: "Optimize Diagrams",
+  bindKey: { win: "Ctrl-Shift-O", mac: "Command-Shift-O" },
+  exec: function(editor) {
+    optimizeDiagrams = !optimizeDiagrams;
+    invalidateDocument();
+  }
+});
+// Turn into toggle ?
+editor.commands.addCommand({
   name: "Make markdown text bold",
   bindKey: { win: "Ctrl-B", mac: "Command-B" },
   exec: function(editor) {
@@ -191,12 +227,16 @@ editor.commands.addCommand({
 });
 
 updateDocument(editor, false);
-let updateTimeout;
-const UPDATE_THROTTLE = 200;
 editor.getSession().on("change", () => {
+  invalidateDocument();
+});
+
+const UPDATE_THROTTLE = 200;
+let updateTimeout;
+const invalidateDocument = () => {
   clearTimeout(updateTimeout);
   updateTimeout = setTimeout(() => updateDocument(editor), UPDATE_THROTTLE);
-});
+};
 
 const dasherize = text => text.replace(/\s+/g, "-");
 
