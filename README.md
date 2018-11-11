@@ -1,8 +1,10 @@
 # EBNF 2 RailRoad
 
-[![npm](https://img.shields.io/npm/v/ebnf2railroad.svg)](http://npm.im/ebnf2railroad)
 [![Build
 Status](https://travis-ci.org/matthijsgroen/ebnf2railroad.svg?branch=master)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
+[![npm](https://img.shields.io/npm/v/ebnf2railroad.svg)](http://npm.im/ebnf2railroad)
+[![Install Size](https://packagephobia.now.sh/badge?p=ebnf2railroad)](https://packagephobia.now.sh/result?p=ebnf2railroad)
+
 
 A command line tool to create great documentation including railroad
 diagrams based on the ISO/IEC 14977 specification
