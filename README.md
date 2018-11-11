@@ -4,8 +4,16 @@
 [![Build
 Status](https://travis-ci.org/matthijsgroen/ebnf2railroad.svg?branch=master)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
 
-A command line tool to create nice documentation including railroad
+A command line tool to create great documentation including railroad
 diagrams based on the ISO/IEC 14977 specification
+
+## Features
+
+- Creates optimized visual syntax diagrams based on the EBNF syntax
+- Quick navigation using references of used declarations
+- Nice comment markup using markdown
+- Validates if document is complete and hasn't duplicate declarations
+- Shows pretty printed text syntax in the document
 
 ## Installation
 
@@ -25,6 +33,7 @@ Options:
   -o, --target [target]  output the file to target destination.
   -q, --quiet            suppress output to STDOUT
   --validate             exit with status code 2 if ebnf document has warnings
+  --no-optimizations     does not try to optimize the diagrams
   --title [title]        title to use for HTML document
   -h, --help             output usage information
 ```
