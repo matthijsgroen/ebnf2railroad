@@ -64,7 +64,21 @@ const detectRenderConfig = (item, options) => {
     };
   }
 
+  const sequence = item.sequence && options.format;
+  if (sequence) {
+    return {
+      ...options,
+      lineWrap: true
+    };
+  }
+
   return options;
+};
+
+const calculateMaxLength = production => {
+  const output = productionToEBNF(production, { markup: false, format: true });
+  const multiLine = output.includes("\n");
+  return multiLine ? -1 : output.length;
 };
 
 const productionToEBNF = (production, setOptions) => {
@@ -73,7 +87,10 @@ const productionToEBNF = (production, setOptions) => {
     ...setOptions
   };
   if (production.identifier) {
-    const renderConfig = detectRenderConfig(production.definition, options);
+    const renderConfig = detectRenderConfig(production.definition, {
+      ...options,
+      offsetLength: production.identifier.length + 3
+    });
 
     return `${wrapSpan(
       "ebnf-identifier",
@@ -149,8 +166,26 @@ const productionToEBNF = (production, setOptions) => {
   }
   if (production.sequence) {
     return production.sequence
-      .map(element => productionToEBNF(element, options))
-      .join(" , ");
+      .map(element => ({
+        output: productionToEBNF(element, { ...options, offsetLength: 0 }),
+        length: calculateMaxLength(element)
+      }))
+      .map((elem, index, list) => {
+        if (index === 0) return elem.output;
+        const indent = options.indent + 1;
+        const currentOffset = list
+          .slice(0, index - 1)
+          .reduce(
+            (acc, elem) => (elem.length === -1 ? 0 : acc + elem.length + 3),
+            options.offsetLength || 0
+          );
+
+        const addBreak = currentOffset + indent * 2 > options.maxLineLength;
+        if (addBreak) list[index - 1].length = -1;
+
+        return ` ,${addBreak ? lineIndent(indent) : " "}${elem.output}`;
+      })
+      .join("");
   }
   if (production.specialSequence) {
     return wrapSpan(

@@ -94,4 +94,30 @@ describe("EBNF Builder", () => {
       );
     });
   });
+
+  describe("sequences", () => {
+    it("wraps to multiline for long sequences", () => {
+      const text =
+        "statement = a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,uu,v,w,q,y,z;";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        "statement = a , b , c , d , e , f , g , h ,\n" +
+          "  i , j , k , l , m , n , o , p , q , r , s ,\n" +
+          "  t , uu , v , w , q , y , z;"
+      );
+    });
+
+    it("takes into account item length", () => {
+      const text =
+        "statement = abcdef something very long,g,hijklm,n,o,p,q,r,s,t,uu,v,w,q,y,z;";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        "statement = abcdef something very long , g ,\n" +
+          "  hijklm , n , o , p , q , r , s , t , uu , v ,\n" +
+          "  w , q , y , z;"
+      );
+    });
+  });
 });
