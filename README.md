@@ -32,9 +32,10 @@ Options:
   -V, --version          output the version number
   -o, --target [target]  output the file to target destination.
   -q, --quiet            suppress output to STDOUT
+  -t, --title [title]    title to use for HTML document
   --validate             exit with status code 2 if ebnf document has warnings
   --no-optimizations     does not try to optimize the diagrams
-  --title [title]        title to use for HTML document
+  --no-text-formatting   does not format the output text version (becomes single line)
   -h, --help             output usage information
 ```
 
