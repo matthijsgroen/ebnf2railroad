@@ -18,9 +18,11 @@ headSection.appendChild(styleElem);
 
 const ace = require("brace");
 require("brace/ext/language_tools");
+require("brace/mode/plain_text");
 require("./ace-ebnf-mode");
 
 const EditSession = ace.EditSession;
+const Range = ace.acequire("ace/range").Range;
 require("brace/theme/iplastic");
 
 // Toggle collapse/expand
@@ -180,7 +182,10 @@ editor.completers = [
 ];
 editor.$blockScrolling = Infinity;
 editor.setSession(session);
+
 editor.getSession().setMode("ace/mode/ebnf");
+window.editor = editor;
+
 editor.setTheme("ace/theme/iplastic");
 editor.session.setTabSize(2);
 editor.session.setUseSoftTabs(true);
@@ -215,14 +220,75 @@ editor.commands.addCommand({
     invalidateDocument();
   }
 });
-// Turn into toggle ?
+
+const toggleMarkup = (editor, markup) => {
+  const range = editor.getSelectionRange();
+
+  const selection = editor.session.getTextRange(range);
+  const line = editor.session.getDocument().getLine(range.start.row);
+  const preCursorLine = line.slice(0, range.start.column);
+  const markupParts = preCursorLine.split(markup);
+
+  const markupStart = markupParts.slice(0, -1).join(markup);
+  const postCursorLine = line.slice(range.start.column);
+  const markupEnd = postCursorLine.indexOf(markup);
+  const inMarkup = markupParts.length % 2 === 0 && markupEnd !== -1;
+
+  if (inMarkup) {
+    // toggle off
+    const markupRange = new Range(
+      range.start.row,
+      markupStart.length,
+      range.start.row,
+      range.start.column + markupEnd + markup.length
+    );
+    const markupText = editor.session.getTextRange(markupRange);
+    if (markupText.startsWith(markup) && markupText.endsWith(markup)) {
+      editor.session.replace(
+        markupRange,
+        markupText.slice(markup.length, -markup.length)
+      );
+    }
+  } else {
+    // toggle on
+    if (selection.length > 0) {
+      editor.session.replace(range, `${markup}${selection}${markup}`);
+    }
+  }
+};
+
 editor.commands.addCommand({
   name: "Make markdown text bold",
   bindKey: { win: "Ctrl-B", mac: "Command-B" },
   exec: function(editor) {
-    const range = editor.getSelectionRange();
-    const selection = editor.session.getTextRange(range);
-    editor.session.replace(range, `**${selection}**`);
+    toggleMarkup(editor, "**");
+  }
+});
+editor.commands.addCommand({
+  name: "Make markdown text italic",
+  bindKey: { win: "Ctrl-I", mac: "Command-I" },
+  exec: function(editor) {
+    toggleMarkup(editor, "_");
+  }
+});
+editor.commands.addCommand({
+  name: "toggle edit mode",
+  bindKey: { win: "Ctrl-Shift-M", mac: "Command-Shift-M" },
+  exec: function(editor) {
+    const isEBNF = editor.session.getMode().$id === "ace/mode/ebnf";
+    if (isEBNF) {
+      editor.session.setMode("ace/mode/plain_text");
+      editor.setOptions({
+        enableLiveAutocompletion: false,
+        enableBasicAutocompletion: false
+      });
+    } else {
+      editor.session.setMode("ace/mode/ebnf");
+      editor.setOptions({
+        enableLiveAutocompletion: true,
+        enableBasicAutocompletion: false
+      });
+    }
   }
 });
 
@@ -230,6 +296,11 @@ updateDocument(editor, false);
 editor.getSession().on("change", () => {
   invalidateDocument();
 });
+
+setTimeout(() => {
+  const editorPane = document.getElementById("editor-pane");
+  editorPane.classList.add("loaded");
+}, 1000);
 
 const UPDATE_THROTTLE = 200;
 let updateTimeout;

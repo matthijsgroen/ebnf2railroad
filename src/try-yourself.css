@@ -82,9 +82,11 @@ body.expanded #result {
 
 #editor-pane {
   flex: 1 1 0;
-  transition: flex .5s;
   display: flex;
   flex-direction: column;
+}
+#editor-pane.loaded {
+  transition: flex .5s;
 }
 
 #editor {
