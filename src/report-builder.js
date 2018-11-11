@@ -39,16 +39,15 @@ const productionToDiagram = production => {
     return Terminal(production.terminal);
   }
   if (production.nonTerminal) {
-    return NonTerminal(
-      production.nonTerminal,
-      `#${dasherize(production.nonTerminal)}`
-    );
+    return NonTerminal(production.nonTerminal, {
+      href: `#${dasherize(production.nonTerminal)}`
+    });
   }
   if (production.skip) {
     return Skip();
   }
   if (production.specialSequence) {
-    const sequence = NonTerminal(" " + production.specialSequence + " ");
+    const sequence = NonTerminal(" " + production.specialSequence + " ", {});
     sequence.attrs.class = "special-sequence";
     return sequence;
   }
@@ -86,7 +85,7 @@ const productionToDiagram = production => {
   if (production.repetition && production.amount !== undefined) {
     return OneOrMore(
       productionToDiagram(production.repetition),
-      Comment(`${production.amount} ×`)
+      Comment(`${production.amount} ×`, {})
     );
   }
   if (production.optional) {
@@ -96,20 +95,24 @@ const productionToDiagram = production => {
     return production.group
       ? Sequence(
           productionToDiagram(production.group),
-          Comment(production.comment)
+          Comment(production.comment, {})
         )
-      : Comment(production.comment);
+      : Comment(production.comment, {});
   }
   if (production.group) {
     return productionToDiagram(production.group);
   }
   if (production.exceptNonTerminal) {
     return NonTerminal(
-      `${production.include} - ${production.exceptNonTerminal}`
+      `${production.include} - ${production.exceptNonTerminal}`,
+      {}
     );
   }
   if (production.exceptTerminal) {
-    return NonTerminal(`${production.include} - ${production.exceptTerminal}`);
+    return NonTerminal(
+      `${production.include} - ${production.exceptTerminal}`,
+      {}
+    );
   }
   return "unknown construct";
 };

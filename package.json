@@ -31,7 +31,7 @@
   "files": ["src/*", "bin/*"],
   "dependencies": {
     "commander": "^2.19.0",
-    "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams",
+    "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams#e9b1a12",
     "showdown": "^1.8.7"
   },
   "devDependencies": {
