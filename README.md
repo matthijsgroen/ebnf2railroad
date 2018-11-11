@@ -1,11 +1,11 @@
 # EBNF 2 RailRoad
 
-[![Build
-Status](https://travis-ci.org/matthijsgroen/ebnf2railroad.svg?branch=master)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
-[![npm](https://img.shields.io/npm/v/ebnf2railroad.svg)](http://npm.im/ebnf2railroad)
-[![Install Size](https://packagephobia.now.sh/badge?p=ebnf2railroad)](https://packagephobia.now.sh/result?p=ebnf2railroad)
-
-
+[![travis](https://badgen.now.sh/travis/matthijsgroen/ebnf2railroad?icon=travis)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
+[![npm](https://badgen.now.sh/npm/v/ebnf2railroad?icon=npm)](http://npm.im/ebnf2railroad)
+[![code style: prettier](https://badgen.now.sh/badge/code%20style/prettier/ff69b4)](https://github.com/prettier/prettier)
+[![publishsize](https://badgen.now.sh/packagephobia/publish/ebnf2railroad)](https://packagephobia.now.sh/result?p=ebnf2railroad)
+[![license](https://badgen.now.sh/github/license/matthijsgroen/ebnf2railroad)](https://github.com/matthijsgroen/ebnf2railroad)
+ 
 A command line tool to create great documentation including railroad
 diagrams based on the ISO/IEC 14977 specification
 
