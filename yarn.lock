@@ -1219,12 +1219,13 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"ebnf2railroad@https://github.com/matthijsgroen/ebnf2railroad":
-  version "1.6.0-pre"
-  resolved "https://github.com/matthijsgroen/ebnf2railroad#77c9d43bb2691b36cba8b0f6de4ec270034d0ed0"
+ebnf2railroad@*:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.5.0.tgz#a5e2cc1cdcabd10fec50122d7215d221aa90433a"
+  integrity sha512-IUZh8x42DURZ7zIjUMj8L/otv9GDMFtPBf0qGbzhtNJ7Dhs3r3N/8duxZdxiYL2evgRg2Zm7ap73P8m7ySXW/A==
   dependencies:
     commander "^2.19.0"
-    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#e9b1a12"
+    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams"
     showdown "^1.8.7"
 
 ee-first@1.1.1:
@@ -3327,9 +3328,9 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha512-sluvZZ1YiTLD5jsqZcDmFyV2EwToyXZBfpoVOmktMmW+VEnhgakFHnasVph65fOjGPTWN0Nw3+XQaSeMayr0kg==
 
-"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#e9b1a12":
+"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git":
   version "1.1.0"
-  resolved "https://github.com/tabatkins/railroad-diagrams#e9b1a128ebfbb926a7497efd194e071e948c292c"
+  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#21a978408e7a00ef4df2016b28751508bd17c464"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
