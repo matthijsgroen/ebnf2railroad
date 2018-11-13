@@ -128,37 +128,45 @@ const productionToEBNF = (production, setOptions) => {
   }
   if (production.choice) {
     if (options.multiline && options.format) {
-      return production.choice
-        .map((choice, index, choices) => {
-          if (!options.padding || !options.rowCount) {
-            return productionToEBNF(choice, { ...options, multiline: false });
-          }
-          const inColumn = index % options.rowCount;
-          const longestOfColumn = choices
-            .filter((elem, index) => index % options.rowCount === inColumn)
-            .map(
-              elem =>
-                productionToEBNF(elem, { format: false, markup: false }).length
-            )
-            .reduce((max, elem) => (max > elem ? max : elem));
+      return (
+        production.choice
+          .map((choice, index, choices) => {
+            if (!options.padding || !options.rowCount) {
+              return productionToEBNF(choice, { ...options, multiline: false });
+            }
+            const inColumn = index % options.rowCount;
+            const longestOfColumn = choices
+              .filter((elem, index) => index % options.rowCount === inColumn)
+              .map(
+                elem =>
+                  productionToEBNF(elem, { format: false, markup: false })
+                    .length
+              )
+              .reduce((max, elem) => (max > elem ? max : elem));
 
-          const length = productionToEBNF(choice, {
-            markup: false,
-            format: false
-          }).length;
-          const padding = " ".repeat(Math.max(longestOfColumn - length, 0));
+            const length = productionToEBNF(choice, {
+              markup: false,
+              format: false
+            }).length;
+            const padding = " ".repeat(Math.max(longestOfColumn - length, 0));
 
-          return (
-            productionToEBNF(choice, { ...options, multiline: false }) + padding
-          );
-        })
-        .map((elem, index) => {
-          if (index === 0) return elem;
-          const addBreak = index % options.rowCount === 0;
+            return (
+              productionToEBNF(choice, { ...options, multiline: false }) +
+              padding
+            );
+          })
+          .map((elem, index) => {
+            if (index === 0) return elem;
+            const addBreak = index % options.rowCount === 0;
 
-          return `${addBreak ? lineIndent(options.indent) : " "}| ${elem}`;
-        })
-        .join("");
+            return `${addBreak ? lineIndent(options.indent) : " "}| ${elem}`;
+          })
+          .join("")
+          // Remove potentially added whitespace paddings at the end of the line
+          .split("\n")
+          .map(line => line.trimEnd())
+          .join("\n")
+      );
     }
     return production.choice
       .map(choice => productionToEBNF(choice, options))
