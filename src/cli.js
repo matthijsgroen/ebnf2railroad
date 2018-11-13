@@ -20,10 +20,6 @@ program
   .option("--no-target", "skip writing output HTML", null)
   .option("-t, --title [title]", "title to use for HTML document")
   .option("--lint", "exit with status code 2 if EBNF document has warnings")
-  .option(
-    "--lint-style",
-    "exit with status code 2 does not match forced styling"
-  )
   .option("--write-style", "rewrites the source document with styled text")
   .option("--no-optimizations", "does not try to optimize the diagrams")
   .option(
@@ -69,7 +65,7 @@ async function run(args) {
       allowOutput &&
       warnings.forEach(warning => outputErrorStruct(warning));
 
-    if (program.lintStyle || program.writeStyle) {
+    if (program.writeStyle) {
       const prettyOutput =
         ast
           .map(production =>
@@ -77,15 +73,8 @@ async function run(args) {
           )
           .join("\n\n") + "\n";
 
-      if (program.lintStyle && prettyOutput !== ebnf) {
-        // TODO: Add proper error messages (and status code)
-        output("Style does not match");
-      }
-
-      if (program.writeStyle) {
-        await writeFile(filename, prettyOutput, "utf8");
-        output(`💅 Source updated at ${filename}`);
-      }
+      await writeFile(filename, prettyOutput, "utf8");
+      output(`💅 Source updated at ${filename}`);
     }
 
     if (targetFilename) {
