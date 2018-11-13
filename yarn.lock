@@ -1220,12 +1220,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.5.0.tgz#a5e2cc1cdcabd10fec50122d7215d221aa90433a"
-  integrity sha512-IUZh8x42DURZ7zIjUMj8L/otv9GDMFtPBf0qGbzhtNJ7Dhs3r3N/8duxZdxiYL2evgRg2Zm7ap73P8m7ySXW/A==
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.6.0.tgz#115e647f2a9c163cbf8dc1ab8b4306491dbc8eef"
+  integrity sha512-+WPcDBfdqEw0mCyRGKQQDGlq/eiSfiy1ZgTdTO6gCVgLtxc0sQYwMOPC47u8/oKitrWVNsx/pA6ZDxEylZSqKg==
   dependencies:
     commander "^2.19.0"
-    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams"
+    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#e9b1a12"
     showdown "^1.8.7"
 
 ee-first@1.1.1:
@@ -3328,9 +3328,9 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha512-sluvZZ1YiTLD5jsqZcDmFyV2EwToyXZBfpoVOmktMmW+VEnhgakFHnasVph65fOjGPTWN0Nw3+XQaSeMayr0kg==
 
-"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git":
+"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git#e9b1a12":
   version "1.1.0"
-  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#21a978408e7a00ef4df2016b28751508bd17c464"
+  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#e9b1a128ebfbb926a7497efd194e071e948c292c"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
@@ -3706,9 +3706,9 @@ shebang-regex@^1.0.0:
   integrity sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
 
 showdown@^1.8.7:
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/showdown/-/showdown-1.8.7.tgz#c4ccf300063adb0ef75a1b94b29a6cb6f7c36008"
-  integrity sha512-S1wyj80vu2lZZ7xm2ijr6e3VxHxPu8WfhTH7R6nelbIQeyl2g0ioEohS0YtFim8yAFMbQ8sQuXxiKvr10rKbTg==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/showdown/-/showdown-1.9.0.tgz#d49d2a0b6db21b7c2e96ef855f7b3b2a28ef46f4"
+  integrity sha512-x7xDCRIaOlicbC57nMhGfKamu+ghwsdVkHMttyn+DelwzuHOx4OHCVL/UW/2QOLH7BxfCcCCVVUix3boKXJKXQ==
   dependencies:
     yargs "^10.0.3"
 
