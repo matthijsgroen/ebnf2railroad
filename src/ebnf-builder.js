@@ -73,8 +73,8 @@ const detectRenderConfig = (item, options) => {
   return options;
 };
 
-const calculateMaxLength = production => {
-  const output = productionToEBNF(production, { markup: false, format: true });
+const calculateMaxLength = (production, format) => {
+  const output = productionToEBNF(production, { markup: false, format });
   const multiLine = output.includes("\n");
   return multiLine ? -1 : output.length;
 };
@@ -183,7 +183,7 @@ const productionToEBNF = (production, setOptions) => {
       production.sequence
         .map(element => ({
           element,
-          length: calculateMaxLength(element)
+          length: calculateMaxLength(element, options.format)
         }))
         .map(({ element }, index, list) => {
           if (index === 0) return productionToEBNF(element, options);
@@ -197,9 +197,11 @@ const productionToEBNF = (production, setOptions) => {
           const totalLength = sequenceLength(list, options.offsetLength || 0);
 
           const addBreak =
+            options.format &&
             currentLength > options.maxLineLength &&
             totalLength > options.maxLineLength + options.lineMargin;
           if (addBreak) list[index - 1].length = -1;
+
           const offsetLength = addBreak ? 0 : currentLength;
           const output = productionToEBNF(element, {
             ...options,
