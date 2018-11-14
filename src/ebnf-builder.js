@@ -179,35 +179,41 @@ const productionToEBNF = (production, setOptions) => {
           offset
         );
 
-    return production.sequence
-      .map(element => ({
-        element,
-        length: calculateMaxLength(element)
-      }))
-      .map(({ element }, index, list) => {
-        if (index === 0) return productionToEBNF(element, options);
-        const indent = options.indent + 1;
+    return (
+      production.sequence
+        .map(element => ({
+          element,
+          length: calculateMaxLength(element)
+        }))
+        .map(({ element }, index, list) => {
+          if (index === 0) return productionToEBNF(element, options);
+          const indent = options.indent + 1;
 
-        const currentLength = sequenceLength(
-          list,
-          options.offsetLength || 0,
-          index
-        );
-        const totalLength = sequenceLength(list, options.offsetLength || 0);
+          const currentLength = sequenceLength(
+            list,
+            options.offsetLength || 0,
+            index
+          );
+          const totalLength = sequenceLength(list, options.offsetLength || 0);
 
-        const addBreak =
-          currentLength > options.maxLineLength &&
-          totalLength > options.maxLineLength + options.lineMargin;
-        if (addBreak) list[index - 1].length = -1;
-        const offsetLength = addBreak ? 0 : currentLength;
-        const output = productionToEBNF(element, {
-          ...options,
-          offsetLength
-        });
+          const addBreak =
+            currentLength > options.maxLineLength &&
+            totalLength > options.maxLineLength + options.lineMargin;
+          if (addBreak) list[index - 1].length = -1;
+          const offsetLength = addBreak ? 0 : currentLength;
+          const output = productionToEBNF(element, {
+            ...options,
+            offsetLength
+          });
 
-        return ` ,${addBreak ? lineIndent(indent) : " "}${output}`;
-      })
-      .join("");
+          return ` ,${addBreak ? lineIndent(indent) : " "}${output}`;
+        })
+        .join("")
+        // Remove potentially added whitespace paddings at the end of the line
+        .split("\n")
+        .map(line => line.trimEnd())
+        .join("\n")
+    );
   }
   if (production.specialSequence) {
     return wrapSpan(

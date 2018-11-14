@@ -103,7 +103,7 @@ describe("EBNF Builder", () => {
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
-        "statement = a , \n" +
+        "statement = a ,\n" +
           "  { b\n" +
           "  | d\n" +
           "  | e\n" +
