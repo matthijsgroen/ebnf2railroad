@@ -98,6 +98,7 @@ header {
 
 main {
     display: flex;
+    overflow: hidden;
 }
 
 nav {
@@ -111,9 +112,6 @@ nav h3 {
 nav ul {
     list-style: none;
     padding: 0;
-}
-
-nav li {
 }
 
 nav a {
@@ -146,6 +144,41 @@ h4 {
     padding: 1rem 0;
     display: flex;
     justify-content: center;
+    overflow: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 640px) {
+  header {
+    padding: 0.5rem 1rem;
+  }
+
+  header h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  header h1::after {
+    content: '☰';
+    margin-left: auto;
+  }
+
+  main {
+    display: block;
+    position: relative;
+  }
+
+  nav {
+  nav a {
+    padding: 0.66rem 0;
+  }
+
+  article {
+    margin-left: 0;
+    border-left: 0;
+    padding: 1rem;
+  }
 }
 
 /* EBNF text representation styling */
@@ -223,7 +256,6 @@ svg.railroad-diagram path.diagram-text {
 svg.railroad-diagram g.diagram-text:hover path.diagram-text {
     fill: #eee;
 }
-
 `;
 
 const dasherize = str => str.replace(/\s+/g, "-");
