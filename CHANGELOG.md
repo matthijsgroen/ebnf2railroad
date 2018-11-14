@@ -4,16 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-### Fixed
-- Closing tag for Terminals with single quotes
+## [1.6.0] - 2018-11-13
+### Added
+- Formatting of text output in the document
+- Long sequences will wrap over multiple lines
+- Choice lists between 3 and 6 items will be displayed under eachother
+- Choice lists over 6 items will be displayed as a grid
+- Option `--no-text-formatting` to write all text on a single line
+- Option `--no-optimizations` to write diagrams as-is
+- Option `--no-target` to skip writing documentation
+- Option `--write-style` to 'prettify' source documents
 
+## [1.5.0] - 2018-11-10
 ### Added
 - Support to use package as library within other projects
 - Support for alternative characters: `|` -> `/`, `!`, `[ ]` -> `(/ /)`,
   `{ }` -> `(: :)`
 - Table of contents, showing structure in alphabet, or as
   hierarchy overview at the bottom.
+- Optimize EBNF syntax as `a | a` into `a`
+- Optimize EBNF syntax as `a | a, b` into `a, [ b ]`
+- Optimize EBNF syntax as `a, b, c, g | a, b, d, g` into `a, b, ( c | d ), g`
+
+### Fixed
+- Closing tag for Terminals with single quotes
+- Issue when the chain was optimized without repeater
+  `a, b, c, { b, c }`.
 
 ## [1.4.0] - 2018-11-03
 ### Added
@@ -52,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show validation warnings for missing references
 - Option `--validate` to exit with status code 2 if document has
   warnings
-- Option `--quite` to suppress output to console
+- Option `--quiet` to suppress output to console
 - Optimize EBNF syntax as `( a ), { a }` in diagram as `a+` (one or more)
 - Optimize EBNF syntax as `a | { b }` in diagram as choice with "skip",
   "a", or one or more "b"

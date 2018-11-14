@@ -25,8 +25,8 @@
 
   Linking to a [EBNF declaration](#one-or-more) is also nice
 
-  > It nice if you spend a lot of time and effort on creating a DSL  
-  > (Domain specific language). That if you formally specify it  
+  > It nice if you spend a lot of time and effort on creating a DSL
+  > (Domain specific language). That if you formally specify it
   > using EBNF, you get really good looking documentation for free!
   >
   > -- someone
@@ -55,13 +55,24 @@
 
 *)
 
-optimizations = optimized choices | optimized one or more;
+optimizations
+  = optimized choices
+  | optimized one or more
+  | (optimized one or more)
+  | optimized one or more;
 
-optimized choices = choice with optional | nested choices with optional | nested choices with multiple optionals
-  | nested choices | choice with one or more;
+optimized choices
+  = choice with optional
+  | nested choices with optional
+  | nested choices with multiple optionals
+  | nested choices
+  | choice with one or more;
 
-optimized one or more = choice with one or more | one or more | one or more with group | one or more with repeater,
-  optimizations;
+optimized one or more
+  = choice with one or more
+  | one or more
+  | one or more with group
+  | one or more with repeater, optimizations;
 
 choice with optional = [ "a" | "b" ];
 nested choices with optional = "a" | [ "b" | "c"];
@@ -71,6 +82,17 @@ choice with one or more= "a" | { "b" };
 one or more = "a", { "a" };
 one or more with group = ( "a" | "b"), { "a" | "b" };
 one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
+
+calculation
+  = normal value, "*", number value
+  | normal value, "+", normal value
+  | normal value, "-", normal value
+  | special value, "-", special value
+  ;
+
+normal value = "fixing ref";
+special value = "fixing ref";
+number value = "fixing ref";
 
 (*
   Mixing comments in
@@ -111,3 +133,5 @@ big parts = "item", { "item" };
 
 definition main characters = "item" | "item2" | ["optional"], { "repeater" };
 alternative main characters = "item" / "item2" ! (/ "optional" /), (:  "repeater" :).
+
+lowercase letter = "a" | "b" | "c" | "d" | "e" | "f" | "ghij" | "k" | "l" | "m" | "n" | "o" | "pqr" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";

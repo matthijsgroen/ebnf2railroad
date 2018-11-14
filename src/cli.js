@@ -5,17 +5,26 @@ const writeFile = util.promisify(require("fs").writeFile);
 const { parse } = require("./ebnf-parser");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
-
-program.version(version);
+const { productionToEBNF } = require("./ebnf-builder");
 
 program
+  .version(version)
+
   .usage("[options] <file>")
-  .option("-o, --target [target]", "output the file to target destination.")
   .option("-q, --quiet", "suppress output to STDOUT")
-  .option("--validate", "exit with status code 2 if ebnf document has warnings")
-  .option("--title [title]", "title to use for HTML document")
+
   .description(
     "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
+  )
+  .option("-o, --target [target]", "output the file to target destination.")
+  .option("--no-target", "skip writing output HTML", null)
+  .option("-t, --title [title]", "title to use for HTML document")
+  .option("--lint", "exit with status code 2 if EBNF document has warnings")
+  .option("--write-style", "rewrites the source document with styled text")
+  .option("--no-optimizations", "does not try to optimize the diagrams")
+  .option(
+    "--no-text-formatting",
+    "does not format the output text version (becomes single line)"
   );
 
 async function run(args) {
@@ -25,6 +34,8 @@ async function run(args) {
     return;
   }
   const allowOutput = !program.quiet;
+  const optimizeDiagrams = program.optimizations;
+  const textFormatting = program.textFormatting;
   const output = text => allowOutput && process.stdout.write(text + "\n");
   const outputError = text => allowOutput && process.stderr.write(text + "\n");
   const outputErrorStruct = struct =>
@@ -36,6 +47,7 @@ async function run(args) {
   try {
     const filename = program.args[0];
     const ebnf = await readFile(filename, "utf8");
+
     const basename = filename
       .split(".")
       .slice(0, -1)
@@ -43,7 +55,8 @@ async function run(args) {
     const defaultOutputFilename = basename + ".html";
     const documentTitle = program.title || basename;
 
-    const targetFilename = program.target || defaultOutputFilename;
+    const targetFilename =
+      program.target === true ? defaultOutputFilename : program.target;
 
     const ast = parse(ebnf);
     const warnings = validateEbnf(ast);
@@ -52,12 +65,28 @@ async function run(args) {
       allowOutput &&
       warnings.forEach(warning => outputErrorStruct(warning));
 
-    const report = createDocumentation(ast, {
-      title: documentTitle
-    });
-    await writeFile(targetFilename, report, "utf8");
+    if (program.writeStyle) {
+      const prettyOutput =
+        ast
+          .map(production =>
+            productionToEBNF(production, { markup: false, format: true })
+          )
+          .join("\n\n") + "\n";
 
-    output(`📜 Document created at ${targetFilename}`);
+      await writeFile(filename, prettyOutput, "utf8");
+      output(`💅 Source updated at ${filename}`);
+    }
+
+    if (targetFilename) {
+      const report = createDocumentation(ast, {
+        title: documentTitle,
+        optimizeDiagrams,
+        textFormatting
+      });
+      await writeFile(targetFilename, report, "utf8");
+
+      output(`📜 Document created at ${targetFilename}`);
+    }
     warnings.length > 0 && program.validate && process.exit(2);
   } catch (e) {
     if (e.hash) {
@@ -69,6 +98,8 @@ async function run(args) {
       });
     } else {
       outputError(e.message);
+      output("");
+      output("use --help for usage information");
     }
     process.exit(1);
   }

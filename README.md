@@ -1,11 +1,22 @@
 # EBNF 2 RailRoad
 
-[![npm](https://img.shields.io/npm/v/ebnf2railroad.svg)](http://npm.im/ebnf2railroad)
-[![Build
-Status](https://travis-ci.org/matthijsgroen/ebnf2railroad.svg?branch=master)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
+[![travis](https://badgen.now.sh/travis/matthijsgroen/ebnf2railroad?icon=travis)](https://travis-ci.org/matthijsgroen/ebnf2railroad)
+[![npm](https://badgen.now.sh/npm/v/ebnf2railroad?icon=npm)](http://npm.im/ebnf2railroad)
+[![code style: prettier](https://badgen.now.sh/badge/code%20style/prettier/ff69b4)](https://github.com/prettier/prettier)
+[![publishsize](https://badgen.now.sh/packagephobia/publish/ebnf2railroad)](https://packagephobia.now.sh/result?p=ebnf2railroad)
+[![license](https://badgen.now.sh/github/license/matthijsgroen/ebnf2railroad)](https://github.com/matthijsgroen/ebnf2railroad)
 
-A command line tool to create nice documentation including railroad
+A command line tool to create great documentation including railroad
 diagrams based on the ISO/IEC 14977 specification
+
+## Features
+
+- Creates optimized visual syntax diagrams based on the EBNF syntax
+- Quick navigation using references of used declarations
+- Nice comment markup using markdown
+- Validates if document is complete and has no duplicate declarations
+- Shows pretty printed text syntax in the document
+- Pretty printing of the sourcefile
 
 ## Installation
 
@@ -22,12 +33,38 @@ Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams
 
 Options:
   -V, --version          output the version number
-  -o, --target [target]  output the file to target destination.
   -q, --quiet            suppress output to STDOUT
-  --validate             exit with status code 2 if ebnf document has warnings
-  --title [title]        title to use for HTML document
+  -o, --target [target]  output the file to target destination.
+  --no-target            skip writing output HTML
+  -t, --title [title]    title to use for HTML document
+  --lint                 exit with status code 2 if EBNF document has warnings
+  --write-style          rewrites the source document with styled text
+  --no-optimizations     does not try to optimize the diagrams
+  --no-text-formatting   does not format the output text version (becomes single line)
   -h, --help             output usage information
 ```
+
+### Examples
+
+To generate HTML documentation of the EBNF file:
+
+```
+ebnf2railroad --title 'My Title' inputfile.ebnf -o outputfile.html
+```
+
+To only verify the EBNF file:
+
+```
+ebnf2railroad --lint inputfile.ebnf --no-target
+```
+
+To prettify the source EBNF file:
+
+```
+ebnf2railroad --write-style inputfile.ebnf --no-target
+```
+
+### Online examples
 
 Check the examples folder for an example input file and the generated result page.
 

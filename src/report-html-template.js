@@ -1,7 +1,10 @@
 const { Converter } = require("showdown");
 const { dedent } = require("./dedent");
 const converter = new Converter({
-  simplifiedAutoLink: true
+  simplifiedAutoLink: true,
+  strikethrough: true,
+  tasklists: true,
+  tables: true
 });
 
 const documentFrame = ({ head, body, title }) =>
@@ -51,7 +54,7 @@ const documentStyle = () =>
   `
 /* Dev-only CSS */
 nav:last-child {
-    display: none;
+  display: none;
 }
 
 /* Proper CSS */
@@ -64,87 +67,87 @@ html {
 }
 
 :root {
-    --subtleText: #777;
-    --highlightText: hotpink;
-    --itemHeadingBackground: #eee;
-    --diagramBackground: #f8f8f8;
+  --subtleText: #777;
+  --highlightText: hotpink;
+  --itemHeadingBackground: #eee;
+  --diagramBackground: #f8f8f8;
 }
 
 html {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-    color: inherit;
+  color: inherit;
 }
 
 a:visited {
-    color: var(--subtleText);
+  color: var(--subtleText);
 }
 
 a:active, a:focus, a:hover {
-    color: var(--highlightText);
+  color: var(--highlightText);
 }
 
 header {
-    border-bottom: 1px solid #ccc;
-    padding: 1rem;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem;
 }
 
 main {
-    display: flex;
-    overflow: hidden;
+  display: flex;
+  overflow: hidden;
 }
 
 nav {
-    padding: 1rem 2rem 1rem 1rem;
+  padding: 1rem 2rem 1rem 1rem;
 }
 
 nav h3 {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 nav ul {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 nav a {
-    display: inline-block;
-    color: var(--subtleText);
-    text-decoration: none;
-    padding: 0.33rem 0;
+  display: inline-block;
+  color: var(--subtleText);
+  text-decoration: none;
+  padding: 0.33rem 0;
 }
 
 article {
-    padding: 1rem 2rem;
-    margin-left: 1rem;
-    border-left: 1px solid #ccc;
+  padding: 1rem 2rem;
+  margin-left: 1rem;
+  border-left: 1px solid #ccc;
 }
 
 code {
-    width: 100%;
+  width: 100%;
 }
 
 h4 {
-    padding: 2rem;
-    margin: 4rem -2rem 1rem -2rem;
-    background: var(--itemHeadingBackground);
-    font-size: 125%;
+  padding: 2rem;
+  margin: 4rem -2rem 1rem -2rem;
+  background: var(--itemHeadingBackground);
+  font-size: 125%;
 }
 
 .diagram-container {
-    background: var(--diagramBackground);
-    margin-bottom: 0.25rem;
-    padding: 1rem 0;
-    display: flex;
-    justify-content: center;
-    overflow: auto;
+  background: var(--diagramBackground);
+  margin-bottom: 0.25rem;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
 }
 
 /* Responsiveness */
@@ -169,7 +172,6 @@ h4 {
     position: relative;
   }
 
-  nav {
   nav a {
     padding: 0.66rem 0;
   }
@@ -190,6 +192,9 @@ code.ebnf {
   color: #777;
   white-space: nowrap;
   display: inline-block;
+}
+code.ebnf pre {
+  margin: 0;
 }
 .ebnf-identifier {
   color: #990099;
@@ -266,7 +271,9 @@ const referencesTemplate = (identifier, references) =>
 ${references
     .map(
       reference =>
-        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+        `<li><a href="#${dasherize(
+          reference.trim()
+        )}">${reference.trim()}</a></li>`
     )
     .join("")}
 </ul>`;
@@ -277,7 +284,9 @@ const referencesToTemplate = (identifier, references) =>
 ${references
     .map(
       reference =>
-        `<li><a href="#${dasherize(reference)}">${reference}</a></li>`
+        `<li><a href="#${dasherize(
+          reference.trim()
+        )}">${reference.trim()}</a></li>`
     )
     .join("")}
 </ul>`;
@@ -293,7 +302,7 @@ const ebnfTemplate = ({
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}  </div>
-  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
+  <code class="ebnf"><pre>${ebnf}</pre></code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +
     (referencesTo.length > 0
