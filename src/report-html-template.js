@@ -185,8 +185,7 @@ h4 {
 
 /* EBNF text representation styling */
 code.ebnf {
-  padding: 1em 1em 1em 3em;
-  text-indent: -2em;
+  padding: 1em;
   background: rgb(255, 246, 209);
   font-weight: bold;
   color: #777;
