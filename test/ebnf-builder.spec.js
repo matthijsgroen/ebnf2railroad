@@ -51,7 +51,27 @@ describe("EBNF Builder", () => {
   });
 
   describe("choice lists", () => {
-    it("converts a root choice list to a multiline statement, when less than 6 items", () => {
+    it("does not convert a root choice list to a multiline statement, when 2 short items", () => {
+      const text = "statement = function call | if condition;";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql("statement = function call | if condition;");
+    });
+
+    it("converts a root choice list to a multiline statement, when 2 long items", () => {
+      const text =
+        'time calculation = time value , "-" , duration value | time value , "+" , duration value;';
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        "time calculation\n" +
+          '  = time value , "-" , duration value\n' +
+          '  | time value , "+" , duration value\n' +
+          "  ;"
+      );
+    });
+
+    it("converts a root choice list to a multiline statement, when between 3 and 6 items", () => {
       const text =
         "statement = function call | if condition | assignment | loop;";
       const ast = parser.parse(text);
@@ -67,14 +87,13 @@ describe("EBNF Builder", () => {
     });
 
     it("converts a root choice list to a multiline statement, when more than 6 items, as a grid", () => {
-      const text = "statement = a|b|c|d|e|f|ghijkl|m|n|o|p|q|rs|t;";
+      const text = "statement = a|b|cd|e|f|ghi|jkl|m|n|o|p|q|rs|t;";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
         "statement\n" +
-          "  = a | b      | c  | d | e\n" +
-          "  | f | ghijkl | m  | n | o\n" +
-          "  | p | q      | rs | t\n" +
+          "  = a | b | cd | e | f  | ghi | jkl | m\n" +
+          "  | n | o | p  | q | rs | t\n" +
           "  ;"
       );
     });
@@ -102,9 +121,9 @@ describe("EBNF Builder", () => {
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
-        "statement = a , b , c , d , e , f , g , h ,\n" +
-          "  i , j , k , l , m , n , o , p , q , r , s ,\n" +
-          "  t , uu , v , w , q , y , z;"
+        "statement = a , b , c , d , e , f , g , h , i ,\n" +
+          "  j , k , l , m , n , o , p , q , r , s , t , uu ,\n" +
+          "  v , w , q , y , z;"
       );
     });
 
@@ -114,9 +133,31 @@ describe("EBNF Builder", () => {
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
-        "statement = abcdef something very long , g ,\n" +
-          "  hijklm , n , o , p , q , r , s , t , uu , v ,\n" +
-          "  w , q , y , z;"
+        "statement = abcdef something very long , g , hijklm ,\n" +
+          "  n , o , p , q , r , s , t , uu , v , w , q , y , z;"
+      );
+    });
+
+    it("uses a margin to prevent wrapping short pieces at the end", () => {
+      const text = 'gamut = "[" , gamut float , "," , gamut float , "]";';
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        'gamut = "[" , gamut float , "," , gamut float , "]";'
+      );
+    });
+
+    it("keeps stacking offset until linebreak", () => {
+      const text =
+        'function call with priority support = identifier , [ "!" ] ,\n' +
+        ' "(" , [ argument value with mutators , { "," , argument value with mutators } ] , ")";';
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        "function call with priority support = identifier ,\n" +
+          '  [ "!" ] , "(" , [ argument value with mutators ,\n' +
+          '  { "," , argument value with mutators } ] ,\n' +
+          '  ")";'
       );
     });
   });
