@@ -89,7 +89,42 @@ const createStructuralToc = ast => {
     );
 };
 
+const createDefinitionMetadata = (structuralToc, level = 0) => {
+  const metadata = {};
+  structuralToc.forEach(item => {
+    const data = metadata[item.name] || { counted: 0 };
+    if (level === 0) {
+      data["root"] = true;
+    }
+    if (item.recursive) {
+      data["recursive"] = true;
+    }
+    data["counted"]++;
+    metadata[item.name] = data;
+
+    if (item.children) {
+      const childData = createDefinitionMetadata(item.children, level + 1);
+      Object.entries(childData).forEach(([name, cData]) => {
+        const data = metadata[name] || { counted: 0 };
+        metadata[name] = {
+          ...data,
+          ...cData,
+          counted: cData.counted + data.counted
+        };
+      });
+    }
+  });
+  const values = Object.values(metadata);
+  const total = values.reduce((acc, item) => acc + item.counted, 0);
+  const average = total / values.length;
+  Object.entries(metadata).forEach(([varName, value]) => {
+    metadata[varName].common = value.counted > average;
+  });
+  return metadata;
+};
+
 module.exports = {
   createAlphabeticalToc,
+  createDefinitionMetadata,
   createStructuralToc
 };

@@ -23,12 +23,7 @@ ${body}
 </html>
 `;
 
-const documentContent = ({
-  title,
-  contents,
-  alphabeticalToc,
-  hierarchicalToc
-}) =>
+const documentContent = ({ title, contents, alphabeticalToc }) =>
   `<header>
     <h1>${title}</h1>
   </header>
@@ -42,12 +37,6 @@ const documentContent = ({
   <article>
     ${contents}
   </article>
-  <nav>
-    <h3>Language overview</h3>
-    <ul class="nav-hierarchical">
-    ${hierarchicalToc}
-    </ul>
-  </nav>
   </main>`;
 
 const documentStyle = () =>

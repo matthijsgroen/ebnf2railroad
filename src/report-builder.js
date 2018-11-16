@@ -167,13 +167,15 @@ const createDocumentation = (ast, options) => {
     .join("");
 
   const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
-  const hierarchicalToc = createTocStructure(createStructuralToc(ast));
+  const structuralToc = createStructuralToc(ast);
+  //console.log(structuralToc, alphabeticalToc);
+  //const hierarchicalToc = createTocStructure(createStructuralToc(ast));
 
   const htmlContent = documentContent({
     title: options.title,
     contents,
-    alphabeticalToc,
-    hierarchicalToc
+    alphabeticalToc
+    //hierarchicalToc
   });
   return options.full !== false
     ? documentFrame({
