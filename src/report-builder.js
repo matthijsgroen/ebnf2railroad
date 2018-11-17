@@ -23,7 +23,11 @@ const {
   searchReferencesFromIdentifier,
   searchReferencesToIdentifier
 } = require("./references");
-const { createAlphabeticalToc, createStructuralToc } = require("./toc");
+const {
+  createAlphabeticalToc,
+  createStructuralToc,
+  createDefinitionMetadata
+} = require("./toc");
 const { productionToEBNF } = require("./ebnf-builder");
 
 const dasherize = str => str.replace(/\s+/g, "-");
@@ -119,15 +123,21 @@ const productionToDiagram = production => {
 
 const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
 
-const createTocStructure = tocData =>
+const createTocStructure = (tocData, metadata) =>
   tocData
     .map(
       tocNode =>
-        `<li><a href="#${dasherize(
-          tocNode.name.trim()
-        )}">${tocNode.name.trim()} ${tocNode.recursive ? "↖︎" : ""}</a>${
+        `<li${
+          metadata[tocNode.name].root
+            ? ' class="root-node"'
+            : metadata[tocNode.name].common
+              ? ' class="common-node"'
+              : ""
+        }><a href="#${dasherize(tocNode.name.trim())}">${tocNode.name.trim()} ${
+          metadata[tocNode.name].recursive ? "↖︎" : ""
+        }</a>${
           tocNode.children
-            ? `<ul>${createTocStructure(tocNode.children)}</ul>`
+            ? `<ul>${createTocStructure(tocNode.children, metadata)}</ul>`
             : ""
         }
       </li>`
@@ -166,16 +176,28 @@ const createDocumentation = (ast, options) => {
     })
     .join("");
 
-  const alphabeticalToc = createTocStructure(createAlphabeticalToc(ast));
   const structuralToc = createStructuralToc(ast);
-  //console.log(structuralToc, alphabeticalToc);
-  //const hierarchicalToc = createTocStructure(createStructuralToc(ast));
+  const metadata = createDefinitionMetadata(structuralToc);
+  const alphabetical = createAlphabeticalToc(ast);
+  const rootItems = alphabetical.filter(item => metadata[item.name].root);
+  const commonItems = alphabetical.filter(
+    item => !metadata[item.name].root && metadata[item.name].common
+  );
+  const otherItems = alphabetical.filter(
+    item => !metadata[item.name].root && !metadata[item.name].common
+  );
+  const hierarchicalToc = createTocStructure(structuralToc, metadata);
 
   const htmlContent = documentContent({
     title: options.title,
     contents,
-    alphabeticalToc
-    //hierarchicalToc
+    singleRoot: rootItems.length === 1,
+    toc: {
+      hierarchical: hierarchicalToc,
+      common: createTocStructure(commonItems, metadata),
+      roots: createTocStructure(rootItems, metadata),
+      other: createTocStructure(otherItems, metadata)
+    }
   });
   return options.full !== false
     ? documentFrame({
