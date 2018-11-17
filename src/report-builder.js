@@ -133,9 +133,15 @@ const createTocStructure = (tocData, metadata) =>
             : metadata[tocNode.name].common
               ? ' class="common-node"'
               : ""
-        }><a href="#${dasherize(tocNode.name.trim())}">${tocNode.name.trim()} ${
-          metadata[tocNode.name].recursive ? "↖︎" : ""
-        }</a>${
+        }><a href="#${dasherize(
+          tocNode.name.trim()
+        )}">${tocNode.name.trim()}</a>
+        ${
+          metadata[tocNode.name].recursive
+            ? '<dfn title="recursive">♺</dfn>'
+            : ""
+        }
+        ${
           tocNode.children
             ? `<ul>${createTocStructure(tocNode.children, metadata)}</ul>`
             : ""
