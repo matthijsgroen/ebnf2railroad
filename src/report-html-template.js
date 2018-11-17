@@ -23,31 +23,28 @@ ${body}
 </html>
 `;
 
-const documentContent = ({
-  title,
-  contents,
-  alphabeticalToc,
-  hierarchicalToc
-}) =>
+const documentContent = ({ title, contents, toc, singleRoot }) =>
   `<header>
     <h1>${title}</h1>
   </header>
   <main>
   <nav>
+    <h3>Root element${singleRoot ? "" : "s"}:</h3>
+    <ul class="nav-alphabetical">
+    ${toc.roots}
+    </ul>
     <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
-    ${alphabeticalToc}
+    ${toc.other}
+    </ul>
+    <h3>Common elements:</h3>
+    <ul class="nav-alphabetical">
+    ${toc.common}
     </ul>
   </nav>
   <article>
     ${contents}
   </article>
-  <nav>
-    <h3>Language overview</h3>
-    <ul class="nav-hierarchical">
-    ${hierarchicalToc}
-    </ul>
-  </nav>
   </main>`;
 
 const documentStyle = () =>
@@ -69,6 +66,15 @@ const documentStyle = () =>
   }
   section h4 {
     margin-bottom: 0;
+  }
+  .nav-alphabetical .root-node {
+    font-weight: bold;
+  }
+  .nav-alphabetical .common-node {
+    opacity: 0.5;
+  }
+  .nav-hierarchicalToc .common-node {
+    display: none;
   }
 
   /* EBNF text representation styling */

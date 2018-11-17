@@ -1,7 +1,11 @@
 const { expect } = require("chai");
 const { parser } = require("../src/ebnf-parser");
 const { dedent } = require("../src/dedent");
-const { createAlphabeticalToc, createStructuralToc } = require("../src/toc");
+const {
+  createAlphabeticalToc,
+  createStructuralToc,
+  createDefinitionMetadata
+} = require("../src/toc");
 
 describe("table of contents", () => {
   const ebnfDefinition = dedent(`
@@ -79,6 +83,49 @@ describe("table of contents", () => {
           ]
         }
       ]);
+    });
+  });
+
+  describe("createDefinitionMetadata", () => {
+    it("marks elements as 'root'", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata)
+        .have.nested.property("root.root")
+        .eq(true);
+      expect(metadata)
+        .have.nested.property("second root.root")
+        .eq(true);
+    });
+
+    it("counts element encounters", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata)
+        .have.nested.property("root.counted")
+        .eq(1);
+      expect(metadata)
+        .have.nested.property("condition.counted")
+        .eq(2);
+    });
+
+    it("marks if elements are recursive", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata)
+        .have.nested.property("condition.recursive")
+        .eq(true);
+    });
+
+    it("marks if elements are common in structure", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata)
+        .have.nested.property("root.common")
+        .eq(false);
+      expect(metadata)
+        .have.nested.property("statement.common")
+        .eq(true);
     });
   });
 });
