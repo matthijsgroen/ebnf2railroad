@@ -8,8 +8,10 @@ const {
   OneOrMore,
   Sequence,
   Skip,
+  Stack,
   Terminal
 } = require("railroad-diagrams");
+
 const { optimizeProduction } = require("./structure-optimizer");
 const {
   documentContent,
@@ -31,6 +33,55 @@ const {
 const { productionToEBNF } = require("./ebnf-builder");
 
 const dasherize = str => str.replace(/\s+/g, "-");
+
+const EXTRA_DIAGRAM_PADDING = 1;
+const determineDiagramSequenceLength = production => {
+  if (production.sequence) {
+    return production.sequence.reduce(
+      (total, elem) =>
+        determineDiagramSequenceLength(elem) + EXTRA_DIAGRAM_PADDING + total,
+      0
+    );
+  }
+  if (production.nonTerminal) {
+    return production.nonTerminal.length + EXTRA_DIAGRAM_PADDING;
+  }
+  if (production.terminal) {
+    return production.terminal.length + EXTRA_DIAGRAM_PADDING;
+  }
+  if (production.group) {
+    return determineDiagramSequenceLength(production.group);
+  }
+  if (production.choice) {
+    return (
+      production.choice
+        .map(elem => determineDiagramSequenceLength(elem))
+        .reduce((max, elem) => (max > elem ? max : elem), 0) +
+      EXTRA_DIAGRAM_PADDING * 2
+    );
+  }
+  if (production.repetition) {
+    const repetitionLength = determineDiagramSequenceLength(
+      production.repetition
+    );
+    const repeaterLength = production.repeater
+      ? determineDiagramSequenceLength(production.repeater)
+      : 0;
+    return Math.max(repetitionLength, repeaterLength) +
+      EXTRA_DIAGRAM_PADDING * 2 +
+      production.skippable
+      ? EXTRA_DIAGRAM_PADDING * 2
+      : 0;
+  }
+  if (production.optional) {
+    return (
+      determineDiagramSequenceLength(production.optional) +
+      EXTRA_DIAGRAM_PADDING * 2
+    );
+  }
+  return 0;
+};
+
 const SHRINK_CHOICE = 10;
 
 const productionToDiagram = production => {
@@ -69,6 +120,38 @@ const productionToDiagram = production => {
       : choiceLists[0];
   }
   if (production.sequence) {
+    const sequenceLength = determineDiagramSequenceLength(production);
+    if (sequenceLength > 45) {
+      const subSequences = production.sequence
+        .reduce(
+          (totals, elem, index, list) => {
+            const lastList = totals.slice(-1)[0];
+            lastList.push(elem);
+            const currentLength = determineDiagramSequenceLength({
+              sequence: lastList
+            });
+            const remainingLength = determineDiagramSequenceLength({
+              sequence: list.slice(index + 1)
+            });
+            if (
+              currentLength + remainingLength > 40 &&
+              currentLength >= 25 &&
+              remainingLength > 10
+            ) {
+              totals.push([]);
+            }
+            return totals;
+          },
+          [[]]
+        )
+        .filter(array => array.length > 0);
+      return Stack(
+        ...subSequences.map(subSequence =>
+          Sequence(...subSequence.map(productionToDiagram))
+        )
+      );
+    }
+
     return Sequence(...production.sequence.map(productionToDiagram));
   }
   if (production.repetition && production.skippable === true) {
