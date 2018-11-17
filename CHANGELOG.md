@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Syntax diagram will wrap if sequences become very long
+- Split navigation bar in 3 parts. Root elements, Normal elements,
+  Common elements
+- Added Marker of recursion in navigation list
+
+### Fixed
+- Small pretty print issues that caused weird line breaks
+
 ## [1.6.0] - 2018-11-13
 ### Added
 - Formatting of text output in the document

@@ -19,25 +19,30 @@ const wrapTag = (tag, attributes, content, markup) =>
 const wrapSpan = (classNames, content, markup) =>
   wrapTag("span", { class: classNames }, content, markup);
 
-const MAX_LINE_LENGTH = 40;
+const MAX_LINE_LENGTH = 45;
+const LINE_MARGIN_LENGTH = 20;
 
 const defaultOptions = {
   markup: false,
   format: false,
   maxLineLength: MAX_LINE_LENGTH,
+  lineMargin: LINE_MARGIN_LENGTH,
   indent: 0
 };
 
 const detectRenderConfig = (item, options) => {
   const multiLineChoice =
     item.choice &&
-    item.choice.length > 2 &&
+    (item.choice.length > 2 ||
+      productionToEBNF(item, { format: false, markup: false }).length >
+        options.maxLineLength) &&
     item.choice.length <= 6 &&
     options.format;
 
   if (multiLineChoice) {
     return {
       ...options,
+      offsetLength: 0,
       multiline: true,
       indent: 1,
       rowCount: 1
@@ -58,25 +63,18 @@ const detectRenderConfig = (item, options) => {
     return {
       ...options,
       multiline: true,
+      offsetLength: 0,
       rowCount,
       padding: true,
       indent: options.indent + 1
     };
   }
 
-  const sequence = item.sequence && options.format;
-  if (sequence) {
-    return {
-      ...options,
-      lineWrap: true
-    };
-  }
-
   return options;
 };
 
-const calculateMaxLength = production => {
-  const output = productionToEBNF(production, { markup: false, format: true });
+const calculateMaxLength = (production, format) => {
+  const output = productionToEBNF(production, { markup: false, format });
   const multiLine = output.includes("\n");
   return multiLine ? -1 : output.length;
 };
@@ -173,27 +171,51 @@ const productionToEBNF = (production, setOptions) => {
       .join(" | ");
   }
   if (production.sequence) {
-    return production.sequence
-      .map(element => ({
-        output: productionToEBNF(element, { ...options, offsetLength: 0 }),
-        length: calculateMaxLength(element)
-      }))
-      .map((elem, index, list) => {
-        if (index === 0) return elem.output;
-        const indent = options.indent + 1;
-        const currentOffset = list
-          .slice(0, index - 1)
-          .reduce(
-            (acc, elem) => (elem.length === -1 ? 0 : acc + elem.length + 3),
-            options.offsetLength || 0
+    const sequenceLength = (list, offset, till = undefined) =>
+      list
+        .slice(0, till)
+        .reduce(
+          (acc, elem) => (elem.length === -1 ? 0 : acc + elem.length + 3),
+          offset
+        );
+
+    return (
+      production.sequence
+        .map(element => ({
+          element,
+          length: calculateMaxLength(element, options.format)
+        }))
+        .map(({ element }, index, list) => {
+          if (index === 0) return productionToEBNF(element, options);
+          const indent = options.indent + 1;
+
+          const currentLength = sequenceLength(
+            list,
+            options.offsetLength || 0,
+            index
           );
+          const totalLength = sequenceLength(list, options.offsetLength || 0);
 
-        const addBreak = currentOffset + indent * 2 > options.maxLineLength;
-        if (addBreak) list[index - 1].length = -1;
+          const addBreak =
+            options.format &&
+            currentLength > options.maxLineLength &&
+            totalLength > options.maxLineLength + options.lineMargin;
+          if (addBreak) list[index - 1].length = -1;
 
-        return ` ,${addBreak ? lineIndent(indent) : " "}${elem.output}`;
-      })
-      .join("");
+          const offsetLength = addBreak ? 0 : currentLength;
+          const output = productionToEBNF(element, {
+            ...options,
+            offsetLength
+          });
+
+          return ` ,${addBreak ? lineIndent(indent) : " "}${output}`;
+        })
+        .join("")
+        // Remove potentially added whitespace paddings at the end of the line
+        .split("\n")
+        .map(line => line.trimEnd())
+        .join("\n")
+    );
   }
   if (production.specialSequence) {
     return wrapSpan(

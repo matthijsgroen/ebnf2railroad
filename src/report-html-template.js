@@ -23,41 +23,32 @@ ${body}
 </html>
 `;
 
-const documentContent = ({
-  title,
-  contents,
-  alphabeticalToc,
-  hierarchicalToc
-}) =>
+const documentContent = ({ title, contents, toc, singleRoot }) =>
   `<header>
     <h1>${title}</h1>
   </header>
   <main>
   <nav>
+    <h3>Root element${singleRoot ? "" : "s"}:</h3>
+    <ul class="nav-alphabetical">
+    ${toc.roots}
+    </ul>
     <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
-    ${alphabeticalToc}
+    ${toc.other}
+    </ul>
+    <h3>Common elements:</h3>
+    <ul class="nav-alphabetical">
+    ${toc.common}
     </ul>
   </nav>
   <article>
     ${contents}
   </article>
-  <nav>
-    <h3>Language overview</h3>
-    <ul class="nav-hierarchical">
-    ${hierarchicalToc}
-    </ul>
-  </nav>
   </main>`;
 
 const documentStyle = () =>
   `
-/* Dev-only CSS */
-nav:last-child {
-  display: none;
-}
-
-/* Proper CSS */
 html {
   box-sizing: border-box;
 }
@@ -189,11 +180,8 @@ code.ebnf {
   background: rgb(255, 246, 209);
   font-weight: bold;
   color: #777;
-  white-space: nowrap;
+  white-space: pre-wrap;
   display: inline-block;
-}
-code.ebnf pre {
-  margin: 0;
 }
 .ebnf-identifier {
   color: #990099;
@@ -211,54 +199,57 @@ code.ebnf pre {
 }
 
 /* EBNF diagram representation styling */
+svg.railroad-diagram {
+  width: 100%;
+}
 svg.railroad-diagram path {
-    stroke-width: 3;
-    stroke: black;
-    fill: rgba(0,0,0,0);
+  stroke-width: 3;
+  stroke: black;
+  fill: rgba(0,0,0,0);
 }
 svg.railroad-diagram text {
-    font: bold 14px monospace;
-    text-anchor: middle;
+  font: bold 14px monospace;
+  text-anchor: middle;
 }
 svg.railroad-diagram text.diagram-text {
-    font-size: 12px;
+  font-size: 12px;
 }
 svg.railroad-diagram text.diagram-arrow {
-    font-size: 16px;
+  font-size: 16px;
 }
 svg.railroad-diagram text.label {
-    text-anchor: start;
+  text-anchor: start;
 }
 svg.railroad-diagram text.comment {
-    font: italic 12px monospace;
+  font: italic 12px monospace;
 }
 svg.railroad-diagram g.non-terminal text {
-    /*font-style: italic;*/
+  /*font-style: italic;*/
 }
 svg.railroad-diagram g.special-sequence rect {
-    fill: #FFDB4D;
+  fill: #FFDB4D;
 }
 svg.railroad-diagram g.special-sequence text {
-    font-style: italic;
+  font-style: italic;
 }
 svg.railroad-diagram rect {
-    stroke-width: 3;
-    stroke: black;
+  stroke-width: 3;
+  stroke: black;
 }
 svg.railroad-diagram g.non-terminal rect {
-    fill: hsl(120,100%,90%);
+  fill: hsl(120,100%,90%);
 }
 svg.railroad-diagram g.terminal rect {
-    fill: hsl(120,100%,90%);
+  fill: hsl(120,100%,90%);
 }
 svg.railroad-diagram path.diagram-text {
-    stroke-width: 3;
-    stroke: black;
-    fill: white;
-    cursor: help;
+  stroke-width: 3;
+  stroke: black;
+  fill: white;
+  cursor: help;
 }
 svg.railroad-diagram g.diagram-text:hover path.diagram-text {
-    fill: #eee;
+  fill: #eee;
 }
 `;
 
@@ -301,7 +292,7 @@ const ebnfTemplate = ({
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}  </div>
-  <code class="ebnf"><pre>${ebnf}</pre></code>${(referencedBy.length > 0
+  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +
     (referencesTo.length > 0
