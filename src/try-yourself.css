@@ -5,6 +5,38 @@ body {
   flex-direction: column;
 }
 
+@media (max-width: 1280px) {
+  body.split header {
+    padding: 0.5rem 1rem;
+  }
+
+  body.split header h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  body.split header h1::after {
+    content: '☰';
+    margin-left: auto;
+  }
+
+  body.split main {
+    display: block;
+    position: relative;
+  }
+
+  body.split nav a {
+    padding: 0.66rem 0;
+  }
+
+  body.split article {
+    margin-left: 0;
+    border-left: 0;
+    padding: 1rem;
+  }
+}
+
 #header {
   flex: 1rem 0 0;
   padding: 0 1em;
@@ -42,7 +74,7 @@ body a.collapse::before {
   color: black;
   position: absolute;
   top: 0.2rem;
-  left: 0rem;
+  left: 0.5rem;
 }
 body a.collapse::after {
   transition: left 0.5s;
@@ -50,14 +82,14 @@ body a.collapse::after {
   color: black;
   position: absolute;
   top: 0.2rem;
-  left: 1.5rem;
+  left: 0.8rem;
 }
 
-body.collapsed a.collapse::before {
-  left: 0.5rem;
+body.split a.collapse::before {
+  left: 0rem;
 }
-body.collapsed a.collapse::after {
-  left: 0.8rem;
+body.split a.collapse::after {
+  left: 1.5rem;
 }
 
 body.expanded a.collapse::before {
@@ -73,15 +105,16 @@ a.collapse {
   transition: transform .5s;
 }
 
-body.collapsed #editor-pane {
-  flex-grow: 0.00001;
+body.split #editor-pane,
+body.expanded #editor-pane {
+  flex-grow: 1;
 }
 body.expanded #result {
   flex-grow: 0.00001;
 }
 
 #editor-pane {
-  flex: 1 1 0;
+  flex: 0.00001 1 0;
   display: flex;
   flex-direction: column;
 }

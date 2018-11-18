@@ -31,10 +31,10 @@ require("brace/theme/iplastic");
 let position = 1;
 const updatePosition = newPosition => {
   position = newPosition % 4;
-  if (position !== 2) {
-    document.body.classList.remove("collapsed");
+  if (position === 1 || position === 3) {
+    document.body.classList.add("split");
   } else {
-    document.body.classList.add("collapsed");
+    document.body.classList.remove("split");
   }
   if (position !== 0) {
     document.body.classList.remove("expanded");
