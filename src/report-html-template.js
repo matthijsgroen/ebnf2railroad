@@ -121,6 +121,9 @@ article {
   border-left: 1px solid #ccc;
 }
 
+pre {
+  white-space: pre-wrap;
+}
 code {
   width: 100%;
 }
