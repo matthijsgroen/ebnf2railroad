@@ -200,10 +200,12 @@ const productionToEBNF = (production, setOptions) => {
             options.offsetLength || 0,
             index + 1
           );
+          const totalLength = sequenceLength(list, options.offsetLength || 0);
           const addBreak =
             options.format &&
             currentLength > options.maxLineLength &&
-            nextLength > options.maxLineLength + options.lineMargin / 2;
+            nextLength > options.maxLineLength + options.lineMargin / 2 &&
+            totalLength - currentLength > 10;
           if (addBreak) list[index - 1].length = -1;
 
           const offsetLength = addBreak ? 0 : currentLength;
