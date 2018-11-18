@@ -92,8 +92,8 @@ describe("EBNF Builder", () => {
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
         "statement\n" +
-          "  = a | b | cd | e | f  | ghi | jkl | m\n" +
-          "  | n | o | p  | q | rs | t\n" +
+          "  = a | b | cd | e | f | ghi | jkl\n" +
+          "  | m | n | o  | p | q | rs  | t\n" +
           "  ;"
       );
       const rawResult = productionToEBNF(ast[0], {
@@ -128,9 +128,9 @@ describe("EBNF Builder", () => {
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
-        "statement = a , b , c , d , e , f , g , h , i ,\n" +
-          "  j , k , l , m , n , o , p , q , r , s , t , uu ,\n" +
-          "  v , w , q , y , z;"
+        "statement = a , b , c , d , e , f , g , h , i , j ,\n" +
+          "  k , l , m , n , o , p , q , r , s , t , uu , v , w ,\n" +
+          "  q , y , z;"
       );
     });
 
@@ -170,8 +170,7 @@ describe("EBNF Builder", () => {
       expect(result).to.eql(
         "function call with priority support = identifier ,\n" +
           '  [ "!" ] , "(" , [ argument value with mutators ,\n' +
-          '  { "," , argument value with mutators } ] ,\n' +
-          '  ")";'
+          '  { "," , argument value with mutators } ] , ")";'
       );
     });
   });
