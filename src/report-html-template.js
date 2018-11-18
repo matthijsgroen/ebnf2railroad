@@ -119,13 +119,11 @@ article {
   padding: 1rem 2rem;
   margin-left: 1rem;
   border-left: 1px solid #ccc;
+  overflow: scroll;
 }
 
 pre {
-  white-space: pre-wrap;
-}
-code {
-  width: 100%;
+  overflow-x: scroll;
 }
 
 h4 {
@@ -185,6 +183,7 @@ code.ebnf {
   color: #777;
   white-space: pre-wrap;
   display: inline-block;
+  width: 100%;
 }
 .ebnf-identifier {
   color: #990099;
