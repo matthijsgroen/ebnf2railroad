@@ -49,6 +49,19 @@ collapseExpand.addEventListener("click", event => {
   updatePosition(position + 1);
 });
 
+document.querySelector("body").addEventListener("click", function(event) {
+  if (event.target === document.querySelector("header button")) {
+    document.getElementsByTagName("html")[0].classList.toggle("menu-open");
+  }
+  if (event.target.tagName === "A") {
+    document.querySelectorAll("nav a").forEach(e => {
+      if (e === event.target) {
+        document.getElementsByTagName("html")[0].classList.remove("menu-open");
+      }
+    });
+  }
+});
+
 let lastValidAst = [];
 let textFormatting = true;
 let optimizeDiagrams = true;
