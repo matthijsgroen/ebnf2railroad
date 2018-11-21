@@ -26,8 +26,8 @@ ${body}
 const documentContent = ({ title, contents, toc, singleRoot }) =>
   `<header>
     <h1>${title}</h1>
+    <button type="button"></button>
   </header>
-  <main>
   <nav>
     <h3>Root element${singleRoot ? "" : "s"}:</h3>
     <ul class="nav-alphabetical">
@@ -42,10 +42,21 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
     ${toc.common}
     </ul>
   </nav>
+  <main>
   <article>
     ${contents}
   </article>
-  </main>`;
+  </main>
+  <script type="text/javascript">
+    document.querySelector("header button").addEventListener("click", function() {
+      document.getElementsByTagName("html")[0].classList.toggle("menu-open");
+    });
+    document.querySelector("nav").addEventListener("click", function(event) {
+      if (event.target.tagName !== "A") return;
+      document.getElementsByTagName("html")[0].classList.remove("menu-open");
+    });
+  </script>
+`;
 
 const documentStyle = () =>
   `
@@ -58,110 +69,166 @@ html {
 }
 
 :root {
-  --subtleText: #777;
-  --highlightText: hotpink;
-  --itemHeadingBackground: #eee;
-  --diagramBackground: #f8f8f8;
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --diagramBackground: #f8f8f8;
 }
 
 html {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 a {
-  color: inherit;
+    color: inherit;
 }
 
 a:visited {
-  color: var(--subtleText);
+    color: var(--subtleText);
 }
 
 a:active, a:focus, a:hover {
-  color: var(--highlightText);
+    color: var(--highlightText);
 }
 
 header {
-  border-bottom: 1px solid #ccc;
-  padding: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
+}
+
+header button {
+  display: none;
 }
 
 main {
-  display: flex;
-  overflow: hidden;
+    display: flex;
+    overflow: hidden;
+    margin-left: 300px;
 }
 
 nav {
-  padding: 1rem 2rem 1rem 1rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1rem 2rem 1rem 1rem;
+    z-index: 5;
+    background: white;
+    width: 300px;
+    float: left;
+    overflow: auto;
 }
 
 nav h3 {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 nav ul {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 nav a {
-  display: inline-block;
-  color: var(--subtleText);
-  text-decoration: none;
-  padding: 0.33rem 0;
+    display: inline-block;
+    color: var(--subtleText);
+    text-decoration: none;
+    padding: 0.33rem 0;
 }
 
 article {
-  padding: 1rem 2rem;
-  margin-left: 1rem;
-  border-left: 1px solid #ccc;
-  overflow: scroll;
+    width: 100%;
+    overflow: hidden;
+    padding: 1rem 2rem;
+    border-left: 1px solid #ccc;
+}
+
+code {
+    width: 100%;
 }
 
 pre {
-  overflow-x: scroll;
+    overflow: auto;
+}
+
+pre > code {
+    display: block;
+    padding: 1em;
+    background: var(--diagramBackground);
 }
 
 h4 {
-  padding: 2rem;
-  margin: 4rem -2rem 1rem -2rem;
-  background: var(--itemHeadingBackground);
-  font-size: 125%;
+    padding: 2rem;
+    margin: 4rem -2rem 1rem -2rem;
+    background: var(--itemHeadingBackground);
+    font-size: 125%;
+}
+
+dfn {
+    font-style: normal;
+    cursor: default;
 }
 
 .diagram-container {
-  background: var(--diagramBackground);
-  margin-bottom: 0.25rem;
-  padding: 1rem 0;
-  display: flex;
-  justify-content: center;
-  overflow: auto;
+    background: var(--diagramBackground);
+    margin-bottom: 0.25rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
 }
 
 /* Responsiveness */
 @media (max-width: 640px) {
   header {
     padding: 0.5rem 1rem;
+    display: flex;
   }
 
   header h1 {
-    margin: 0;
+    margin: 0 auto 0 0;
     display: flex;
     align-items: center;
   }
 
-  header h1::after {
+  header button {
+    display: initial;
+    position: relative;
+    z-index: 10;
+  }
+
+  header button::after {
     content: '☰';
     margin-left: auto;
+    font-size: 1.5rem;
   }
 
   main {
     display: block;
     position: relative;
+    margin-left: 0;
+  }
+
+  nav {
+    height: auto;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-top: 3rem;
+    background: white;
+    box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
+  }
+
+  .menu-open nav {
+    pointer-events: auto;
+    opacity: 1;
   }
 
   nav a {
