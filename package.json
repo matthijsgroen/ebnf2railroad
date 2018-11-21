@@ -1,6 +1,6 @@
 {
   "name": "ebnf2railroad",
-  "version": "1.7.0-pre",
+  "version": "1.7.0",
   "description": "EBNF to Railroad diagram",
   "keywords": [
     "ebnf",
