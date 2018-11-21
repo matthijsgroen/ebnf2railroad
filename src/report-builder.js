@@ -67,11 +67,11 @@ const determineDiagramSequenceLength = production => {
     const repeaterLength = production.repeater
       ? determineDiagramSequenceLength(production.repeater)
       : 0;
-    return Math.max(repetitionLength, repeaterLength) +
+    return (
+      Math.max(repetitionLength, repeaterLength) +
       EXTRA_DIAGRAM_PADDING * 2 +
-      production.skippable
-      ? EXTRA_DIAGRAM_PADDING * 2
-      : 0;
+      (production.skippable ? EXTRA_DIAGRAM_PADDING * 2 : 0)
+    );
   }
   if (production.optional) {
     return (

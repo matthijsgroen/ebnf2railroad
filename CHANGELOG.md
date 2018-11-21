@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split navigation bar in 3 parts. Root elements, Normal elements,
   Common elements
 - Added Marker of recursion in navigation list
+- Responsive design, mobile navigation, overall styling
 
 ### Fixed
 - Small pretty print issues that caused weird line breaks

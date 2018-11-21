@@ -26,8 +26,8 @@ ${body}
 const documentContent = ({ title, contents, toc, singleRoot }) =>
   `<header>
     <h1>${title}</h1>
+    <button type="button"></button>
   </header>
-  <main>
   <nav>
     <h3>Root element${singleRoot ? "" : "s"}:</h3>
     <ul class="nav-alphabetical">
@@ -42,118 +42,284 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
     ${toc.common}
     </ul>
   </nav>
+  <main>
   <article>
     ${contents}
   </article>
-  </main>`;
+  </main>
+  <script type="text/javascript">
+    document.querySelector("header button").addEventListener("click", function() {
+      document.getElementsByTagName("html")[0].classList.toggle("menu-open");
+    });
+    document.querySelector("nav").addEventListener("click", function(event) {
+      if (event.target.tagName !== "A") return;
+      document.getElementsByTagName("html")[0].classList.remove("menu-open");
+    });
+  </script>
+`;
 
 const documentStyle = () =>
-  `/* Text styling */
-  body {
-    font: normal 12px Verdana, sans-serif;
-    color: #0F0C00;
-    background: #FFFCFC;
-  }
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.5em; }
-  a,
-  a:visited,
-  a:active {
-    color: #0F0C00;
-  }
-  a:hover {
-    color: #000;
-  }
-  section h4 {
-    margin-bottom: 0;
-  }
-  .nav-alphabetical .root-node {
-    font-weight: bold;
-  }
-  .nav-alphabetical .common-node {
-    opacity: 0.5;
-  }
-  .nav-hierarchicalToc .common-node {
-    display: none;
-  }
+  `
+html {
+  box-sizing: border-box;
+}
 
-  /* EBNF text representation styling */
-  code.ebnf {
-    padding: 1em 1em 1em 1em;
-    background: rgb(255, 246, 209);
-    font-weight: bold;
-    color: #777;
-    white-space: nowrap;
-    display: inline-block;
-  }
-  code.ebnf pre {
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+:root {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --diagramBackground: #f8f8f8;
+}
+
+html {
+    font-family: sans-serif;
+}
+
+html, body {
     margin: 0;
-  }
-  .ebnf-identifier {
-    color: #990099;
-  }
-  .ebnf-terminal {
-    color: #009900;
-  }
-  .ebnf-non-terminal {
-    font-weight: normal;
-  }
-  .ebnf-comment {
-    font-weight: normal;
-    font-style: italic;
-    color: #999;
+    padding: 0;
+}
+
+a {
+    color: inherit;
+}
+
+a:visited {
+    color: var(--subtleText);
+}
+
+a:active, a:focus, a:hover {
+    color: var(--highlightText);
+}
+
+header {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
+}
+
+header button {
+  display: none;
+}
+
+main {
+    display: flex;
+    overflow: hidden;
+    margin-left: 300px;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1rem 2rem 1rem 1rem;
+    z-index: 5;
+    background: white;
+    width: 300px;
+    float: left;
+    overflow: auto;
+}
+
+nav h3 {
+    white-space: nowrap;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav a {
+    display: inline-block;
+    color: var(--subtleText);
+    text-decoration: none;
+    padding: 0.33rem 0;
+}
+
+article {
+    width: 100%;
+    overflow: hidden;
+    padding: 1rem 2rem;
+    border-left: 1px solid #ccc;
+}
+
+code {
+    width: 100%;
+}
+
+pre {
+    overflow: auto;
+}
+
+pre > code {
+    display: block;
+    padding: 1em;
+    background: var(--diagramBackground);
+}
+
+h4 {
+    padding: 2rem;
+    margin: 4rem -2rem 1rem -2rem;
+    background: var(--itemHeadingBackground);
+    font-size: 125%;
+}
+
+dfn {
+    font-style: normal;
+    cursor: default;
+}
+
+.diagram-container {
+    background: var(--diagramBackground);
+    margin-bottom: 0.25rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 640px) {
+  header {
+    padding: 0.5rem 1rem;
+    display: flex;
   }
 
-  /* EBNF diagram representation styling */
-  svg.railroad-diagram path {
-      stroke-width: 3;
-      stroke: black;
-      fill: rgba(0,0,0,0);
+  header h1 {
+    margin: 0 auto 0 0;
+    display: flex;
+    align-items: center;
   }
-  svg.railroad-diagram text {
-      font: bold 14px monospace;
-      text-anchor: middle;
+
+  header button {
+    display: initial;
+    position: relative;
+    z-index: 10;
   }
-  svg.railroad-diagram text.diagram-text {
-      font-size: 12px;
+
+  header button::after {
+    content: '☰';
+    margin-left: auto;
+    font-size: 1.5rem;
   }
-  svg.railroad-diagram text.diagram-arrow {
-      font-size: 16px;
+
+  main {
+    display: block;
+    position: relative;
+    margin-left: 0;
   }
-  svg.railroad-diagram text.label {
-      text-anchor: start;
+
+  nav {
+    height: auto;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-top: 3rem;
+    background: white;
+    box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
   }
-  svg.railroad-diagram text.comment {
-      font: italic 12px monospace;
+
+  .menu-open nav {
+    pointer-events: auto;
+    opacity: 1;
   }
-  svg.railroad-diagram g.non-terminal text {
-      /*font-style: italic;*/
+
+  nav a {
+    padding: 0.66rem 0;
   }
-  svg.railroad-diagram g.special-sequence rect {
-      fill: #FFDB4D;
+
+  article {
+    margin-left: 0;
+    border-left: 0;
+    padding: 1rem;
   }
-  svg.railroad-diagram g.special-sequence text {
-      font-style: italic;
-  }
-  svg.railroad-diagram rect {
-      stroke-width: 3;
-      stroke: black;
-  }
-  svg.railroad-diagram g.non-terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram g.terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram path.diagram-text {
-      stroke-width: 3;
-      stroke: black;
-      fill: white;
-      cursor: help;
-  }
-  svg.railroad-diagram g.diagram-text:hover path.diagram-text {
-      fill: #eee;
-  }
+}
+
+/* EBNF text representation styling */
+code.ebnf {
+  padding: 1em;
+  background: rgb(255, 246, 209);
+  font-weight: bold;
+  color: #777;
+  white-space: pre-wrap;
+  display: inline-block;
+  width: 100%;
+}
+.ebnf-identifier {
+  color: #990099;
+}
+.ebnf-terminal {
+  color: #009900;
+}
+.ebnf-non-terminal {
+  font-weight: normal;
+}
+.ebnf-comment {
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}
+
+/* EBNF diagram representation styling */
+svg.railroad-diagram {
+  width: 100%;
+}
+svg.railroad-diagram path {
+  stroke-width: 3;
+  stroke: black;
+  fill: rgba(0,0,0,0);
+}
+svg.railroad-diagram text {
+  font: bold 14px monospace;
+  text-anchor: middle;
+}
+svg.railroad-diagram text.diagram-text {
+  font-size: 12px;
+}
+svg.railroad-diagram text.diagram-arrow {
+  font-size: 16px;
+}
+svg.railroad-diagram text.label {
+  text-anchor: start;
+}
+svg.railroad-diagram text.comment {
+  font: italic 12px monospace;
+}
+svg.railroad-diagram g.non-terminal text {
+  /*font-style: italic;*/
+}
+svg.railroad-diagram g.special-sequence rect {
+  fill: #FFDB4D;
+}
+svg.railroad-diagram g.special-sequence text {
+  font-style: italic;
+}
+svg.railroad-diagram rect {
+  stroke-width: 3;
+  stroke: black;
+}
+svg.railroad-diagram g.non-terminal rect {
+  fill: hsl(120,100%,90%);
+}
+svg.railroad-diagram g.terminal rect {
+  fill: hsl(120,100%,90%);
+}
+svg.railroad-diagram path.diagram-text {
+  stroke-width: 3;
+  stroke: black;
+  fill: white;
+  cursor: help;
+}
+svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+  fill: #eee;
+}
 `;
 
 const dasherize = str => str.replace(/\s+/g, "-");
@@ -195,7 +361,7 @@ const ebnfTemplate = ({
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">
   ${diagram}  </div>
-  <code class="ebnf"><pre>${ebnf}</pre></code>${(referencedBy.length > 0
+  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +
     (referencesTo.length > 0

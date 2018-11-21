@@ -19,8 +19,8 @@ const wrapTag = (tag, attributes, content, markup) =>
 const wrapSpan = (classNames, content, markup) =>
   wrapTag("span", { class: classNames }, content, markup);
 
-const MAX_LINE_LENGTH = 45;
-const LINE_MARGIN_LENGTH = 20;
+const MAX_LINE_LENGTH = 40;
+const LINE_MARGIN_LENGTH = 30;
 
 const defaultOptions = {
   markup: false,
@@ -194,12 +194,18 @@ const productionToEBNF = (production, setOptions) => {
             options.offsetLength || 0,
             index
           );
-          const totalLength = sequenceLength(list, options.offsetLength || 0);
 
+          const nextLength = sequenceLength(
+            list,
+            options.offsetLength || 0,
+            index + 1
+          );
+          const totalLength = sequenceLength(list, options.offsetLength || 0);
           const addBreak =
             options.format &&
             currentLength > options.maxLineLength &&
-            totalLength > options.maxLineLength + options.lineMargin;
+            nextLength > options.maxLineLength + options.lineMargin / 2 &&
+            totalLength - currentLength > 10;
           if (addBreak) list[index - 1].length = -1;
 
           const offsetLength = addBreak ? 0 : currentLength;
@@ -207,6 +213,10 @@ const productionToEBNF = (production, setOptions) => {
             ...options,
             offsetLength
           });
+          if (options.format && output.indexOf("\n") !== -1) {
+            const lastLineLength = output.split("\n").slice(-1)[0].length;
+            list[index].length = lastLineLength - currentLength;
+          }
 
           return ` ,${addBreak ? lineIndent(indent) : " "}${output}`;
         })
