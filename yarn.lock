@@ -1220,9 +1220,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.6.0.tgz#115e647f2a9c163cbf8dc1ab8b4306491dbc8eef"
-  integrity sha512-+WPcDBfdqEw0mCyRGKQQDGlq/eiSfiy1ZgTdTO6gCVgLtxc0sQYwMOPC47u8/oKitrWVNsx/pA6ZDxEylZSqKg==
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.7.0.tgz#dbdaa97fb40bcb043bf98e5306230fd68ef374f9"
+  integrity sha512-J7Mu77jaIEW1Di6S4YekG7xJTomYS2GlCtbHy5E0Z3yzZOk01rTfCM+TxPSl/396nJH2z/CiCnDSajucu9PEBg==
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#e9b1a12"
@@ -2397,7 +2397,15 @@ lower-case@^1.1.1:
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
   integrity sha1-miyr0bno4K6ZOkv31YdcOcQujqw=
 
-lru-cache@^4.0.1, lru-cache@^4.1.1:
+lru-cache@^4.0.1:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.4.tgz#51cc46e8e6d9530771c857e24ccc720ecdbcc031"
+  integrity sha512-EPstzZ23znHUVLKj+lcXO1KvZkrlw+ZirdwvOmnAnA/1PB4ggyXJ77LRkCqkff+ShQ+cqoxCxLQOh4cKITO5iA==
+  dependencies:
+    pseudomap "^1.0.2"
+    yallist "^3.0.2"
+
+lru-cache@^4.1.1:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.3.tgz#a1175cf3496dfc8436c156c334b4955992bce69c"
   integrity sha512-fFEhvcgzuIoJVUF8fYr5KR0YqxD238zgObTps31YdADwPPAp82a4M8TrckkWyx7ekNlf9aBcVn81cFwwXngrJA==
