@@ -23,6 +23,15 @@ ${body}
 </html>
 `;
 
+const currentDate = () => {
+  const date = new Date();
+  const pad = number => (number < 10 ? "0" + number : number);
+
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(
+    date.getUTCDate()
+  )}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+};
+
 const documentContent = ({ title, contents, toc, singleRoot }) =>
   `<header>
     <h1>${title}</h1>
@@ -46,14 +55,32 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
   <article>
     ${contents}
   </article>
+  <footer>
+    <p>Date: ${currentDate()} - <a href="#theme/dark">Dark</a> - <a href="#theme/light">Light</a></p>
+  </footer>
   </main>
   <script type="text/javascript">
     document.querySelector("header button").addEventListener("click", function() {
       document.getElementsByTagName("html")[0].classList.toggle("menu-open");
     });
+    const htmlTag = document.getElementsByTagName("html")[0];
     document.querySelector("nav").addEventListener("click", function(event) {
       if (event.target.tagName !== "A") return;
-      document.getElementsByTagName("html")[0].classList.remove("menu-open");
+      htmlTag.classList.remove("menu-open");
+    });
+
+    document.querySelector("main footer").addEventListener("click", function(event) {
+      if (event.target.getAttribute("href").startsWith("#theme/")) {
+        event.preventDefault();
+        if (event.target.getAttribute("href") === "#theme/dark") {
+          htmlTag.classList.remove("theme-light");
+          htmlTag.classList.add("theme-dark");
+        }
+        if (event.target.getAttribute("href") === "#theme/light") {
+          htmlTag.classList.remove("theme-dark");
+          htmlTag.classList.add("theme-light");
+        }
+      }
     });
   </script>
 `;
@@ -73,6 +100,19 @@ html {
     --highlightText: hotpink;
     --itemHeadingBackground: #eee;
     --diagramBackground: #f8f8f8;
+    --background: white;
+    --borderColor: #ccc;
+    --textColor: #111;
+}
+
+.theme-dark {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --diagramBackground: #f8f8f8;
+    --background: #333;
+    --borderColor: lightblue;
+    --textColor: #ddd;
 }
 
 html {
@@ -82,6 +122,9 @@ html {
 html, body {
     margin: 0;
     padding: 0;
+    background: var(--background);
+    overflow-x: hidden;
+    color: var(--textColor);
 }
 
 a {
@@ -97,8 +140,9 @@ a:active, a:focus, a:hover {
 }
 
 header {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--borderColor);
     padding: 1rem;
+    background: var(--background);
 }
 
 header button {
@@ -106,18 +150,18 @@ header button {
 }
 
 main {
-    display: flex;
     overflow: hidden;
     margin-left: 300px;
+    background: var(--background);
 }
 
 nav {
     position: sticky;
     top: 0;
-    height: 100vh;
+    max-height: 100vh;
     padding: 1rem 2rem 1rem 1rem;
     z-index: 5;
-    background: white;
+    background: var(--background);
     width: 300px;
     float: left;
     overflow: auto;
@@ -143,7 +187,12 @@ article {
     width: 100%;
     overflow: hidden;
     padding: 1rem 2rem;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid var(--borderColor);
+}
+
+article + footer {
+    padding: 1rem 2rem;
+    border-left: 1px solid var(--borderColor);
 }
 
 code {
@@ -217,18 +266,20 @@ dfn {
     display: block;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
     position: absolute;
     top: 0;
     right: 0;
+    transform: translateX(300px);
     padding-top: 3rem;
-    background: white;
+    background: var(--background);
     box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
   }
 
   .menu-open nav {
     pointer-events: auto;
     opacity: 1;
+    transform: translateX(0px);
   }
 
   nav a {
@@ -239,6 +290,10 @@ dfn {
     margin-left: 0;
     border-left: 0;
     padding: 1rem;
+  }
+  article + footer {
+    padding: 1rem;
+    border-left: 0;
   }
 }
 
