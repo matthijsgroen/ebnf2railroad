@@ -6,31 +6,31 @@ body {
 }
 
 @media (max-width: 1280px) {
-  #result header {
+  .split header {
     padding: 0.5rem 1rem;
     display: flex;
   }
-  #result header h1 {
+  .split header h1 {
     margin: 0 auto 0 0;
     display: flex;
     align-items: center;
   }
-  #result header button {
+  .split header button {
     display: initial;
     position: relative;
     z-index: 10;
   }
-  #result header button::after {
+  .split header button::after {
     content: '☰';
     margin-left: auto;
     font-size: 1.5rem;
   }
-  #result main {
+  .split main {
     display: block;
     position: relative;
     margin-left: 0;
   }
-  #result nav {
+  .split nav {
     height: auto;
     display: block;
     pointer-events: none;
@@ -43,14 +43,14 @@ body {
     background: white;
     box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
   }
-  .menu-open #result nav {
+  .menu-open .split nav {
     pointer-events: auto;
     opacity: 1;
   }
-  #result nav a {
+  .split nav a {
     padding: 0.66rem 0;
   }
-  #result article {
+  .split article {
     margin-left: 0;
     border-left: 0;
     padding: 1rem;
