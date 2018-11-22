@@ -142,7 +142,6 @@ a:active, a:focus, a:hover {
 header {
     border-bottom: 1px solid var(--borderColor);
     padding: 1rem;
-    background: var(--background);
 }
 
 header button {
@@ -152,7 +151,6 @@ header button {
 main {
     overflow: hidden;
     margin-left: 300px;
-    background: var(--background);
 }
 
 nav {
