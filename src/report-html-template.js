@@ -33,7 +33,20 @@ const currentDate = () => {
 };
 
 const documentContent = ({ title, contents, toc, singleRoot }) =>
-  `<header>
+  `
+  <script type="text/javascript">
+    const htmlTag = document.getElementsByTagName("html")[0];
+    const options = (document.location.search || "")
+      .slice(1)
+      .split("&")
+      .map(kv => kv.split("="))
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
+    if (options["theme"]) {
+      htmlTag.classList.add("theme-" + options["theme"]);
+    }
+  </script>
+  <header>
     <h1>${title}</h1>
     <button type="button"></button>
   </header>
@@ -56,31 +69,16 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
     ${contents}
   </article>
   <footer>
-    <p>Date: ${currentDate()} - <a href="#theme/dark">Dark</a> - <a href="#theme/light">Light</a></p>
+    <p>Date: ${currentDate()} - <a href="?theme=dark">Dark</a> - <a href="?theme=light">Light</a></p>
   </footer>
   </main>
   <script type="text/javascript">
     document.querySelector("header button").addEventListener("click", function() {
       document.getElementsByTagName("html")[0].classList.toggle("menu-open");
     });
-    const htmlTag = document.getElementsByTagName("html")[0];
     document.querySelector("nav").addEventListener("click", function(event) {
       if (event.target.tagName !== "A") return;
       htmlTag.classList.remove("menu-open");
-    });
-
-    document.querySelector("main footer").addEventListener("click", function(event) {
-      if (event.target.getAttribute("href").startsWith("#theme/")) {
-        event.preventDefault();
-        if (event.target.getAttribute("href") === "#theme/dark") {
-          htmlTag.classList.remove("theme-light");
-          htmlTag.classList.add("theme-dark");
-        }
-        if (event.target.getAttribute("href") === "#theme/light") {
-          htmlTag.classList.remove("theme-dark");
-          htmlTag.classList.add("theme-light");
-        }
-      }
     });
   </script>
 `;
@@ -99,20 +97,48 @@ html {
     --subtleText: #777;
     --highlightText: hotpink;
     --itemHeadingBackground: #eee;
-    --diagramBackground: #f8f8f8;
     --background: white;
     --borderColor: #ccc;
     --textColor: #111;
+
+    --diagramBackground: #f8f8f8;
+    --diagramLines: black;
+    --diagramText: black;
+    --terminalLines: black;
+    --terminalFill: #feffdf;
+    --nonTerminalLines: black;
+    --nonTerminalFill: #feffdf;
+    --specialSequenceLines: black;
+    --specialSequenceFill: #ffe79a;
+
+    --ebnfCodeBackground: #e8e8e8;
+    --ebnfIdentifier: #ef5a5a;
+    --ebnfTerminal: #ffa952;
+    --ebnfBaseColor: #777;
 }
 
 .theme-dark {
     --subtleText: #777;
     --highlightText: hotpink;
-    --itemHeadingBackground: #eee;
-    --diagramBackground: #f8f8f8;
+    --itemHeadingBackground: #444;
     --background: #333;
     --borderColor: lightblue;
     --textColor: #ddd;
+
+    --diagramBackground: #222;
+    --diagramLines: lightblue;
+    --diagramText: #a7d129;
+    --terminalLines: #a7d129;
+    --terminalFill: #3e432e;
+    --nonTerminalLines: #a7d129;
+    --nonTerminalFill: #3e432e;
+    --specialSequenceLines: #a7d129;
+    --specialSequenceFill: #616f39;
+
+    --ebnfCodeBackground: #3e432e;
+    --ebnfIdentifier: lightblue;
+    --ebnfTerminal: #a7d129;
+    --ebnfBaseColor: #ddd;
 }
 
 html {
@@ -123,7 +149,6 @@ html, body {
     margin: 0;
     padding: 0;
     background: var(--background);
-    overflow-x: hidden;
     color: var(--textColor);
 }
 
@@ -191,6 +216,7 @@ article {
 article + footer {
     padding: 1rem 2rem;
     border-left: 1px solid var(--borderColor);
+    background: var(--itemHeadingBackground);
 }
 
 code {
@@ -230,6 +256,10 @@ dfn {
 
 /* Responsiveness */
 @media (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
+
   header {
     padding: 0.5rem 1rem;
     display: flex;
@@ -298,18 +328,18 @@ dfn {
 /* EBNF text representation styling */
 code.ebnf {
   padding: 1em;
-  background: rgb(255, 246, 209);
+  background: var(--ebnfCodeBackground);
   font-weight: bold;
-  color: #777;
+  color: var(--ebnfBaseColor);
   white-space: pre-wrap;
   display: inline-block;
   width: 100%;
 }
 .ebnf-identifier {
-  color: #990099;
+  color: var(--ebnfIdentifier);
 }
 .ebnf-terminal {
-  color: #009900;
+  color: var(--ebnfTerminal);
 }
 .ebnf-non-terminal {
   font-weight: normal;
@@ -326,12 +356,13 @@ svg.railroad-diagram {
 }
 svg.railroad-diagram path {
   stroke-width: 3;
-  stroke: black;
+  stroke: var(--diagramLines);
   fill: rgba(0,0,0,0);
 }
 svg.railroad-diagram text {
   font: bold 14px monospace;
   text-anchor: middle;
+  fill: var(--diagramText);
 }
 svg.railroad-diagram text.diagram-text {
   font-size: 12px;
@@ -349,20 +380,22 @@ svg.railroad-diagram g.non-terminal text {
   /*font-style: italic;*/
 }
 svg.railroad-diagram g.special-sequence rect {
-  fill: #FFDB4D;
+  fill: var(--specialSequenceFill);
+  stroke: var(--specialSequenceLines);
 }
 svg.railroad-diagram g.special-sequence text {
   font-style: italic;
 }
 svg.railroad-diagram rect {
   stroke-width: 3;
-  stroke: black;
 }
 svg.railroad-diagram g.non-terminal rect {
-  fill: hsl(120,100%,90%);
+  fill: var(--nonTerminalFill);
+  stroke: var(--nonTerminalLines);
 }
 svg.railroad-diagram g.terminal rect {
-  fill: hsl(120,100%,90%);
+  fill: var(--terminalFill);
+  stroke: var(--terminalLines);
 }
 svg.railroad-diagram path.diagram-text {
   stroke-width: 3;
