@@ -255,7 +255,7 @@ dfn {
 }
 
 /* Responsiveness */
-@media (max-width: 640px) {
+@media (max-width: 800px) {
   body {
     overflow-x: hidden;
   }
