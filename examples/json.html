@@ -5,122 +5,381 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <meta name="generator" content="ebnf2railroad" />
   <title>JSON</title>
-  <style type="text/css">/* Text styling */
-  body {
-    font: normal 12px Verdana, sans-serif;
-    color: #0F0C00;
-    background: #FFFCFC;
-  }
-  h1 { font-size: 2em; }
-  h2 { font-size: 1.5em; }
-  a,
-  a:visited,
-  a:active {
-    color: #0F0C00;
-  }
-  a:hover {
-    color: #000;
-  }
-  section h4 {
-    margin-bottom: 0;
-  }
+  <style type="text/css">
+html {
+  box-sizing: border-box;
+}
 
-  /* EBNF text representation styling */
-  code.ebnf {
-    padding: 1em 1em 1em 1em;
-    background: rgb(255, 246, 209);
-    font-weight: bold;
-    color: #777;
-    white-space: nowrap;
-    display: inline-block;
-  }
-  code.ebnf pre {
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+:root {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --background: white;
+    --borderColor: #ccc;
+    --textColor: #111;
+
+    --diagramBackground: #f8f8f8;
+    --diagramLines: black;
+    --diagramText: black;
+    --terminalLines: black;
+    --terminalFill: #feffdf;
+    --nonTerminalLines: black;
+    --nonTerminalFill: #feffdf;
+    --specialSequenceLines: black;
+    --specialSequenceFill: #ffe79a;
+
+    --ebnfCodeBackground: #e8e8e8;
+    --ebnfIdentifier: #ef5a5a;
+    --ebnfTerminal: #ffa952;
+    --ebnfBaseColor: #777;
+}
+
+.theme-dark {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #444;
+    --background: #333;
+    --borderColor: lightblue;
+    --textColor: #ddd;
+
+    --diagramBackground: #222;
+    --diagramLines: lightblue;
+    --diagramText: #a7d129;
+    --terminalLines: #a7d129;
+    --terminalFill: #3e432e;
+    --nonTerminalLines: #a7d129;
+    --nonTerminalFill: #3e432e;
+    --specialSequenceLines: #a7d129;
+    --specialSequenceFill: #616f39;
+
+    --ebnfCodeBackground: #3e432e;
+    --ebnfIdentifier: lightblue;
+    --ebnfTerminal: #a7d129;
+    --ebnfBaseColor: #ddd;
+}
+
+html {
+    font-family: sans-serif;
+}
+
+html, body {
     margin: 0;
-  }
-  .ebnf-identifier {
-    color: #990099;
-  }
-  .ebnf-terminal {
-    color: #009900;
-  }
-  .ebnf-non-terminal {
-    font-weight: normal;
-  }
-  .ebnf-comment {
-    font-weight: normal;
-    font-style: italic;
-    color: #999;
+    padding: 0;
+    background: var(--background);
+    color: var(--textColor);
+}
+
+a {
+    color: inherit;
+}
+
+a:visited {
+    color: var(--subtleText);
+}
+
+a:active, a:focus, a:hover {
+    color: var(--highlightText);
+}
+
+header {
+    border-bottom: 1px solid var(--borderColor);
+    padding: 1rem;
+}
+
+header button {
+  display: none;
+}
+
+main {
+    overflow: hidden;
+    margin-left: 300px;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    padding: 1rem 2rem 1rem 1rem;
+    z-index: 5;
+    background: var(--background);
+    width: 300px;
+    float: left;
+    overflow: auto;
+}
+
+nav h3 {
+    white-space: nowrap;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav a {
+    display: inline-block;
+    color: var(--subtleText);
+    text-decoration: none;
+    padding: 0.33rem 0;
+}
+
+article {
+    width: 100%;
+    overflow: hidden;
+    padding: 1rem 2rem;
+    border-left: 1px solid var(--borderColor);
+}
+
+article + footer {
+    padding: 1rem 2rem;
+    border-left: 1px solid var(--borderColor);
+    background: var(--itemHeadingBackground);
+}
+
+code {
+    width: 100%;
+}
+
+pre {
+    overflow: auto;
+}
+
+pre > code {
+    display: block;
+    padding: 1em;
+    background: var(--diagramBackground);
+}
+
+h4 {
+    padding: 2rem;
+    margin: 4rem -2rem 1rem -2rem;
+    background: var(--itemHeadingBackground);
+    font-size: 125%;
+}
+
+dfn {
+    font-style: normal;
+    cursor: default;
+}
+
+.diagram-container {
+    background: var(--diagramBackground);
+    margin-bottom: 0.25rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 800px) {
+  body {
+    overflow-x: hidden;
   }
 
-  /* EBNF diagram representation styling */
-  svg.railroad-diagram path {
-      stroke-width: 3;
-      stroke: black;
-      fill: rgba(0,0,0,0);
+  header {
+    padding: 0.5rem 1rem;
+    display: flex;
   }
-  svg.railroad-diagram text {
-      font: bold 14px monospace;
-      text-anchor: middle;
+
+  header h1 {
+    margin: 0 auto 0 0;
+    display: flex;
+    align-items: center;
   }
-  svg.railroad-diagram text.diagram-text {
-      font-size: 12px;
+
+  header button {
+    display: initial;
+    position: relative;
+    z-index: 10;
   }
-  svg.railroad-diagram text.diagram-arrow {
-      font-size: 16px;
+
+  header button::after {
+    content: '☰';
+    margin-left: auto;
+    font-size: 1.5rem;
   }
-  svg.railroad-diagram text.label {
-      text-anchor: start;
+
+  main {
+    display: block;
+    position: relative;
+    margin-left: 0;
   }
-  svg.railroad-diagram text.comment {
-      font: italic 12px monospace;
+
+  nav {
+    height: auto;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(300px);
+    padding-top: 3rem;
+    background: var(--background);
+    box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
   }
-  svg.railroad-diagram g.non-terminal text {
-      /*font-style: italic;*/
+
+  .menu-open nav {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateX(0px);
   }
-  svg.railroad-diagram g.special-sequence rect {
-      fill: #FFDB4D;
+
+  nav a {
+    padding: 0.66rem 0;
   }
-  svg.railroad-diagram g.special-sequence text {
-      font-style: italic;
+
+  article {
+    margin-left: 0;
+    border-left: 0;
+    padding: 1rem;
   }
-  svg.railroad-diagram rect {
-      stroke-width: 3;
-      stroke: black;
+  article + footer {
+    padding: 1rem;
+    border-left: 0;
   }
-  svg.railroad-diagram g.non-terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram g.terminal rect {
-      fill: hsl(120,100%,90%);
-  }
-  svg.railroad-diagram path.diagram-text {
-      stroke-width: 3;
-      stroke: black;
-      fill: white;
-      cursor: help;
-  }
-  svg.railroad-diagram g.diagram-text:hover path.diagram-text {
-      fill: #eee;
-  }
+}
+
+/* EBNF text representation styling */
+code.ebnf {
+  padding: 1em;
+  background: var(--ebnfCodeBackground);
+  font-weight: bold;
+  color: var(--ebnfBaseColor);
+  white-space: pre-wrap;
+  display: inline-block;
+  width: 100%;
+}
+.ebnf-identifier {
+  color: var(--ebnfIdentifier);
+}
+.ebnf-terminal {
+  color: var(--ebnfTerminal);
+}
+.ebnf-non-terminal {
+  font-weight: normal;
+}
+.ebnf-comment {
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}
+
+/* EBNF diagram representation styling */
+svg.railroad-diagram {
+  width: 100%;
+}
+svg.railroad-diagram path {
+  stroke-width: 3;
+  stroke: var(--diagramLines);
+  fill: rgba(0,0,0,0);
+}
+svg.railroad-diagram text {
+  font: bold 14px monospace;
+  text-anchor: middle;
+  fill: var(--diagramText);
+}
+svg.railroad-diagram text.diagram-text {
+  font-size: 12px;
+}
+svg.railroad-diagram text.diagram-arrow {
+  font-size: 16px;
+}
+svg.railroad-diagram text.label {
+  text-anchor: start;
+}
+svg.railroad-diagram text.comment {
+  font: italic 12px monospace;
+}
+svg.railroad-diagram g.non-terminal text {
+  /*font-style: italic;*/
+}
+svg.railroad-diagram g.special-sequence rect {
+  fill: var(--specialSequenceFill);
+  stroke: var(--specialSequenceLines);
+}
+svg.railroad-diagram g.special-sequence text {
+  font-style: italic;
+}
+svg.railroad-diagram rect {
+  stroke-width: 3;
+}
+svg.railroad-diagram g.non-terminal rect {
+  fill: var(--nonTerminalFill);
+  stroke: var(--nonTerminalLines);
+}
+svg.railroad-diagram g.terminal rect {
+  fill: var(--terminalFill);
+  stroke: var(--terminalLines);
+}
+svg.railroad-diagram path.diagram-text {
+  stroke-width: 3;
+  stroke: black;
+  fill: white;
+  cursor: help;
+}
+svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+  fill: #eee;
+}
 </style>
 </head>
 <body>
-<header>
+
+  <script type="text/javascript">
+    const htmlTag = document.getElementsByTagName("html")[0];
+    const options = (document.location.search || "")
+      .slice(1)
+      .split("&")
+      .map(kv => kv.split("="))
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
+    if (options["theme"]) {
+      htmlTag.classList.add("theme-" + options["theme"]);
+    }
+  </script>
+  <header>
     <h1>JSON</h1>
+    <button type="button"></button>
   </header>
-  <main>
   <nav>
+    <h3>Root element:</h3>
+    <ul class="nav-alphabetical">
+    <li class="root-node"><a href="#json">json</a>
+        
+        
+      </li>
+    </ul>
     <h3>Quick navigation:</h3>
     <ul class="nav-alphabetical">
-    <li><a href="#array">array </a>
-      </li><li><a href="#json">json </a>
-      </li><li><a href="#number">number </a>
-      </li><li><a href="#object">object </a>
-      </li><li><a href="#string">string </a>
-      </li><li><a href="#value">value </a>
+    <li><a href="#number">number</a>
+        
+        
+      </li>
+    </ul>
+    <h3>Common elements:</h3>
+    <ul class="nav-alphabetical">
+    <li class="common-node"><a href="#array">array</a>
+        <dfn title="recursive">♺</dfn>
+        
+      </li><li class="common-node"><a href="#object">object</a>
+        <dfn title="recursive">♺</dfn>
+        
+      </li><li class="common-node"><a href="#string">string</a>
+        
+        
+      </li><li class="common-node"><a href="#value">value</a>
+        <dfn title="recursive">♺</dfn>
+        
       </li>
     </ul>
   </nav>
+  <main>
   <article>
     <h1 id="jsonjavascriptobjectnotation">JSON (JavaScript Object Notation)</h1>
 <p>JSON (JavaScript Object Notation) is a lightweight data-interchange format.
@@ -132,7 +391,7 @@ It is easy for humans to read and write. It is easy for machines to parse and ge
   <div class="diagram-container">
   <svg class="railroad-diagram" width="191" height="92" viewBox="0 0 191 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M151 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M131 31h0"></path><rect x="60" y="20" width="71" height="22"></rect><a xlink:href="#object"><text x="95.5" y="35">object</text></a></g><path d="M131 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h4.25"></path><path d="M126.75 61h4.25"></path><rect x="64.25" y="50" width="62.5" height="22"></rect><a xlink:href="#array"><text x="95.5" y="65">array</text></a></g><path d="M131 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 151 31 h 20 m 0 -10 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">json</span> = <a class="ebnf-non-terminal" href="#object">object</a> | <a class="ebnf-non-terminal" href="#array">array</a><span class="ebnf-end">;</span></pre></code>
+  <code class="ebnf"><span class="ebnf-identifier">json</span> = <a class="ebnf-non-terminal" href="#object">object</a> | <a class="ebnf-non-terminal" href="#array">array</a><span class="ebnf-end">;</span></code>
   <p><strong>json</strong> is referencing:<p>
 <ul>
 <li><a href="#object">object</a></li><li><a href="#array">array</a></li>
@@ -145,7 +404,8 @@ Each name is followed by : (colon) and the name/value pairs are separated by , (
   <div class="diagram-container">
   <svg class="railroad-diagram" width="439" height="101" viewBox="0 0 439 101"><g transform="translate(.5 .5)"><g><path d="M20 30v20m0 -10h20"></path></g><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M389 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78.5 40h0"></path><rect x="50" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="44">{</text></g><path d="M78.5 40h10"></path><g><path d="M88.5 40h0"></path><path d="M350.5 40h0"></path><path d="M88.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108.5 20h222"></path></g><path d="M330.5 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88.5 40h20"></path><g><path d="M108.5 40h0"></path><path d="M330.5 40h0"></path><path d="M108.5 40h10"></path><g><path d="M118.5 40h0"></path><path d="M320.5 40h0"></path><g class="non-terminal"><path d="M118.5 40h0"></path><path d="M189.5 40h0"></path><rect x="118.5" y="29" width="71" height="22"></rect><a xlink:href="#string"><text x="154" y="44">string</text></a></g><path d="M189.5 40h10"></path><path d="M199.5 40h10"></path><g class="terminal"><path d="M209.5 40h0"></path><path d="M238 40h0"></path><rect x="209.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="223.75" y="44">:</text></g><path d="M238 40h10"></path><path d="M248 40h10"></path><g class="non-terminal"><path d="M258 40h0"></path><path d="M320.5 40h0"></path><rect x="258" y="29" width="62.5" height="22"></rect><a xlink:href="#value"><text x="289.25" y="44">value</text></a></g></g><path d="M320.5 40h10"></path><path d="M118.5 40a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M118.5 70h86.75"></path><path d="M233.75 70h86.75"></path><rect x="205.25" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="219.5" y="74">,</text></g><path d="M320.5 70a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M330.5 40h20"></path></g><path d="M350.5 40h10"></path><g class="terminal"><path d="M360.5 40h0"></path><path d="M389 40h0"></path><rect x="360.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="374.75" y="44">}</text></g></g><path d="M389 40h10"></path><path d="M 399 40 h 20 m 0 -10 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">object</span> = <span class="ebnf-terminal">"{"</span> , [ <a class="ebnf-non-terminal" href="#string">string</a> , <span class="ebnf-terminal">":"</span> , <a class="ebnf-non-terminal" href="#value">value</a> , { <span class="ebnf-terminal">","</span> , <a class="ebnf-non-terminal" href="#string">string</a> , <span class="ebnf-terminal">":"</span> , <a class="ebnf-non-terminal" href="#value">value</a> } ] , <span class="ebnf-terminal">"}"</span><span class="ebnf-end">;</span></pre></code>
+  <code class="ebnf"><span class="ebnf-identifier">object</span> = <span class="ebnf-terminal">"{"</span> , [ <a class="ebnf-non-terminal" href="#string">string</a> , <span class="ebnf-terminal">":"</span> , <a class="ebnf-non-terminal" href="#value">value</a> , { <span class="ebnf-terminal">","</span> , <a class="ebnf-non-terminal" href="#string">string</a> ,
+  <span class="ebnf-terminal">":"</span> , <a class="ebnf-non-terminal" href="#value">value</a> } ] , <span class="ebnf-terminal">"}"</span><span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>object</strong>:<p>
 <ul>
 <li><a href="#json">json</a></li><li><a href="#value">value</a></li>
@@ -162,7 +422,7 @@ Values are separated by , (comma).</p><section>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="299.5" height="101" viewBox="0 0 299.5 101"><g transform="translate(.5 .5)"><g><path d="M20 30v20m0 -10h20"></path></g><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M249.5 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78.5 40h0"></path><rect x="50" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="44">&#91;</text></g><path d="M78.5 40h10"></path><g><path d="M88.5 40h0"></path><path d="M211 40h0"></path><path d="M88.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108.5 20h82.5"></path></g><path d="M191 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88.5 40h20"></path><g><path d="M108.5 40h0"></path><path d="M191 40h0"></path><path d="M108.5 40h10"></path><g><path d="M118.5 40h0"></path><path d="M181 40h0"></path><g class="non-terminal"><path d="M118.5 40h0"></path><path d="M181 40h0"></path><rect x="118.5" y="29" width="62.5" height="22"></rect><a xlink:href="#value"><text x="149.75" y="44">value</text></a></g></g><path d="M181 40h10"></path><path d="M118.5 40a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M118.5 70h17"></path><path d="M164 70h17"></path><rect x="135.5" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="149.75" y="74">,</text></g><path d="M181 70a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g><path d="M191 40h20"></path></g><path d="M211 40h10"></path><g class="terminal"><path d="M221 40h0"></path><path d="M249.5 40h0"></path><rect x="221" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="235.25" y="44">&#93;</text></g></g><path d="M249.5 40h10"></path><path d="M 259.5 40 h 20 m 0 -10 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">array</span> = <span class="ebnf-terminal">"["</span> , [ <a class="ebnf-non-terminal" href="#value">value</a> , { <span class="ebnf-terminal">","</span> , <a class="ebnf-non-terminal" href="#value">value</a> } ] , <span class="ebnf-terminal">"]"</span><span class="ebnf-end">;</span></pre></code>
+  <code class="ebnf"><span class="ebnf-identifier">array</span> = <span class="ebnf-terminal">"["</span> , [ <a class="ebnf-non-terminal" href="#value">value</a> , { <span class="ebnf-terminal">","</span> , <a class="ebnf-non-terminal" href="#value">value</a> } ] , <span class="ebnf-terminal">"]"</span><span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>array</strong>:<p>
 <ul>
 <li><a href="#json">json</a></li><li><a href="#value">value</a></li>
@@ -179,10 +439,10 @@ or <code>true</code> or <code>false</code> or <code>null</code>, or an <em>objec
   <div class="diagram-container">
   <svg class="railroad-diagram" width="191" height="242" viewBox="0 0 191 242"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M151 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M131 31h0"></path><rect x="60" y="20" width="71" height="22"></rect><a xlink:href="#string"><text x="95.5" y="35">string</text></a></g><path d="M131 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h0"></path><path d="M131 61h0"></path><rect x="60" y="50" width="71" height="22"></rect><a xlink:href="#number"><text x="95.5" y="65">number</text></a></g><path d="M131 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 91h0"></path><path d="M131 91h0"></path><rect x="60" y="80" width="71" height="22"></rect><a xlink:href="#object"><text x="95.5" y="95">object</text></a></g><path d="M131 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 121h4.25"></path><path d="M126.75 121h4.25"></path><rect x="64.25" y="110" width="62.5" height="22"></rect><a xlink:href="#array"><text x="95.5" y="125">array</text></a></g><path d="M131 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 151h8.5"></path><path d="M122.5 151h8.5"></path><rect x="68.5" y="140" width="54" height="22" rx="10" ry="10"></rect><text x="95.5" y="155">true</text></g><path d="M131 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 181h4.25"></path><path d="M126.75 181h4.25"></path><rect x="64.25" y="170" width="62.5" height="22" rx="10" ry="10"></rect><text x="95.5" y="185">false</text></g><path d="M131 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 211h8.5"></path><path d="M122.5 211h8.5"></path><rect x="68.5" y="200" width="54" height="22" rx="10" ry="10"></rect><text x="95.5" y="215">null</text></g><path d="M131 211a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path></g><path d="M 151 31 h 20 m 0 -10 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">value</span>
+  <code class="ebnf"><span class="ebnf-identifier">value</span>
   = <a class="ebnf-non-terminal" href="#string">string</a>  | <a class="ebnf-non-terminal" href="#number">number</a> | <a class="ebnf-non-terminal" href="#object">object</a> | <a class="ebnf-non-terminal" href="#array">array</a> | <span class="ebnf-terminal">"true"</span>
   | <span class="ebnf-terminal">"false"</span> | <span class="ebnf-terminal">"null"</span>
-  <span class="ebnf-end">;</span></pre></code>
+  <span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>value</strong>:<p>
 <ul>
 <li><a href="#object">object</a></li><li><a href="#array">array</a></li>
@@ -199,13 +459,16 @@ using backslash escapes. A character is represented as a single character string
   <div class="diagram-container">
   <svg class="railroad-diagram" width="790" height="379" viewBox="0 0 790 379"><g transform="translate(.5 .5)"><g><path d="M20 30v20m10 -20v20m-10 -10h20"></path></g><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M740 40h0"></path><g class="terminal"><path d="M50 40h0"></path><path d="M78.5 40h0"></path><rect x="50" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="44">"</text></g><path d="M78.5 40h10"></path><g><path d="M88.5 40h0"></path><path d="M701.5 40h0"></path><path d="M88.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108.5 20h573"></path></g><path d="M681.5 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88.5 40h20"></path><g><path d="M108.5 40h0"></path><path d="M681.5 40h0"></path><path d="M108.5 40h10"></path><g><path d="M118.5 40h0"></path><path d="M671.5 40h0"></path><path d="M118.5 40h20"></path><g class="special-sequence"><path d="M138.5 40h0"></path><path d="M651.5 40h0"></path><rect x="138.5" y="29" width="513" height="22"></rect><text x="395" y="44"> Any unicode character except " or \ or control character </text></g><path d="M651.5 40h20"></path><path d="M118.5 40a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g><path d="M138.5 70h92.25"></path><path d="M559.25 70h92.25"></path><g class="terminal"><path d="M230.75 70h0"></path><path d="M259.25 70h0"></path><rect x="230.75" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="245" y="74">\</text></g><path d="M259.25 70h10"></path><g><path d="M269.25 70h0"></path><path d="M559.25 70h0"></path><path d="M269.25 70h20"></path><g><path d="M289.25 70h39.75"></path><path d="M499.5 70h39.75"></path><g class="terminal"><path d="M329 70h0"></path><path d="M357.5 70h0"></path><rect x="329" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="343.25" y="74">"</text></g><path d="M357.5 70h10"></path><path d="M367.5 70h10"></path><g><path d="M377.5 70h0"></path><path d="M499.5 70h0"></path><text x="438.5" y="75" class="comment"> quotation mark </text></g></g><path d="M539.25 70h20"></path><path d="M269.25 70a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g><path d="M289.25 100h36.25"></path><path d="M503 100h36.25"></path><g class="terminal"><path d="M325.5 100h0"></path><path d="M354 100h0"></path><rect x="325.5" y="89" width="28.5" height="22" rx="10" ry="10"></rect><text x="339.75" y="104">\</text></g><path d="M354 100h10"></path><path d="M364 100h10"></path><g><path d="M374 100h0"></path><path d="M503 100h0"></path><text x="438.5" y="105" class="comment"> reverse solidus </text></g></g><path d="M539.25 100a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g><path d="M289.25 130h64.25"></path><path d="M475 130h64.25"></path><g class="terminal"><path d="M353.5 130h0"></path><path d="M382 130h0"></path><rect x="353.5" y="119" width="28.5" height="22" rx="10" ry="10"></rect><text x="367.75" y="134">/</text></g><path d="M382 130h10"></path><path d="M392 130h10"></path><g><path d="M402 130h0"></path><path d="M475 130h0"></path><text x="438.5" y="135" class="comment"> solidus </text></g></g><path d="M539.25 130a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g><path d="M289.25 160h57.25"></path><path d="M482 160h57.25"></path><g class="terminal"><path d="M346.5 160h0"></path><path d="M375 160h0"></path><rect x="346.5" y="149" width="28.5" height="22" rx="10" ry="10"></rect><text x="360.75" y="164">b</text></g><path d="M375 160h10"></path><path d="M385 160h10"></path><g><path d="M395 160h0"></path><path d="M482 160h0"></path><text x="438.5" y="165" class="comment"> backspace </text></g></g><path d="M539.25 160a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g><path d="M289.25 190h60.75"></path><path d="M478.5 190h60.75"></path><g class="terminal"><path d="M350 190h0"></path><path d="M378.5 190h0"></path><rect x="350" y="179" width="28.5" height="22" rx="10" ry="10"></rect><text x="364.25" y="194">f</text></g><path d="M378.5 190h10"></path><path d="M388.5 190h10"></path><g><path d="M398.5 190h0"></path><path d="M478.5 190h0"></path><text x="438.5" y="195" class="comment"> formfeed </text></g></g><path d="M539.25 190a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g><path d="M289.25 220h64.25"></path><path d="M475 220h64.25"></path><g class="terminal"><path d="M353.5 220h0"></path><path d="M382 220h0"></path><rect x="353.5" y="209" width="28.5" height="22" rx="10" ry="10"></rect><text x="367.75" y="224">n</text></g><path d="M382 220h10"></path><path d="M392 220h10"></path><g><path d="M402 220h0"></path><path d="M475 220h0"></path><text x="438.5" y="225" class="comment"> newline </text></g></g><path d="M539.25 220a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g><path d="M289.25 250h36.25"></path><path d="M503 250h36.25"></path><g class="terminal"><path d="M325.5 250h0"></path><path d="M354 250h0"></path><rect x="325.5" y="239" width="28.5" height="22" rx="10" ry="10"></rect><text x="339.75" y="254">r</text></g><path d="M354 250h10"></path><path d="M364 250h10"></path><g><path d="M374 250h0"></path><path d="M503 250h0"></path><text x="438.5" y="255" class="comment"> carriage return </text></g></g><path d="M539.25 250a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g><path d="M289.25 280h39.75"></path><path d="M499.5 280h39.75"></path><g class="terminal"><path d="M329 280h0"></path><path d="M357.5 280h0"></path><rect x="329" y="269" width="28.5" height="22" rx="10" ry="10"></rect><text x="343.25" y="284">t</text></g><path d="M357.5 280h10"></path><path d="M367.5 280h10"></path><g><path d="M377.5 280h0"></path><path d="M499.5 280h0"></path><text x="438.5" y="285" class="comment"> horizontal tab </text></g></g><path d="M539.25 280a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M269.25 70a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g><path d="M289.25 310h0"></path><path d="M539.25 310h0"></path><g class="terminal"><path d="M289.25 310h0"></path><path d="M317.75 310h0"></path><rect x="289.25" y="299" width="28.5" height="22" rx="10" ry="10"></rect><text x="303.5" y="314">u</text></g><path d="M317.75 310h10"></path><path d="M327.75 310h10"></path><g><path d="M337.75 310h0"></path><path d="M539.25 310h0"></path><path d="M337.75 310h10"></path><g class="special-sequence"><path d="M347.75 310h0"></path><path d="M529.25 310h0"></path><rect x="347.75" y="299" width="181.5" height="22"></rect><text x="438.5" y="314"> hexadeximal digit </text></g><path d="M529.25 310h10"></path><path d="M347.75 310a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path><g><path d="M347.75 340h75.25"></path><path d="M454 340h75.25"></path><text x="438.5" y="345" class="comment">4 ×</text></g><path d="M529.25 340a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path></g></g><path d="M539.25 310a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path></g></g><path d="M651.5 70a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M671.5 40h10"></path><path d="M118.5 40a10 10 0 0 0 -10 10v299a10 10 0 0 0 10 10"></path><g><path d="M118.5 359h553"></path></g><path d="M671.5 359a10 10 0 0 0 10 -10v-299a10 10 0 0 0 -10 -10"></path></g><path d="M681.5 40h20"></path></g><path d="M701.5 40h10"></path><g class="terminal"><path d="M711.5 40h0"></path><path d="M740 40h0"></path><rect x="711.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="725.75" y="44">"</text></g></g><path d="M740 40h10"></path><path d="M 750 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">string</span> = <span class="ebnf-terminal">'"'</span> , { <span class="ebnf-special-sequence">? Any unicode character except " or \ or control character ?</span> | <span class="ebnf-terminal">"\"</span> , 
-  ( <span class="ebnf-terminal">'"'</span> <span class="ebnf-comment">(* quotation mark *)</span>        | <span class="ebnf-terminal">"\"</span> <span class="ebnf-comment">(* reverse solidus *)</span>
-  | <span class="ebnf-terminal">"/"</span> <span class="ebnf-comment">(* solidus *)</span>               | <span class="ebnf-terminal">"b"</span> <span class="ebnf-comment">(* backspace *)</span>
-  | <span class="ebnf-terminal">"f"</span> <span class="ebnf-comment">(* formfeed *)</span>              | <span class="ebnf-terminal">"n"</span> <span class="ebnf-comment">(* newline *)</span>
-  | <span class="ebnf-terminal">"r"</span> <span class="ebnf-comment">(* carriage return *)</span>       | <span class="ebnf-terminal">"t"</span> <span class="ebnf-comment">(* horizontal tab *)</span>
-  | <span class="ebnf-terminal">"u"</span> , <span class="ebnf-multiplier">4 *</span> <span class="ebnf-special-sequence">? hexadeximal digit ?</span>
-  ) } , <span class="ebnf-terminal">'"'</span><span class="ebnf-end">;</span></pre></code>
+  <code class="ebnf"><span class="ebnf-identifier">string</span> = <span class="ebnf-terminal">'"'</span> ,
+  { <span class="ebnf-special-sequence">? Any unicode character except " or \ or control character ?</span>
+  | <span class="ebnf-terminal">"\"</span> ,
+    ( <span class="ebnf-terminal">'"'</span> <span class="ebnf-comment">(* quotation mark *)</span>        | <span class="ebnf-terminal">"\"</span> <span class="ebnf-comment">(* reverse solidus *)</span>
+    | <span class="ebnf-terminal">"/"</span> <span class="ebnf-comment">(* solidus *)</span>               | <span class="ebnf-terminal">"b"</span> <span class="ebnf-comment">(* backspace *)</span>
+    | <span class="ebnf-terminal">"f"</span> <span class="ebnf-comment">(* formfeed *)</span>              | <span class="ebnf-terminal">"n"</span> <span class="ebnf-comment">(* newline *)</span>
+    | <span class="ebnf-terminal">"r"</span> <span class="ebnf-comment">(* carriage return *)</span>       | <span class="ebnf-terminal">"t"</span> <span class="ebnf-comment">(* horizontal tab *)</span>
+    | <span class="ebnf-terminal">"u"</span> , <span class="ebnf-multiplier">4 *</span> <span class="ebnf-special-sequence">? hexadeximal digit ?</span>
+    )
+  } , <span class="ebnf-terminal">'"'</span><span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>string</strong>:<p>
 <ul>
 <li><a href="#object">object</a></li><li><a href="#value">value</a></li>
@@ -217,8 +480,9 @@ and hexadecimal formats are not used.</p><section>
   <div class="diagram-container">
   <svg class="railroad-diagram" width="946" height="121" viewBox="0 0 946 121"><g transform="translate(.5 .5)"><g><path d="M20 30v20m10 -20v20m-10 -10h20"></path></g><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M896 40h0"></path><g><path d="M50 40h0"></path><path d="M118.5 40h0"></path><path d="M50 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M70 20h28.5"></path></g><path d="M98.5 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M50 40h20"></path><g class="terminal"><path d="M70 40h0"></path><path d="M98.5 40h0"></path><rect x="70" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="44">-</text></g><path d="M98.5 40h20"></path></g><g><path d="M118.5 40h0"></path><path d="M421.5 40h0"></path><path d="M118.5 40h20"></path><g class="terminal"><path d="M138.5 40h117.25"></path><path d="M284.25 40h117.25"></path><rect x="255.75" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="270" y="44">0</text></g><path d="M401.5 40h20"></path><path d="M118.5 40a10 10 0 0 1 10 10v19a10 10 0 0 0 10 10"></path><g><path d="M138.5 79h0"></path><path d="M401.5 79h0"></path><g class="special-sequence"><path d="M138.5 79h0"></path><path d="M252 79h0"></path><rect x="138.5" y="68" width="113.5" height="22"></rect><text x="195.25" y="83"> digit 1-9 </text></g><path d="M252 79h10"></path><g><path d="M262 79h0"></path><path d="M401.5 79h0"></path><path d="M262 79a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M282 59h99.5"></path></g><path d="M381.5 59a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M262 79h20"></path><g><path d="M282 79h0"></path><path d="M381.5 79h0"></path><path d="M282 79h10"></path><g class="special-sequence"><path d="M292 79h0"></path><path d="M371.5 79h0"></path><rect x="292" y="68" width="79.5" height="22"></rect><text x="331.75" y="83"> digit </text></g><path d="M371.5 79h10"></path><path d="M292 79a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M292 99h79.5"></path></g><path d="M371.5 99a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g><path d="M381.5 79h20"></path></g></g><path d="M401.5 79a10 10 0 0 0 10 -10v-19a10 10 0 0 1 10 -10"></path></g><g><path d="M421.5 40h0"></path><path d="M609.5 40h0"></path><path d="M421.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M441.5 20h148"></path></g><path d="M589.5 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M421.5 40h20"></path><g><path d="M441.5 40h0"></path><path d="M589.5 40h0"></path><g class="terminal"><path d="M441.5 40h0"></path><path d="M470 40h0"></path><rect x="441.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="455.75" y="44">.</text></g><path d="M470 40h10"></path><path d="M480 40h10"></path><g><path d="M490 40h0"></path><path d="M589.5 40h0"></path><path d="M490 40h10"></path><g class="special-sequence"><path d="M500 40h0"></path><path d="M579.5 40h0"></path><rect x="500" y="29" width="79.5" height="22"></rect><text x="539.75" y="44"> digit </text></g><path d="M579.5 40h10"></path><path d="M500 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M500 60h79.5"></path></g><path d="M579.5 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g></g><path d="M589.5 40h20"></path></g><g><path d="M609.5 40h0"></path><path d="M896 40h0"></path><path d="M609.5 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M629.5 20h246.5"></path></g><path d="M876 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M609.5 40h20"></path><g><path d="M629.5 40h0"></path><path d="M876 40h0"></path><g><path d="M629.5 40h0"></path><path d="M698 40h0"></path><path d="M629.5 40h20"></path><g class="terminal"><path d="M649.5 40h0"></path><path d="M678 40h0"></path><rect x="649.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="663.75" y="44">e</text></g><path d="M678 40h20"></path><path d="M629.5 40a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M649.5 70h0"></path><path d="M678 70h0"></path><rect x="649.5" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="663.75" y="74">E</text></g><path d="M678 70a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M698 40h0"></path><path d="M766.5 40h0"></path><path d="M698 40h20"></path><g><path d="M718 40h28.5"></path></g><path d="M746.5 40h20"></path><path d="M698 40a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M718 60h0"></path><path d="M746.5 60h0"></path><rect x="718" y="49" width="28.5" height="22" rx="10" ry="10"></rect><text x="732.25" y="64">+</text></g><path d="M746.5 60a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M698 40a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M718 90h0"></path><path d="M746.5 90h0"></path><rect x="718" y="79" width="28.5" height="22" rx="10" ry="10"></rect><text x="732.25" y="94">-</text></g><path d="M746.5 90a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M766.5 40h10"></path><g><path d="M776.5 40h0"></path><path d="M876 40h0"></path><path d="M776.5 40h10"></path><g class="special-sequence"><path d="M786.5 40h0"></path><path d="M866 40h0"></path><rect x="786.5" y="29" width="79.5" height="22"></rect><text x="826.25" y="44"> digit </text></g><path d="M866 40h10"></path><path d="M786.5 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path><g><path d="M786.5 60h79.5"></path></g><path d="M866 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path></g></g><path d="M876 40h20"></path></g></g><path d="M896 40h10"></path><path d="M 906 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
   </div>
-  <code class="ebnf"><pre><span class="ebnf-identifier">number</span> = [ <span class="ebnf-terminal">"-"</span> ] , ( <span class="ebnf-terminal">"0"</span> | <span class="ebnf-special-sequence">? digit 1-9 ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ) , [ <span class="ebnf-terminal">"."</span> , <span class="ebnf-special-sequence">? digit ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ] ,
-  [ ( <span class="ebnf-terminal">"e"</span> | <span class="ebnf-terminal">"E"</span> ) , [ <span class="ebnf-terminal">"+"</span> | <span class="ebnf-terminal">"-"</span> ] , <span class="ebnf-special-sequence">? digit ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ]<span class="ebnf-end">;</span></pre></code>
+  <code class="ebnf"><span class="ebnf-identifier">number</span> = [ <span class="ebnf-terminal">"-"</span> ] , ( <span class="ebnf-terminal">"0"</span> | <span class="ebnf-special-sequence">? digit 1-9 ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ) , [ <span class="ebnf-terminal">"."</span> ,
+  <span class="ebnf-special-sequence">? digit ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ] , [ ( <span class="ebnf-terminal">"e"</span> | <span class="ebnf-terminal">"E"</span> ) ,
+  [ <span class="ebnf-terminal">"+"</span> | <span class="ebnf-terminal">"-"</span> ] , <span class="ebnf-special-sequence">? digit ?</span> , { <span class="ebnf-special-sequence">? digit ?</span> } ]<span class="ebnf-end">;</span></code>
   <p>Items referencing <strong>number</strong>:<p>
 <ul>
 <li><a href="#value">value</a></li>
@@ -227,29 +491,19 @@ and hexadecimal formats are not used.</p><section>
 <p>Whitespace can be inserted between any pair of tokens.
 Excepting a few encoding details, that completely describes the language.</p>
   </article>
-  <nav>
-    <h3>Language overview</h3>
-    <ul class="nav-hierarchical">
-    <li><a href="#json">json </a><ul><li><a href="#object">object </a><ul><li><a href="#string">string </a>
-      </li><li><a href="#value">value </a><ul><li><a href="#string">string </a>
-      </li><li><a href="#number">number </a>
-      </li><li><a href="#object">object ↖︎</a>
-      </li><li><a href="#array">array </a><ul><li><a href="#value">value ↖︎</a>
-      </li></ul>
-      </li></ul>
-      </li></ul>
-      </li><li><a href="#array">array </a><ul><li><a href="#value">value </a><ul><li><a href="#string">string </a>
-      </li><li><a href="#number">number </a>
-      </li><li><a href="#object">object </a><ul><li><a href="#string">string </a>
-      </li><li><a href="#value">value ↖︎</a>
-      </li></ul>
-      </li><li><a href="#array">array ↖︎</a>
-      </li></ul>
-      </li></ul>
-      </li></ul>
-      </li>
-    </ul>
-  </nav>
+  <footer>
+    <p>Date: 2019-01-21T21:17 - <a href="?theme=dark">Dark</a> - <a href="?theme=light">Light</a></p>
+  </footer>
   </main>
+  <script type="text/javascript">
+    document.querySelector("header button").addEventListener("click", function() {
+      document.getElementsByTagName("html")[0].classList.toggle("menu-open");
+    });
+    document.querySelector("nav").addEventListener("click", function(event) {
+      if (event.target.tagName !== "A") return;
+      htmlTag.classList.remove("menu-open");
+    });
+  </script>
+
 </body>
 </html>

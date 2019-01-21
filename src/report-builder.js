@@ -83,7 +83,6 @@ const determineDiagramSequenceLength = production => {
 };
 
 const MAX_CHOICE_LENGTH = 10;
-const MAX_SEQUENCE_LENGTH = 45;
 
 const productionToDiagram = (production, options) => {
   if (production.identifier) {
@@ -113,8 +112,8 @@ const productionToDiagram = (production, options) => {
       productionToDiagram(elem, options)
     );
     const choiceLists = [];
-    while (choiceOptions.length > options.shrinkChoiceAt) {
-      const subList = choiceOptions.splice(0, options.shrinkChoiceAt);
+    while (choiceOptions.length > options.maxChoiceLength) {
+      const subList = choiceOptions.splice(0, options.maxChoiceLength);
       choiceLists.push(makeChoice(subList));
     }
     choiceLists.push(makeChoice(choiceOptions));
@@ -124,7 +123,7 @@ const productionToDiagram = (production, options) => {
   }
   if (production.sequence) {
     const sequenceLength = determineDiagramSequenceLength(production);
-    if (sequenceLength > options.maxSequenceLength) {
+    if (sequenceLength > 45 && options.optimizeSequenceLength) {
       const subSequences = production.sequence
         .reduce(
           (totals, elem, index, list) => {
@@ -137,7 +136,7 @@ const productionToDiagram = (production, options) => {
               sequence: list.slice(index + 1)
             });
             if (
-              currentLength + remainingLength > options.maxSequenceLength - 5 &&
+              currentLength + remainingLength > 40 &&
               currentLength >= 25 &&
               remainingLength > 10
             ) {
@@ -264,9 +263,7 @@ const createDocumentation = (ast, options) => {
           maxChoiceLength: options.optimizeDiagrams
             ? MAX_CHOICE_LENGTH
             : Infinity,
-          maxSequenceLength: options.optimizeDiagrams
-            ? MAX_SEQUENCE_LENGTH
-            : Infinity
+          optimizeSequenceLength: options.optimizeDiagrams
         }
       );
       return ebnfTemplate({
