@@ -217,7 +217,7 @@ const createTocStructure = (tocData, metadata) =>
     .map(
       tocNode =>
         `<li${
-          metadata[tocNode.name].root
+          (metadata[tocNode.name] || {}).root
             ? ' class="root-node"'
             : metadata[tocNode.name].common
               ? ' class="common-node"'
@@ -226,7 +226,7 @@ const createTocStructure = (tocData, metadata) =>
           tocNode.name.trim()
         )}">${tocNode.name.trim()}</a>
         ${
-          metadata[tocNode.name].recursive
+          (metadata[tocNode.name] || {}).recursive
             ? '<dfn title="recursive">♺</dfn>'
             : ""
         }
