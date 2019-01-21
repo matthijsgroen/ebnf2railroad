@@ -82,13 +82,14 @@ const determineDiagramSequenceLength = production => {
   return 0;
 };
 
-const SHRINK_CHOICE = 10;
+const MAX_CHOICE_LENGTH = 10;
+const MAX_SEQUENCE_LENGTH = 45;
 
-const productionToDiagram = production => {
+const productionToDiagram = (production, options) => {
   if (production.identifier) {
     return production.complex
-      ? ComplexDiagram(productionToDiagram(production.definition))
-      : Diagram(productionToDiagram(production.definition));
+      ? ComplexDiagram(productionToDiagram(production.definition, options))
+      : Diagram(productionToDiagram(production.definition, options));
   }
   if (production.terminal) {
     return Terminal(production.terminal);
@@ -108,20 +109,22 @@ const productionToDiagram = production => {
   }
   if (production.choice) {
     const makeChoice = items => new Choice(0, items);
-    const options = production.choice.map(productionToDiagram);
+    const choiceOptions = production.choice.map(elem =>
+      productionToDiagram(elem, options)
+    );
     const choiceLists = [];
-    while (options.length > SHRINK_CHOICE) {
-      const subList = options.splice(0, SHRINK_CHOICE);
+    while (choiceOptions.length > options.shrinkChoiceAt) {
+      const subList = choiceOptions.splice(0, options.shrinkChoiceAt);
       choiceLists.push(makeChoice(subList));
     }
-    choiceLists.push(makeChoice(options));
+    choiceLists.push(makeChoice(choiceOptions));
     return choiceLists.length > 1
       ? HorizontalChoice(...choiceLists)
       : choiceLists[0];
   }
   if (production.sequence) {
     const sequenceLength = determineDiagramSequenceLength(production);
-    if (sequenceLength > 45) {
+    if (sequenceLength > options.maxSequenceLength) {
       const subSequences = production.sequence
         .reduce(
           (totals, elem, index, list) => {
@@ -134,7 +137,7 @@ const productionToDiagram = production => {
               sequence: list.slice(index + 1)
             });
             if (
-              currentLength + remainingLength > 40 &&
+              currentLength + remainingLength > options.maxSequenceLength - 5 &&
               currentLength >= 25 &&
               remainingLength > 10
             ) {
@@ -147,47 +150,51 @@ const productionToDiagram = production => {
         .filter(array => array.length > 0);
       return Stack(
         ...subSequences.map(subSequence =>
-          Sequence(...subSequence.map(productionToDiagram))
+          Sequence(
+            ...subSequence.map(elem => productionToDiagram(elem, options))
+          )
         )
       );
     }
 
-    return Sequence(...production.sequence.map(productionToDiagram));
+    return Sequence(
+      ...production.sequence.map(elem => productionToDiagram(elem, options))
+    );
   }
   if (production.repetition && production.skippable === true) {
     return Choice(
       1,
       Skip(),
-      OneOrMore(productionToDiagram(production.repetition))
+      OneOrMore(productionToDiagram(production.repetition, options))
     );
   }
   if (production.repetition && production.skippable === false) {
     return production.repeater
       ? OneOrMore(
-          productionToDiagram(production.repetition),
-          productionToDiagram(production.repeater)
+          productionToDiagram(production.repetition, options),
+          productionToDiagram(production.repeater, options)
         )
-      : OneOrMore(productionToDiagram(production.repetition));
+      : OneOrMore(productionToDiagram(production.repetition, options));
   }
   if (production.repetition && production.amount !== undefined) {
     return OneOrMore(
-      productionToDiagram(production.repetition),
+      productionToDiagram(production.repetition, options),
       Comment(`${production.amount} ×`, {})
     );
   }
   if (production.optional) {
-    return Choice(1, Skip(), productionToDiagram(production.optional));
+    return Choice(1, Skip(), productionToDiagram(production.optional, options));
   }
   if (production.comment) {
     return production.group
       ? Sequence(
-          productionToDiagram(production.group),
+          productionToDiagram(production.group, options),
           Comment(production.comment, {})
         )
       : Comment(production.comment, {});
   }
   if (production.group) {
-    return productionToDiagram(production.group);
+    return productionToDiagram(production.group, options);
   }
   if (production.exceptNonTerminal) {
     return NonTerminal(
@@ -248,10 +255,20 @@ const createDocumentation = (ast, options) => {
           ? production
           : optimizeProduction(production);
 
-      const diagram = productionToDiagram({
-        ...renderProduction,
-        complex: outgoingReferences.length > 0
-      });
+      const diagram = productionToDiagram(
+        {
+          ...renderProduction,
+          complex: outgoingReferences.length > 0
+        },
+        {
+          maxChoiceLength: options.optimizeDiagrams
+            ? MAX_CHOICE_LENGTH
+            : Infinity,
+          maxSequenceLength: options.optimizeDiagrams
+            ? MAX_SEQUENCE_LENGTH
+            : Infinity
+        }
+      );
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(production, {
