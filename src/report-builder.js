@@ -219,7 +219,7 @@ const createTocStructure = (tocData, metadata) =>
         `<li${
           (metadata[tocNode.name] || {}).root
             ? ' class="root-node"'
-            : metadata[tocNode.name].common
+            : (metadata[tocNode.name] || {}).common
               ? ' class="common-node"'
               : ""
         }><a href="#${dasherize(
