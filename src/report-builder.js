@@ -282,12 +282,14 @@ const createDocumentation = (ast, options) => {
   const structuralToc = createStructuralToc(ast);
   const metadata = createDefinitionMetadata(structuralToc);
   const alphabetical = createAlphabeticalToc(ast);
-  const rootItems = alphabetical.filter(item => metadata[item.name].root);
+  const isRoot = item => (metadata[item.name] || {}).root;
+  const isCommon = item => (metadata[item.name] || {}).common;
+  const rootItems = alphabetical.filter(item => isRoot(item));
   const commonItems = alphabetical.filter(
-    item => !metadata[item.name].root && metadata[item.name].common
+    item => !isRoot(item) && isCommon(item)
   );
   const otherItems = alphabetical.filter(
-    item => !metadata[item.name].root && !metadata[item.name].common
+    item => !isRoot(item) && !isCommon(item)
   );
   const hierarchicalToc = createTocStructure(structuralToc, metadata);
 
