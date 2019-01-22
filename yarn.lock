@@ -1220,9 +1220,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.8.2.tgz#629dfde464f3a57da2ebd9f4f68f874ba462ad58"
-  integrity sha512-aiwlQ/O+i/O5PClQTb3aV5BdYqmpE3uOUVAr+DIisC+d3AUZz414JVTZGRroprq+AymG/zGjKB8sZqH+fo7SWA==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.9.0.tgz#d2e4ca88f538eb9802bda366d49a379d33e3b163"
+  integrity sha512-LRPk+5ddjVO8luTwOAZOrUpmcuXn9vllg7epe4OhzwQb4ZClNP4gDrYViElK30byW3mGOeHsJOfOxEJFtly8XQ==
   dependencies:
     commander "^2.19.0"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#e9b1a12"
