@@ -73,12 +73,12 @@ const createStructuralToc = ast => {
     // b -> c -> a -> b, vs.
     // c -> a -> b -> c. Check which one is defined first, that one wins
     .filter((root, index, list) => {
-      const childIndex = Math.min(
-        flatList(root.children || [])
-          .filter(node => node !== root.name)
-          .map(node => list.map(p => p.name).indexOf(node))
-          .filter(e => e !== -1)
-      );
+      const indices = flatList(root.children || [])
+        .filter(node => node !== root.name)
+        .map(node => list.map(p => p.name).indexOf(node))
+        .filter(e => e !== -1);
+      const childIndex = Math.min(...indices);
+
       return index < childIndex;
     });
 
