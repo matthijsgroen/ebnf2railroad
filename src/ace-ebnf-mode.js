@@ -51,6 +51,21 @@ ace.define(
             regex: identifier
           },
           {
+            statename: "sstring",
+            token: "string.start",
+            regex: "\\?",
+            next: [
+              {
+                token: "string.end",
+                regex: "\\?",
+                next: "definition"
+              },
+              {
+                defaultToken: "string"
+              }
+            ]
+          },
+          {
             statename: "qstring",
             token: "string.start",
             regex: "'",
