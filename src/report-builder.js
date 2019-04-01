@@ -220,8 +220,8 @@ const createTocStructure = (tocData, metadata) =>
           (metadata[tocNode.name] || {}).root
             ? ' class="root-node"'
             : (metadata[tocNode.name] || {}).common
-              ? ' class="common-node"'
-              : ""
+            ? ' class="common-node"'
+            : ""
         }><a href="#${dasherize(
           tocNode.name.trim()
         )}">${tocNode.name.trim()}</a>
@@ -263,7 +263,8 @@ const createDocumentation = (ast, options) => {
           maxChoiceLength: options.optimizeDiagrams
             ? MAX_CHOICE_LENGTH
             : Infinity,
-          optimizeSequenceLength: options.optimizeDiagrams
+          optimizeSequenceLength:
+            options.diagramWrap && options.optimizeDiagrams
         }
       );
       return ebnfTemplate({

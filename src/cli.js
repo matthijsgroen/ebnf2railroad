@@ -22,6 +22,7 @@ program
   .option("--lint", "exit with status code 2 if EBNF document has warnings")
   .option("--write-style", "rewrites the source document with styled text")
   .option("--no-optimizations", "does not try to optimize the diagrams")
+  .option("--no-diagram-wrap", "does not wrap diagrams for width minimization")
   .option(
     "--no-text-formatting",
     "does not format the output text version (becomes single line)"
@@ -38,6 +39,7 @@ async function run(args) {
   const allowOutput = !program.quiet;
   const optimizeDiagrams = program.optimizations;
   const textFormatting = program.textFormatting;
+  const diagramWrap = program.diagramWrap;
   const output = text => allowOutput && process.stdout.write(text + "\n");
   const outputError = text => allowOutput && process.stderr.write(text + "\n");
   const errLocation = struct =>
@@ -94,7 +96,8 @@ async function run(args) {
       const report = createDocumentation(ast, {
         title: documentTitle,
         optimizeDiagrams,
-        textFormatting
+        textFormatting,
+        diagramWrap
       });
       await writeFile(targetFilename, report, "utf8");
       output(`📜 Document created at ${targetFilename}`);
