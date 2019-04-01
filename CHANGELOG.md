@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 - Skip only diagram wrapping with `--no-diagram-wrap`
+- Breaking of long elements over multiple lines in optional items `[]`
 
 ## [1.10.0] - 2020-09-16
 
