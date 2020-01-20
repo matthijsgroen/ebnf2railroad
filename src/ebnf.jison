@@ -5,7 +5,7 @@
 %%
 \s+                      { /* skip whitespace */}
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
-[a-z][A-Za-z0-9 ]*       { return 'IDENTIFIER'; }
+[A-Za-z][A-Za-z0-9 ]*    { return 'IDENTIFIER'; }
 [0-9]+                   { return 'DIGIT'; }
 "(/"                     { return '['; } // alternative start-option-symbol
 "/)"                     { return ']'; } // alternative end-option-symbol
@@ -107,4 +107,3 @@ terminal
 comment
     : COMMENT { $$ = {comment: $1.slice(2, -2) } }
     ;
-
