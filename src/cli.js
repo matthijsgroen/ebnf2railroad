@@ -22,6 +22,8 @@ program
   .option("--lint", "exit with status code 2 if EBNF document has warnings")
   .option("--write-style", "rewrites the source document with styled text")
   .option("--no-optimizations", "does not try to optimize the diagrams")
+  .option("--dump-ast", "dump EBNF file AST for further processing")
+  .option("--read-ast", "input file is in the AST format")
   .option(
     "--no-text-formatting",
     "does not format the output text version (becomes single line)"
@@ -58,8 +60,12 @@ async function run(args) {
     const targetFilename =
       program.target === true ? defaultOutputFilename : program.target;
 
-    const ast = parse(ebnf);
+    const ast = !program.readAst ? parse(ebnf) : JSON.parse(ebnf);
     const warnings = validateEbnf(ast);
+
+    if (program.dumpAst) {
+      output(JSON.stringify(ast));
+    }
 
     warnings.length > 0 &&
       allowOutput &&
