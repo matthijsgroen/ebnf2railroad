@@ -16,6 +16,10 @@ and this project adheres to
 
 - Updated dependencies to solve security vulnerabilities
 
+### Fixed
+
+- Display of proper line number in CLI output
+
 ## [1.9.0] - 2019-01-22
 
 ### Fixed
