@@ -12,6 +12,13 @@ and this project adheres to
 
 - Support for `--dump-ast` and `--read-ast` options to allow external processing
 - Support for identifiers starting with an uppercase letter
+- Improved error reporting. Exceptions now contain a `data` element with the
+  following:
+
+  - `line` The line number of the error (starting from 1)
+  - `pos` The position within the line of the error (starting from 1)
+  - `expected` the types of token expected by the parser (array)
+  - `token` the token received by the parser
 
 ### Security
 

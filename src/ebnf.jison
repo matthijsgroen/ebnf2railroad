@@ -30,7 +30,8 @@
 \"[^"]+\"                { return 'STRING'; }
 \'[^']+\'                { return 'STRING'; }
 "?"[^\?]+"?"             { return 'SEQUENCE'; }
-<<EOF>>                  { return 'EOF';}
+<<EOF>>                  { return 'EOF'; }
+.*                       { return yytext; }
 
 /lex
 
@@ -46,36 +47,36 @@
 %% /* language grammar */
 
 grammar
-    : production_list EOF
-        {return $1;}
-    ;
+  : production_list EOF
+    { return $1; }
+  ;
 
 production_list
-    : production_list production
-        { $$ = $production_list.concat($production); }
-    | production
-        { $$ = [$production] }
-    ;
+  : production_list production
+    { $$ = $production_list.concat($production); }
+  | production
+    { $$ = [$production] }
+  ;
 
 production
-    : IDENTIFIER "=" rhs ";"
-        { $$ = { identifier: $1.trim(), definition: $rhs, location: @1.first_line };  }
-    | comment
-    ;
+  : IDENTIFIER "=" rhs ";"
+    { $$ = { identifier: $1.trim(), definition: $rhs, location: @1.first_line };  }
+  | comment
+  ;
 
 rhs
   : rhs "," rhs
-      { $$ = $1.sequence ? { sequence: $1.sequence.concat($3) } : { sequence: [$1, $3] } }
+    { $$ = $1.sequence ? { sequence: $1.sequence.concat($3) } : { sequence: [$1, $3] } }
   | rhs "|" rhs
-      { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
+    { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
   | "{" rhs "}"
-      { $$ = { repetition: $2, skippable: true } }
+    { $$ = { repetition: $2, skippable: true } }
   | "(" rhs ")"
-      { $$ = { group: $2 } }
+    { $$ = { group: $2 } }
   | "[" rhs "]"
-      { $$ = { optional: $2 } }
+    { $$ = { optional: $2 } }
   | DIGIT "*" rhs
-      { $$ = { repetition: $3, amount: $1 } }
+    { $$ = { repetition: $3, amount: $1 } }
   | rhs comment
     { $$ = { ...$2, group: $1 } }
   | identifier
@@ -85,25 +86,25 @@ rhs
   ;
 
 exception
-    : IDENTIFIER "-" IDENTIFIER
-      { $$ = { include: $1.trim(), exceptNonTerminal: $3.trim() } }
-    | IDENTIFIER "-" STRING
-      { $$ = { include: $1.trim(), exceptTerminal: $3.slice(1, -1) } }
-    ;
+  : IDENTIFIER "-" IDENTIFIER
+    { $$ = { include: $1.trim(), exceptNonTerminal: $3.trim() } }
+  | IDENTIFIER "-" STRING
+    { $$ = { include: $1.trim(), exceptTerminal: $3.slice(1, -1) } }
+  ;
 
 identifier
-    : IDENTIFIER
-        {$$ = { nonTerminal: $1.trim() }; }
-    ;
+  : IDENTIFIER
+    { $$ = { nonTerminal: $1.trim() }; }
+  ;
 
 specialSequence
-    : SEQUENCE { $$ = { specialSequence: $1.slice(1, -1).trim() } }
-    ;
+  : SEQUENCE { $$ = { specialSequence: $1.slice(1, -1).trim() } }
+  ;
 
 terminal
-    : STRING { $$ = { terminal: $1.slice(1, -1) } }
-    ;
+  : STRING { $$ = { terminal: $1.slice(1, -1) } }
+  ;
 
 comment
-    : COMMENT { $$ = {comment: $1.slice(2, -2) } }
-    ;
+  : COMMENT { $$ = {comment: $1.slice(2, -2) } }
+  ;

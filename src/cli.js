@@ -2,7 +2,7 @@ const program = require("commander");
 const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
-const { parse } = require("./ebnf-parser");
+const { parseEbnf } = require("./main");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
@@ -40,10 +40,14 @@ async function run(args) {
   const textFormatting = program.textFormatting;
   const output = text => allowOutput && process.stdout.write(text + "\n");
   const outputError = text => allowOutput && process.stderr.write(text + "\n");
+  const errLocation = struct =>
+    struct.pos !== undefined
+      ? `${struct.line}:${struct.pos}`
+      : `${struct.line}`;
   const outputErrorStruct = struct =>
     allowOutput &&
     process.stderr.write(
-      `${struct.type} on line ${struct.line + 1}: ${struct.message}\n`
+      `${struct.type} on line ${errLocation(struct)}: ${struct.message}\n`
     );
 
   try {
@@ -60,7 +64,7 @@ async function run(args) {
     const targetFilename =
       program.target === true ? defaultOutputFilename : program.target;
 
-    const ast = !program.readAst ? parse(ebnf) : JSON.parse(ebnf);
+    const ast = !program.readAst ? parseEbnf(ebnf) : JSON.parse(ebnf);
     const warnings = validateEbnf(ast);
 
     if (program.dumpAst) {
@@ -97,10 +101,11 @@ async function run(args) {
     }
     warnings.length > 0 && program.validate && process.exit(2);
   } catch (e) {
-    if (e.hash) {
-      const { line, expected, token } = e.hash;
+    if (e.data) {
+      const { line, expected, token, pos } = e.data;
       outputErrorStruct({
         line,
+        pos,
         type: "Parse error",
         message: `Expected ${expected}, got ${token}`
       });
