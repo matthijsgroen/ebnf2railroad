@@ -263,7 +263,8 @@ const createDocumentation = (ast, options) => {
           maxChoiceLength: options.optimizeDiagrams
             ? MAX_CHOICE_LENGTH
             : Infinity,
-          optimizeSequenceLength: options.optimizeDiagrams
+          optimizeSequenceLength:
+            options.diagramWrap && options.optimizeDiagrams
         }
       );
       return ebnfTemplate({

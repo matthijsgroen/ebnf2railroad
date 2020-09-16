@@ -272,7 +272,12 @@ const productionToEBNF = (production, setOptions) => {
     })`;
   }
   if (production.optional) {
-    return `[ ${productionToEBNF(production.optional, options)} ]`;
+    const renderConfig = detectRenderConfig(production.optional, options);
+    return `${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : ""
+    }[ ${productionToEBNF(production.optional, renderConfig)}${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
+    }]`;
   }
   if (production.exceptNonTerminal) {
     return `${productionToEBNF(

@@ -32,6 +32,7 @@ Usage: ebnf2railroad [options] <file>
 Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams
 
 Options:
+
   -V, --version          output the version number
   -q, --quiet            suppress output to STDOUT
   -o, --target [target]  output the file to target destination.
@@ -40,6 +41,7 @@ Options:
   --lint                 exit with status code 2 if EBNF document has warnings
   --write-style          rewrites the source document with styled text
   --no-optimizations     does not try to optimize the diagrams
+  --no-diagram-wrap      does not wrap diagrams for width minimization
   --no-text-formatting   does not format the output text version (becomes single line)
   --dump-ast             dump EBNF file AST to target destination for further processing
   --read-ast             input file is in the AST format

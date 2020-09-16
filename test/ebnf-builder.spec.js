@@ -174,4 +174,24 @@ describe("EBNF Builder", () => {
       );
     });
   });
+
+  describe("combination tests", () => {
+    it("creates a line length balance between lines", () => {
+      const text = `
+        if statement = "if" , condition , "then" , end of statement , indent , statement , { statement } , unindent , [ "else" ,
+          end of statement , indent , statement , { statement } ,
+          unindent | "else" ,
+          if statement ];
+      `;
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql(
+        'if statement = "if" , condition , "then" , end of statement , indent , statement , { statement } , unindent ,\n' +
+          '  [ "else" , end of statement , indent , statement ,\n' +
+          "    { statement } , unindent\n" +
+          '  | "else" , if statement\n' +
+          "  ];"
+      );
+    });
+  });
 });
