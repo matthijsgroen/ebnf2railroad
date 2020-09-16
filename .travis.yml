@@ -8,11 +8,14 @@ script:
 branches:
   only:
   - website
+os: linux
+dist: xenial
 deploy:
   provider: pages
-  skip-cleanup: true
-  github-token: "$GITHUB_TOKEN"
-  keep-history: false
+  strategy: git
+  skip_cleanup: true
+  token: "$GITHUB_TOKEN"
+  keep_history: false
   local-dir: dist
   on:
     branch: website
