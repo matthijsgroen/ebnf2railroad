@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.1] - Unreleased
+## [1.10.0] - Unreleased
+
+### Added
+
+- Support for `--dump-ast` and `--read-ast` options to allow external processing
 
 ### Security
 

@@ -25,7 +25,9 @@ program
   .option(
     "--no-text-formatting",
     "does not format the output text version (becomes single line)"
-  );
+  )
+  .option("--dump-ast", "dump EBNF file AST for further processing")
+  .option("--read-ast", "input file is in the AST format");
 
 async function run(args) {
   program.parse(args);
@@ -58,9 +60,17 @@ async function run(args) {
     const targetFilename =
       program.target === true ? defaultOutputFilename : program.target;
 
-    const ast = parse(ebnf);
+    const ast = !program.readAst ? parse(ebnf) : JSON.parse(ebnf);
     const warnings = validateEbnf(ast);
 
+    if (program.dumpAst) {
+      const defaultDumpFilename = basename + ".json";
+      const dumpFilename =
+        program.target === true ? defaultDumpFilename : program.target;
+      await writeFile(dumpFilename, JSON.stringify(ast), "utf8");
+      output(`🧬 AST dumped at ${dumpFilename}`);
+      return;
+    }
     warnings.length > 0 &&
       allowOutput &&
       warnings.forEach(warning => outputErrorStruct(warning));
@@ -76,7 +86,6 @@ async function run(args) {
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
     }
-
     if (targetFilename) {
       const report = createDocumentation(ast, {
         title: documentTitle,
@@ -84,7 +93,6 @@ async function run(args) {
         textFormatting
       });
       await writeFile(targetFilename, report, "utf8");
-
       output(`📜 Document created at ${targetFilename}`);
     }
     warnings.length > 0 && program.validate && process.exit(2);
@@ -104,7 +112,6 @@ async function run(args) {
     process.exit(1);
   }
 }
-
 module.exports = {
   run
 };
