@@ -11,9 +11,27 @@ const {
   searchReferencesToIdentifier
 } = require("./references");
 
+const improveErrors = parser => input => {
+  try {
+    return parser(input);
+  } catch (e) {
+    const error = new Error(e.message);
+    if (e.hash) {
+      error.hash = e.hash; // backwards compatibility
+      error.data = {
+        expected: e.hash.expected,
+        token: `'${e.hash.token[0]}'`,
+        line: e.hash.line + 1,
+        pos: e.hash.loc.last_column + 1
+      };
+    }
+    throw error;
+  }
+};
+
 module.exports = {
   version,
-  parseEbnf: parse,
+  parseEbnf: improveErrors(parse),
   createDocumentation,
   documentStyle,
   validateEbnf,
