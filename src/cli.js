@@ -43,7 +43,7 @@ async function run(args) {
   const outputErrorStruct = struct =>
     allowOutput &&
     process.stderr.write(
-      `${struct.type} on line ${struct.line}: ${struct.message}\n`
+      `${struct.type} on line ${struct.line + 1}: ${struct.message}\n`
     );
 
   try {
