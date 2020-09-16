@@ -292,12 +292,14 @@ const optimizeProduction = production => {
         ...production.optional,
         choice: [{ skip: true }, ...production.optional.choice]
       });
-    } else {
-      return {
-        ...production,
-        optional: optimizeProduction(production.optional)
-      };
     }
+    if (production.optional.repetition || production.optional.optional) {
+      return optimizeProduction(production.optional);
+    }
+    return {
+      ...production,
+      optional: optimizeProduction(production.optional)
+    };
   }
   if (production.group) {
     return {
