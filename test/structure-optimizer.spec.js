@@ -262,7 +262,7 @@ describe("AST structure optimizer", () => {
     }
   );
 
-  it("changes `a | a` into " + "`a`", () => {
+  it("changes `a | a` into `a`", () => {
     const text = "foo = a | a;";
     const result = parser.parse(text);
     const inputDefinition = result[0].definition;
@@ -273,7 +273,34 @@ describe("AST structure optimizer", () => {
     expect(optimizedDefinition).to.eql({ nonTerminal: "a" });
   });
 
-  it("changes `a, b, c | a` into " + "`a, [ b, c ]`", () => {
+  it("changes `[ { a } ]` into `{ a }`", () => {
+    const text = "foo = [ { a } ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      optional: { repetition: { nonTerminal: "a" }, skippable: true }
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      repetition: { nonTerminal: "a" },
+      skippable: true
+    });
+  });
+
+  it("changes `[ [ a ] ]` into `[ a ]`", () => {
+    const text = "foo = [ [ a ] ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      optional: { optional: { nonTerminal: "a" } }
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      optional: { nonTerminal: "a" }
+    });
+  });
+
+  it("changes `a, b, c | a` into `a, [ b, c ]`", () => {
     const text = "foo = a, b, c | a;";
     const result = parser.parse(text);
     const inputDefinition = result[0].definition;

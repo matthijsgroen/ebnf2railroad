@@ -12,6 +12,7 @@ and this project adheres to
 
 - Support for `--dump-ast` and `--read-ast` options to allow external processing
 - Support for identifiers starting with an uppercase letter
+- Optimisation to prevent double skip lines
 
 ### Security
 
