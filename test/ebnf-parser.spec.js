@@ -24,6 +24,16 @@ describe("EBNF parser", () => {
       expect(result[0]).to.have.property("definition");
     });
 
+    it("supports CamelCase identifiers", () => {
+      const text = 'FooBar = "baz";';
+      const result = parser.parse(text);
+      expect(result).to.have.lengthOf(1);
+      expect(result[0])
+        .to.have.property("identifier")
+        .eq("FooBar");
+      expect(result[0]).to.have.property("definition");
+    });
+
     it("supports multiple definitions", () => {
       const text = dedent(`
         foo = "bar";
