@@ -11,6 +11,7 @@ and this project adheres to
 ### Added
 
 - Support for `--dump-ast` and `--read-ast` options to allow external processing
+- Support for identifiers starting with an uppercase letter
 
 ### Security
 
