@@ -19,6 +19,7 @@ and this project adheres to
   - `pos` The position within the line of the error (starting from 1)
   - `expected` the types of token expected by the parser (array)
   - `token` the token received by the parser
+- Optimisation to prevent double skip lines
 
 ### Security
 

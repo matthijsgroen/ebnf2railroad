@@ -82,6 +82,8 @@ choice with one or more= "a" | { "b" };
 one or more = "a", { "a" };
 one or more with group = ( "a" | "b"), { "a" | "b" };
 one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
+optional repeater = [ { "a", "b" } ];
+optional optional = [ [ "a", "b" ] ];
 
 calculation
   = normal value, "*", number value
