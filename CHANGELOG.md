@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.10.0] - Unreleased
+## [1.10.0] - 2020-09-16
 
 ### Added
 
@@ -19,6 +19,7 @@ and this project adheres to
   - `pos` The position within the line of the error (starting from 1)
   - `expected` the types of token expected by the parser (array)
   - `token` the token received by the parser
+
 - Optimisation to prevent double skip lines
 
 ### Security
