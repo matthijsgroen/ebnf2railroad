@@ -13,6 +13,10 @@ and this project adheres to
 - Skip only diagram wrapping with `--no-diagram-wrap`
 - Breaking of long elements over multiple lines in optional items `[]`
 
+### Changed
+
+- Show line underneath comments in railroad diagram
+
 ## [1.10.0] - 2020-09-16
 
 ### Added
