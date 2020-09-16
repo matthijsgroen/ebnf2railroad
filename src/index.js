@@ -106,15 +106,15 @@ const updateDocument = (editor, store = true) => {
     validateAst(editor, ast);
     updateAst(ast);
   } catch (e) {
-    if (e.hash) {
-      const { expected, line, token } = e.hash;
+    if (e.data) {
+      const { expected, line, token, pos } = e.data;
       editor.getSession().clearAnnotations();
       editor.getSession().setAnnotations([
         {
           text: `Parse error: Expected ${expected}, got ${token}`,
           type: "error",
-          column: 0,
-          row: line
+          column: pos === undefined ? 0 : pos - 1,
+          row: line - 1
         }
       ]);
     } else {
