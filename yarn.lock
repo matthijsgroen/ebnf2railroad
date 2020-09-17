@@ -1176,9 +1176,9 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#e9b1a12":
+"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
   version "1.1.0"
-  resolved "https://github.com/tabatkins/railroad-diagrams#e9b1a128ebfbb926a7497efd194e071e948c292c"
+  resolved "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
 
 ramda@^0.27.1:
   version "0.27.1"
