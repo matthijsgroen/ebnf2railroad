@@ -10,20 +10,39 @@ const ungroup = elem =>
 const equalElements = (first, second) =>
   JSON.stringify(ungroup(first)) === JSON.stringify(ungroup(second));
 
-const optimizeProduction = production => {
+const optimizeProduction = (production, options = {}) => {
   if (production.definition) {
     return {
       ...production,
-      definition: optimizeProduction(production.definition)
+      definition: optimizeProduction(production.definition, options)
     };
   }
   if (production.choice) {
     // Check if rewrites are possible.
     const allChoicesTheSame = production.choice
-      .map(elem => ungroup(optimizeProduction(elem)))
+      .map(elem => ungroup(optimizeProduction(elem, options)))
       .every((item, idx, list) => equalElements(item, list[0]));
     if (allChoicesTheSame) {
-      return ungroup(optimizeProduction(production.choice[0]));
+      return ungroup(optimizeProduction(production.choice[0], options));
+    }
+
+    // if choice contains an optional, make whole choice optional.
+    const hasOptional = production.choice.some(e => e.optional && !e.comment);
+    if (hasOptional) {
+      const newDef = {
+        optional: optimizeProduction(
+          {
+            choice: production.choice.map(item =>
+              optimizeProduction(
+                item.optional && !item.comment ? item.optional : item,
+                options
+              )
+            )
+          },
+          options
+        )
+      };
+      return optimizeProduction(newDef, options);
     }
 
     const isCertain = elem =>
@@ -46,12 +65,16 @@ const optimizeProduction = production => {
     const collectCertainFirstElements = production.choice.map(
       elem =>
         isCertain(elem) ||
-        (elem.sequence && isCertain(optimizeProduction(elem.sequence[0])))
+        (elem.sequence &&
+          isCertain(optimizeProduction(elem.sequence[0], options)))
     );
     const collectCertainLastElements = production.choice.map(
       elem =>
         isCertain(elem) ||
-        (elem.sequence && isCertain(elem.sequence[elem.sequence.length - 1]))
+        (elem.sequence &&
+          isCertain(
+            optimizeProduction(elem.sequence[elem.sequence.length - 1], options)
+          ))
     );
     const groupFirsts = groupElements(collectCertainFirstElements);
     const groupLasts = groupElements(collectCertainLastElements);
@@ -59,10 +82,13 @@ const optimizeProduction = production => {
     // most wins, optimize, repeat
     const maxFirstsEqual = countSame(groupFirsts);
     const maxLastsEqual = countSame(groupLasts);
-    if (Math.max(maxFirstsEqual, maxLastsEqual) > 1) {
+    if (
+      Math.max(maxFirstsEqual, maxLastsEqual) > 1 &&
+      options.textMode !== true
+    ) {
+      const beforeChoices = [];
+      const afterChoices = [];
       if (maxFirstsEqual >= maxLastsEqual) {
-        const leftOverChoices = [];
-
         const firstElement = Object.entries(groupFirsts).find(
           ([, value]) => value === maxFirstsEqual
         )[0];
@@ -70,10 +96,12 @@ const optimizeProduction = production => {
         // now filter all choices that have this as first element, placing
         // the others in 'leftOverChoices'
         let hasEmpty = false;
+        let found = false;
         const newChoices = collectCertainFirstElements
           .map((elem, index) => {
             // if not match, add production choice to leftOverChoices.
             if (JSON.stringify(elem) === firstElement) {
+              found = true;
               // strip off element of chain.
               const choice = production.choice[index];
               if (choice.sequence) {
@@ -82,7 +110,9 @@ const optimizeProduction = production => {
                 hasEmpty = true;
               }
             } else {
-              leftOverChoices.push(production.choice[index]);
+              (found ? afterChoices : beforeChoices).push(
+                production.choice[index]
+              );
             }
           })
           .filter(Boolean);
@@ -101,14 +131,17 @@ const optimizeProduction = production => {
           newElements.length > 1 ? { sequence: newElements } : newElements[0];
 
         const finalResult =
-          leftOverChoices.length > 0
-            ? { choice: [replacementElement].concat(leftOverChoices) }
+          beforeChoices.length + afterChoices.length > 0
+            ? {
+                choice: []
+                  .concat(beforeChoices)
+                  .concat(replacementElement)
+                  .concat(afterChoices)
+              }
             : replacementElement;
 
-        return optimizeProduction(finalResult);
+        return optimizeProduction(finalResult, options);
       } else {
-        const leftOverChoices = [];
-
         const lastElement = Object.entries(groupLasts).find(
           ([, value]) => value === maxLastsEqual
         )[0];
@@ -116,10 +149,12 @@ const optimizeProduction = production => {
         // now filter all choices that have this as first element, placing
         // the others in 'leftOverChoices'
         let hasEmpty = false;
+        let found = false;
         const newChoices = collectCertainLastElements
           .map((elem, index) => {
             // if not match, add production choice to leftOverChoices.
             if (JSON.stringify(elem) === lastElement) {
+              found = true;
               // strip off element of chain.
               const choice = production.choice[index];
               if (choice.sequence) {
@@ -128,7 +163,9 @@ const optimizeProduction = production => {
                 hasEmpty = true;
               }
             } else {
-              leftOverChoices.push(production.choice[index]);
+              (found ? afterChoices : beforeChoices).push(
+                production.choice[index]
+              );
             }
           })
           .filter(Boolean);
@@ -147,11 +184,16 @@ const optimizeProduction = production => {
           newElements.length > 1 ? { sequence: newElements } : newElements[0];
 
         const finalResult =
-          leftOverChoices.length > 0
-            ? { choice: [replacementElement].concat(leftOverChoices) }
+          beforeChoices.length + afterChoices.length > 0
+            ? {
+                choice: []
+                  .concat(beforeChoices)
+                  .concat(replacementElement)
+                  .concat(afterChoices)
+              }
             : replacementElement;
 
-        return optimizeProduction(finalResult);
+        return optimizeProduction(finalResult, options);
       }
     }
 
@@ -161,8 +203,12 @@ const optimizeProduction = production => {
       choice: skipFirst(
         production.choice
           .map(item => {
-            const optimizedItem = ungroup(optimizeProduction(item));
-            if (optimizedItem.repetition && optimizedItem.skippable) {
+            const optimizedItem = ungroup(optimizeProduction(item, options));
+            if (
+              optimizedItem.repetition &&
+              optimizedItem.skippable &&
+              options.textMode !== true
+            ) {
               return [
                 "skip",
                 {
@@ -170,7 +216,7 @@ const optimizeProduction = production => {
                   skippable: false
                 }
               ];
-            } else if (optimizedItem.optional) {
+            } else if (optimizedItem.optional && options.textMode !== true) {
               return ["skip", optimizedItem.optional];
             } else if (optimizedItem.choice) {
               return optimizedItem.choice;
@@ -186,6 +232,9 @@ const optimizeProduction = production => {
     };
   }
   if (production.sequence) {
+    if (options.textMode === true) {
+      return production;
+    }
     const optimizeStructure = (item, idx, list) => {
       if (item.repetition && idx > 0) {
         if (!item.repetition.sequence) {
@@ -242,7 +291,7 @@ const optimizeProduction = production => {
           }
         }
       }
-      return optimizeProduction(item);
+      return optimizeProduction(item, options);
     };
 
     const vacuumResults = (elem, index, list) => {
@@ -283,28 +332,31 @@ const optimizeProduction = production => {
   if (production.repetition) {
     return {
       ...production,
-      repetition: optimizeProduction(production.repetition)
+      repetition: optimizeProduction(production.repetition, options)
     };
   }
   if (production.optional) {
-    if (production.optional.choice) {
-      return optimizeProduction({
-        ...production.optional,
-        choice: [{ skip: true }, ...production.optional.choice]
-      });
+    if (production.optional.choice && options.textMode !== true) {
+      return optimizeProduction(
+        {
+          ...production.optional,
+          choice: [{ skip: true }, ...production.optional.choice]
+        },
+        options
+      );
     }
     if (production.optional.repetition || production.optional.optional) {
-      return optimizeProduction(production.optional);
+      return optimizeProduction(production.optional, options);
     }
     return {
       ...production,
-      optional: optimizeProduction(production.optional)
+      optional: optimizeProduction(production.optional, options)
     };
   }
   if (production.group) {
     return {
       ...production,
-      group: optimizeProduction(production.group)
+      group: optimizeProduction(production.group, options)
     };
   }
   return production;
