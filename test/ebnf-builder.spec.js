@@ -105,14 +105,22 @@ describe("EBNF Builder", () => {
       );
     });
 
-    it("converts a repeater choice list to a multiline statement", () => {
+    it("does not convert a repeater choice list to a multiline statement when short choices", () => {
       const text = "statement = a, { b | d | e | gh| j }, e;";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql("statement = a , { b | d | e | gh | j } , e;");
+    });
+
+    it("converts a repeater choice list to a multiline statement", () => {
+      const text =
+        "statement = a, { b | having a few long options | e | gh| j }, e;";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
         "statement = a ,\n" +
           "  { b\n" +
-          "  | d\n" +
+          "  | having a few long options\n" +
           "  | e\n" +
           "  | gh\n" +
           "  | j\n" +
