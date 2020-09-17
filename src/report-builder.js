@@ -332,21 +332,15 @@ const createDocumentation = (ast, options) => {
       );
       return ebnfTemplate({
         identifier: production.identifier,
-        ebnf: [
-          productionToEBNF(
-            options.optimizeDiagrams
-              ? optimizeProduction(production, { textMode: true })
-              : production,
-            {
-              markup: true,
-              format: options.textFormatting
-            }
-          ),
-          productionToEBNF(production, {
+        ebnf: productionToEBNF(
+          options.optimizeDiagrams
+            ? optimizeProduction(production, { textMode: true })
+            : production,
+          {
             markup: true,
             format: options.textFormatting
-          })
-        ].join("\n"),
+          }
+        ),
         referencedBy: searchReferencesToIdentifier(production.identifier, ast),
         referencesTo: outgoingReferences,
         diagram: vacuum(diagram.toString())
