@@ -6,6 +6,7 @@ const { parseEbnf } = require("./main");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
+const { optimizeProduction } = require("./structure-optimizer");
 
 program
   .version(version)
@@ -21,7 +22,14 @@ program
   .option("-t, --title [title]", "title to use for HTML document")
   .option("--lint", "exit with status code 2 if EBNF document has warnings")
   .option("--write-style", "rewrites the source document with styled text")
-  .option("--no-optimizations", "does not try to optimize the diagrams")
+  .option(
+    "--rewrite",
+    "rewrites the source document with styled and optimized text"
+  )
+  .option(
+    "--no-optimizations",
+    "does not try to optimize the diagrams and texts"
+  )
   .option("--no-diagram-wrap", "does not wrap diagrams for width minimization")
   .option(
     "--no-text-formatting",
@@ -38,6 +46,7 @@ async function run(args) {
   }
   const allowOutput = !program.quiet;
   const optimizeDiagrams = program.optimizations;
+  const optimizeText = program.optimizations;
   const textFormatting = program.textFormatting;
   const diagramWrap = program.diagramWrap;
   const output = text => allowOutput && process.stdout.write(text + "\n");
@@ -81,11 +90,16 @@ async function run(args) {
       allowOutput &&
       warnings.forEach(warning => outputErrorStruct(warning));
 
-    if (program.writeStyle) {
+    if (program.writeStyle || program.rewrite) {
       const prettyOutput =
         ast
           .map(production =>
-            productionToEBNF(production, { markup: false, format: true })
+            productionToEBNF(
+              program.rewrite
+                ? optimizeProduction(production, { textMode: true })
+                : production,
+              { markup: false, format: true }
+            )
           )
           .join("\n\n") + "\n";
 
@@ -96,6 +110,7 @@ async function run(args) {
       const report = createDocumentation(ast, {
         title: documentTitle,
         optimizeDiagrams,
+        optimizeText,
         textFormatting,
         diagramWrap
       });

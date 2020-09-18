@@ -13,7 +13,6 @@ const {
   Stack,
   Terminal
 } = require("railroad-diagrams");
-
 const { optimizeProduction } = require("./structure-optimizer");
 const {
   documentContent,
@@ -333,7 +332,7 @@ const createDocumentation = (ast, options) => {
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(
-          options.optimizeDiagrams
+          options.optimizeText
             ? optimizeProduction(production, { textMode: true })
             : production,
           {
