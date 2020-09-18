@@ -75,7 +75,8 @@ optimized one or more
   | one or more with repeater, optimizations;
 
 choice with optional = [ "a" | "b" ];
-nested choices with optional = "a" | [ "b" | "c"];
+nested choices with optional = "a" | [ "b" | [ "c" ] ];
+nested choices with optional two = [ "a" | "b" | "c" ];
 nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
 nested choices = "a" | ( "b" | "c" );
 choice with one or more= "a" | { "b" };

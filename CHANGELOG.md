@@ -10,8 +10,21 @@ and this project adheres to
 
 ### Added
 
+- Support for optimizing source diagram using `--rewrite`
 - Skip only diagram wrapping with `--no-diagram-wrap`
 - Breaking of long elements over multiple lines in optional items `[]`
+- Plain text will now also be optimized when reasonable: Text will not be
+  optimized when using the `--no-optimizations` flag.
+
+  ```
+  [ [ a ] ] => [ a ]
+  [ { a } ] => { a }
+  a | b | [ c | [ d | e ] ] => [ a | b | c | d | e ]
+  ```
+
+## Fixes
+
+- When elements in choices are grouped, it will now maintain the original order
 
 ### Changed
 

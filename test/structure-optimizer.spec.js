@@ -43,6 +43,31 @@ describe("AST structure optimizer", () => {
     });
   });
 
+  it("changes `a | [ b | [ c ] ]` in ast to choice with skip without duplicates", () => {
+    const text = "foo = a | [ b | [ c ] ];";
+    const result = parser.parse(text);
+    const inputDefinition = result[0].definition;
+    expect(inputDefinition).to.eql({
+      choice: [
+        { nonTerminal: "a" },
+        {
+          optional: {
+            choice: [{ nonTerminal: "b" }, { optional: { nonTerminal: "c" } }]
+          }
+        }
+      ]
+    });
+    const optimizedDefinition = optimizeProduction(inputDefinition);
+    expect(optimizedDefinition).to.eql({
+      choice: [
+        { skip: true },
+        { nonTerminal: "a" },
+        { nonTerminal: "b" },
+        { nonTerminal: "c" }
+      ]
+    });
+  });
+
   it("changes `a | b | [ b ]` in ast to choice with skip without duplicates", () => {
     const text = "foo = a | b | [ b ];";
     const result = parser.parse(text);
@@ -53,6 +78,14 @@ describe("AST structure optimizer", () => {
         { nonTerminal: "b" },
         { optional: { nonTerminal: "b" } }
       ]
+    });
+    const optimizedText = optimizeProduction(inputDefinition, {
+      textMode: true
+    });
+    expect(optimizedText).to.eql({
+      optional: {
+        choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }]
+      }
     });
     const optimizedDefinition = optimizeProduction(inputDefinition);
     expect(optimizedDefinition).to.eql({
@@ -375,10 +408,18 @@ describe("AST structure optimizer", () => {
         choice: [
           {
             sequence: [
+              { nonTerminal: "x" },
+              { nonTerminal: "y" },
+              { nonTerminal: "z" }
+            ]
+          },
+          {
+            sequence: [
               { nonTerminal: "a" },
               { nonTerminal: "b" },
               {
                 choice: [
+                  { nonTerminal: "c" },
                   {
                     sequence: [
                       {
@@ -386,17 +427,9 @@ describe("AST structure optimizer", () => {
                       },
                       { nonTerminal: "e" }
                     ]
-                  },
-                  { nonTerminal: "c" }
+                  }
                 ]
               }
-            ]
-          },
-          {
-            sequence: [
-              { nonTerminal: "x" },
-              { nonTerminal: "y" },
-              { nonTerminal: "z" }
             ]
           }
         ]

@@ -33,9 +33,8 @@ const defaultOptions = {
 const detectRenderConfig = (item, options) => {
   const multiLineChoice =
     item.choice &&
-    (item.choice.length > 2 ||
-      productionToEBNF(item, { format: false, markup: false }).length >
-        options.maxLineLength) &&
+    productionToEBNF(item, { format: false, markup: false }).length >
+      options.maxLineLength &&
     item.choice.length <= 6 &&
     options.format;
 
