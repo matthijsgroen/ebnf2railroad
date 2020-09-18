@@ -17,8 +17,11 @@ describe("table of contents", () => {
     condition = "if", condition, "then", statement, { statement };
     lowercase letter = ? letters ?;
     second root = 'foo', branch | leaf;
-    branch = leaf | second root;
+    branch = leaf | second root | set char;
     leaf = "leaf";
+    set char = set num | set | "!" | "?";
+    set num = "1" | "2" | "3" | "4";
+    set = "a" | "b" | "c" | "d";
   `);
 
   const ast = parser.parse(ebnfDefinition);
@@ -34,6 +37,9 @@ describe("table of contents", () => {
         { name: "lowercase letter" },
         { name: "root" },
         { name: "second root" },
+        { name: "set" },
+        { name: "set char" },
+        { name: "set num" },
         { name: "statement" },
         { name: "string" }
       ]);
@@ -76,7 +82,11 @@ describe("table of contents", () => {
               name: "branch",
               children: [
                 { name: "leaf" },
-                { name: "second root", recursive: true }
+                { name: "second root", recursive: true },
+                {
+                  name: "set char",
+                  children: [{ name: "set num" }, { name: "set" }]
+                }
               ]
             },
             { name: "leaf" }
@@ -96,6 +106,7 @@ describe("table of contents", () => {
       expect(metadata)
         .have.nested.property("second root.root")
         .eq(true);
+      expect(metadata).not.have.nested.property("set.root");
     });
 
     it("counts element encounters", () => {
@@ -125,6 +136,18 @@ describe("table of contents", () => {
         .eq(false);
       expect(metadata)
         .have.nested.property("statement.common")
+        .eq(true);
+    });
+
+    it("marks if elements are character sets", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata).not.have.nested.property("root.characterSet");
+      expect(metadata)
+        .have.nested.property("set.characterSet")
+        .eq(true);
+      expect(metadata)
+        .have.nested.property("set char.characterSet")
         .eq(true);
     });
   });

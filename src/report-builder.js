@@ -290,12 +290,16 @@ const createDocumentation = (ast, options) => {
   const alphabetical = createAlphabeticalToc(ast);
   const isRoot = item => (metadata[item.name] || {}).root;
   const isCommon = item => (metadata[item.name] || {}).common;
-  const rootItems = alphabetical.filter(item => isRoot(item));
+  const isCharacterSet = item => (metadata[item.name] || {}).characterSet;
+  const rootItems = alphabetical.filter(
+    item => isRoot(item) && !isCharacterSet(item)
+  );
+  const characterSetItems = alphabetical.filter(item => isCharacterSet(item));
   const commonItems = alphabetical.filter(
-    item => !isRoot(item) && isCommon(item)
+    item => !isRoot(item) && !isCharacterSet(item) && isCommon(item)
   );
   const otherItems = alphabetical.filter(
-    item => !isRoot(item) && !isCommon(item)
+    item => !isRoot(item) && !isCommon(item) && !isCharacterSet(item)
   );
   const hierarchicalToc = createTocStructure(structuralToc, metadata);
 
@@ -307,6 +311,7 @@ const createDocumentation = (ast, options) => {
       hierarchical: hierarchicalToc,
       common: createTocStructure(commonItems, metadata),
       roots: createTocStructure(rootItems, metadata),
+      characterSets: createTocStructure(characterSetItems, metadata),
       other: createTocStructure(otherItems, metadata)
     }
   });
