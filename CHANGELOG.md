@@ -22,6 +22,11 @@ and this project adheres to
   a | b | [ c | [ d | e ] ] => [ a | b | c | d | e ]
   ```
 
+- Support of detection of pure character sets. Character sets are now listed
+  seperately at the bottom of the table of contents. A character sets is a
+  choice of terminals, or a choice where the non-terminals are also character
+  sets.
+
 ## Fixes
 
 - When elements in choices are grouped, it will now maintain the original order

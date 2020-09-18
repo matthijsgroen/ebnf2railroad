@@ -32,6 +32,16 @@ const currentDate = () => {
   )}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
 };
 
+const navigation = ({ title, content }) =>
+  content.length === 0
+    ? ""
+    : `
+    <h3>${title}:</h3>
+    <ul class="nav-alphabetical">
+    ${content}
+    </ul>
+    `;
+
 const documentContent = ({ title, contents, toc, singleRoot }) =>
   `
   <script type="text/javascript">
@@ -51,18 +61,22 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
     <button type="button"></button>
   </header>
   <nav>
-    <h3>Root element${singleRoot ? "" : "s"}:</h3>
-    <ul class="nav-alphabetical">
-    ${toc.roots}
-    </ul>
-    <h3>Quick navigation:</h3>
-    <ul class="nav-alphabetical">
-    ${toc.other}
-    </ul>
-    <h3>Common elements:</h3>
-    <ul class="nav-alphabetical">
-    ${toc.common}
-    </ul>
+    ${navigation({
+      title: singleRoot ? "Root element" : "Root elements",
+      content: toc.roots
+    })}
+    ${navigation({
+      title: "Quick navigation",
+      content: toc.other
+    })}
+    ${navigation({
+      title: "Common elements",
+      content: toc.common
+    })}
+    ${navigation({
+      title: "Character sets",
+      content: toc.characterSets
+    })}
   </nav>
   <main>
   <article>

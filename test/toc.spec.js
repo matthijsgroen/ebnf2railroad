@@ -17,8 +17,11 @@ describe("table of contents", () => {
     condition = "if", condition, "then", statement, { statement };
     lowercase letter = ? letters ?;
     second root = 'foo', branch | leaf;
-    branch = leaf | second root;
+    branch = leaf | second root | set char;
     leaf = "leaf";
+    set char = set num | set | "!" | "?";
+    set num = "1" | "2" | "3" | "4";
+    set = "a" | "b" | "c" | "d";
   `);
 
   const ast = parser.parse(ebnfDefinition);
@@ -34,6 +37,9 @@ describe("table of contents", () => {
         { name: "lowercase letter" },
         { name: "root" },
         { name: "second root" },
+        { name: "set" },
+        { name: "set char" },
+        { name: "set num" },
         { name: "statement" },
         { name: "string" }
       ]);
@@ -46,40 +52,55 @@ describe("table of contents", () => {
       expect(result).to.eql([
         {
           name: "root",
+          characterSet: false,
           children: [
             {
               name: "statement",
+              characterSet: false,
               children: [
                 {
                   name: "string",
-                  children: [{ name: "lowercase letter" }]
+                  characterSet: false,
+                  children: [{ name: "lowercase letter", characterSet: false }]
                 },
                 {
                   name: "condition",
+                  characterSet: false,
                   children: [
-                    { name: "condition", recursive: true },
-                    { name: "statement", recursive: true }
+                    { name: "condition", characterSet: false, recursive: true },
+                    { name: "statement", characterSet: false, recursive: true }
                   ]
                 }
               ]
             },
             {
               name: "comment",
-              children: [{ name: "lowercase letter" }]
+              characterSet: false,
+              children: [{ name: "lowercase letter", characterSet: false }]
             }
           ]
         },
         {
           name: "second root",
+          characterSet: false,
           children: [
             {
               name: "branch",
+              characterSet: false,
               children: [
-                { name: "leaf" },
-                { name: "second root", recursive: true }
+                { name: "leaf", characterSet: false },
+                { name: "second root", characterSet: false, recursive: true },
+                {
+                  name: "set char",
+                  characterSet: true,
+                  children: [
+                    { name: "set num", characterSet: true },
+                    { name: "set", characterSet: true }
+                  ]
+                }
               ]
             },
-            { name: "leaf" }
+            { name: "leaf", characterSet: false }
           ]
         }
       ]);
@@ -96,6 +117,7 @@ describe("table of contents", () => {
       expect(metadata)
         .have.nested.property("second root.root")
         .eq(true);
+      expect(metadata).not.have.nested.property("set.root");
     });
 
     it("counts element encounters", () => {
@@ -125,6 +147,18 @@ describe("table of contents", () => {
         .eq(false);
       expect(metadata)
         .have.nested.property("statement.common")
+        .eq(true);
+    });
+
+    it("marks if elements are character sets", () => {
+      const tree = createStructuralToc(ast);
+      const metadata = createDefinitionMetadata(tree);
+      expect(metadata).not.have.nested.property("root.characterSet");
+      expect(metadata)
+        .have.nested.property("set.characterSet")
+        .eq(true);
+      expect(metadata)
+        .have.nested.property("set char.characterSet")
         .eq(true);
     });
   });

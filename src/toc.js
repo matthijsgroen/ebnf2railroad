@@ -12,9 +12,18 @@ const createAlphabeticalToc = ast =>
     .sort()
     .map(node => ({ name: node }));
 
+const isCharacterSet = production => {
+  const rootChoice = production.definition && production.definition.choice;
+  if (!rootChoice) {
+    return false;
+  }
+  return rootChoice.every(element => element.terminal);
+};
+
 const createPath = (production, ast, path) => {
   const leaf = {
-    name: production.identifier
+    name: production.identifier,
+    characterSet: isCharacterSet(production)
   };
   if (path.includes(leaf.name)) {
     leaf.recursive = true;
@@ -30,8 +39,18 @@ const createPath = (production, ast, path) => {
           subPath
         )
       );
+
     if (children.length > 0) {
       leaf.children = children;
+
+      const rootChoice = production.definition && production.definition.choice;
+      if (
+        rootChoice &&
+        rootChoice.every(element => element.terminal || element.nonTerminal) &&
+        children.every(child => child.characterSet)
+      ) {
+        leaf.characterSet = true;
+      }
     }
   }
 
@@ -98,6 +117,9 @@ const createDefinitionMetadata = (structuralToc, level = 0) => {
     }
     if (item.recursive) {
       data["recursive"] = true;
+    }
+    if (item.characterSet) {
+      data["characterSet"] = true;
     }
     data["counted"]++;
     metadata[item.name] = data;
