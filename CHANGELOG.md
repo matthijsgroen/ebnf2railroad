@@ -25,9 +25,10 @@ and this project adheres to
 - Support of detection of pure character sets. Character sets are now listed
   seperately at the bottom of the table of contents. A character sets is a
   choice of terminals, or a choice where the non-terminals are also character
-  sets.
+  sets
 - Support for comments before an optional, placing the comment on the skip line
-  and make the skip line the main line.
+  and make the skip line the main line
+- Support for `_` (underscore) in identifiers
 
 ## Fixes
 

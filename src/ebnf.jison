@@ -5,7 +5,7 @@
 %%
 \s+                      { /* skip whitespace */}
 "(*"([^*]|"*"/[^)])*"*)" { return 'COMMENT'; }
-[A-Za-z][A-Za-z0-9 ]*    { return 'IDENTIFIER'; }
+[A-Za-z][A-Za-z0-9 _]*   { return 'IDENTIFIER'; }
 [0-9]+                   { return 'DIGIT'; }
 "(/"                     { return '['; } // alternative start-option-symbol
 "/)"                     { return ']'; } // alternative end-option-symbol
