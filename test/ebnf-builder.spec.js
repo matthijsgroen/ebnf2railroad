@@ -19,6 +19,13 @@ describe("EBNF Builder", () => {
         '<span class="ebnf-comment">(* Comment data *)</span>'
       );
     });
+
+    it("supports comments before optional", () => {
+      const text = "statement = item, (* Comment data *) [ extra ];";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0]);
+      expect(result).to.eql("statement = item , (* Comment data *) [ extra ];");
+    });
   });
 
   describe("sanitizing HTML", () => {

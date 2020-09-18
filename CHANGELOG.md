@@ -26,6 +26,8 @@ and this project adheres to
   seperately at the bottom of the table of contents. A character sets is a
   choice of terminals, or a choice where the non-terminals are also character
   sets.
+- Support for comments before an optional, placing the comment on the skip line
+  and make the skip line the main line.
 
 ## Fixes
 

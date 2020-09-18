@@ -256,11 +256,17 @@ const productionToEBNF = (production, setOptions) => {
     )}`;
   }
   if (production.comment) {
-    return `${productionToEBNF(production.group, options)} ${wrapSpan(
-      "ebnf-comment",
-      `(*${sanitize(production.comment, options.markup)}*)`,
-      options.markup
-    )}`;
+    return production.before
+      ? `${wrapSpan(
+          "ebnf-comment",
+          `(*${sanitize(production.comment, options.markup)}*)`,
+          options.markup
+        )} ${productionToEBNF(production.group, options)}`
+      : `${productionToEBNF(production.group, options)} ${wrapSpan(
+          "ebnf-comment",
+          `(*${sanitize(production.comment, options.markup)}*)`,
+          options.markup
+        )}`;
   }
   if (production.group) {
     const renderConfig = detectRenderConfig(production.group, options);
