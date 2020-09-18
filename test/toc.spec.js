@@ -52,44 +52,55 @@ describe("table of contents", () => {
       expect(result).to.eql([
         {
           name: "root",
+          characterSet: false,
           children: [
             {
               name: "statement",
+              characterSet: false,
               children: [
                 {
                   name: "string",
-                  children: [{ name: "lowercase letter" }]
+                  characterSet: false,
+                  children: [{ name: "lowercase letter", characterSet: false }]
                 },
                 {
                   name: "condition",
+                  characterSet: false,
                   children: [
-                    { name: "condition", recursive: true },
-                    { name: "statement", recursive: true }
+                    { name: "condition", characterSet: false, recursive: true },
+                    { name: "statement", characterSet: false, recursive: true }
                   ]
                 }
               ]
             },
             {
               name: "comment",
-              children: [{ name: "lowercase letter" }]
+              characterSet: false,
+              children: [{ name: "lowercase letter", characterSet: false }]
             }
           ]
         },
         {
           name: "second root",
+          characterSet: false,
           children: [
             {
               name: "branch",
+              characterSet: false,
               children: [
-                { name: "leaf" },
-                { name: "second root", recursive: true },
+                { name: "leaf", characterSet: false },
+                { name: "second root", characterSet: false, recursive: true },
                 {
                   name: "set char",
-                  children: [{ name: "set num" }, { name: "set" }]
+                  characterSet: true,
+                  children: [
+                    { name: "set num", characterSet: true },
+                    { name: "set", characterSet: true }
+                  ]
                 }
               ]
             },
-            { name: "leaf" }
+            { name: "leaf", characterSet: false }
           ]
         }
       ]);

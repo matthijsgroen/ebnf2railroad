@@ -240,6 +240,9 @@ const createTocStructure = (tocData, metadata) =>
     .join("");
 
 const createDocumentation = (ast, options) => {
+  const structuralToc = createStructuralToc(ast);
+  const metadata = createDefinitionMetadata(structuralToc);
+
   const contents = ast
     .map(production => {
       if (production.comment) {
@@ -285,8 +288,6 @@ const createDocumentation = (ast, options) => {
     })
     .join("");
 
-  const structuralToc = createStructuralToc(ast);
-  const metadata = createDefinitionMetadata(structuralToc);
   const alphabetical = createAlphabeticalToc(ast);
   const isRoot = item => (metadata[item.name] || {}).root;
   const isCommon = item => (metadata[item.name] || {}).common;
