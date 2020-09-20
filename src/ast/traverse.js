@@ -10,10 +10,7 @@
  *   (node: A, initial: B, Transform<A, B>) => B;
  */
 
-const traverse = classifier => {
-  const transformers = [];
-  const travelers = [];
-
+const traverse = classifier => travelers => transformers => {
   const transformNode = (node, nodeType, initialResult) => {
     // Transform
     const result = transformers.reduce(
@@ -29,19 +26,14 @@ const traverse = classifier => {
     const nodeType = classifier(a);
 
     // Travel
-    const traveler = travelers.find(x => x[0] === nodeType);
+    const traveler = travelers[nodeType];
     const startResult = traveler
-      ? traveler[1](a, aNext => transform(aNext))
+      ? traveler(a, aNext => transform(aNext))
       : initialResult;
 
     return transformNode(a, nodeType, startResult);
   };
-
-  return {
-    addTransform: transformer => transformers.push(transformer),
-    addTraveler: (nodeType, traveler) => travelers.push([nodeType, traveler]),
-    transform
-  };
+  return transform;
 };
 
 module.exports = { traverse };

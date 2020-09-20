@@ -17,4 +17,14 @@ const prettyPrint = ebnfTransform([
   }
 ]);
 
-module.exports = { prettyPrint };
+const collectTerminals = ast => {
+  const terminals = [];
+  ebnfTransform([
+    {
+      [NodeTypes.Terminal]: a => terminals.push(a)
+    }
+  ])(ast);
+  return terminals;
+};
+
+module.exports = { prettyPrint, collectTerminals };
