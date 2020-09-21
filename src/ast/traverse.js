@@ -11,27 +11,21 @@
  */
 
 const traverse = classifier => travelers => transformers => {
-  const transformNode = (node, nodeType, initialResult) => {
-    // Transform
-    const result = transformers.reduce(
-      (res, transformer) =>
-        transformer[nodeType] ? transformer[nodeType](node, res) : res,
-      initialResult
-    );
-
-    return result;
-  };
-
-  const transform = (a, initialResult = undefined) => {
-    const nodeType = classifier(a);
+  const transform = (node, initialResult = undefined) => {
+    const nodeType = classifier(node);
 
     // Travel
     const traveler = travelers[nodeType];
     const startResult = traveler
-      ? traveler(a, aNext => transform(aNext))
+      ? traveler(node, aNext => transform(aNext))
       : initialResult;
 
-    return transformNode(a, nodeType, startResult);
+    // Transform
+    return transformers.reduce(
+      (res, transformer) =>
+        transformer[nodeType] ? transformer[nodeType](node, res) : res,
+      startResult
+    );
   };
   return transform;
 };
