@@ -38,9 +38,8 @@ const getReferences = production => {
   return [];
 };
 
-const searchReferencesToIdentifier = (identifier, ast) =>
-  ast
-    .filter(production => production.identifier !== identifier)
+const searchReferencesToIdentifier = (identifier, productions) =>
+  productions
     .filter(production =>
       getReferences(production).some(ref => ref === identifier)
     )
