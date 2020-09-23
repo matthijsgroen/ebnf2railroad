@@ -1230,12 +1230,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.10.0.tgz#35a902ac6f7eebfdf5e81046206306f6b534054c"
-  integrity sha512-lgtI8JDEJHVRAuBwVXgI7294GnbZ/E6Ml6Xha+pUkcEdyMjtZLluiCy5Vlo7eAADHDx9C89Lq2XozXc//f1d3A==
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.11.0.tgz#d4a08f0697358a85585a372b3945ac90eb6f800e"
+  integrity sha512-3dV0uoLu3cXchNjESleF7V9J0bGYBiOfNnuovS1TRQY3FAo3sBAabqlx7qoGC1ms07bgwTXlAZUzJoJ3XBvnsQ==
   dependencies:
     commander "^2.19.0"
-    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#e9b1a12"
+    railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
     showdown "^1.0.0"
 
 ee-first@1.1.1:
@@ -3307,9 +3307,9 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha512-sluvZZ1YiTLD5jsqZcDmFyV2EwToyXZBfpoVOmktMmW+VEnhgakFHnasVph65fOjGPTWN0Nw3+XQaSeMayr0kg==
 
-"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git#e9b1a12":
+"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
   version "1.1.0"
-  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#e9b1a128ebfbb926a7497efd194e071e948c292c"
+  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.0.6"
