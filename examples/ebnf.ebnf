@@ -17,11 +17,11 @@ rhs = identifier
      | rhs , "|" , rhs
      | rhs , "," , rhs ;
 
-identifier = letter , { letter | digit | "_" } ;
+identifier = letter , { letter | digit | " " } ;
 terminal = "'" , character , { character } , "'"
          | '"' , character , { character } , '"' ;
 
-character = letter | digit | symbol | "_" ;
+character = letter | digit | symbol | " " ;
 
 (*
   Basic components

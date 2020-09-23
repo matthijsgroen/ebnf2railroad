@@ -61,6 +61,21 @@ optimizations
   | (optimized one or more)
   | optimized one or more;
 
+(*
+
+  ## Optimization: Removal of duplicate choices
+
+  original fragment:
+
+  ```
+  optimizations
+    = optimized choices
+    | optimized one or more
+    | (optimized one or more)
+    | optimized one or more;
+  ```
+*)
+
 optimized choices
   = choice with optional
   | nested choices with optional
@@ -75,16 +90,77 @@ optimized one or more
   | one or more with repeater, optimizations;
 
 choice with optional = [ "a" | "b" ];
+
 nested choices with optional = "a" | [ "b" | [ "c" ] ];
-nested choices with optional two = [ "a" | "b" | "c" ];
+
+(*
+
+  ## Optimization: Rewrite to simplify optional paths
+
+  If a choice has an optional path rewrite so that
+  it is more clear that the entire choice can be skipped.
+
+  original fragment:
+
+  ```
+  nested choices with optional = "a" | [ "b" | [ "c" ] ];
+  ```
+*)
+
 nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
+
+(*
+
+  original fragment:
+
+  ```
+  nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
+  ```
+*)
+
 nested choices = "a" | ( "b" | "c" );
+(*
+
+  ## Optimization: Ungrouping
+
+  If a structure can be ungrouped without changing
+  the meaning, ungroup it.
+
+  original fragment:
+
+  ```
+  nested choices = "a" | ( "b" | "c" );
+  ```
+*)
+
 choice with one or more= "a" | { "b" };
 one or more = "a", { "a" };
-one or more with group = ( "a" | "b"), { "a" | "b" };
+one or more with group = ( "a" | "b" ), { "a" | "b" };
 one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
+
 optional repeater = [ { "a", "b" } ];
+(*
+
+  ## Optimization: Remove duplicate optional routes
+
+  If a repetation is optional, but also wrap inside
+  an optional, remove the optional
+
+  original fragment:
+
+  ```
+  optional repeater = [ { "a", "b" } ];
+  ```
+*)
 optional optional = [ [ "a", "b" ] ];
+(*
+
+  original fragment:
+
+  ```
+  optional optional = [ [ "a", "b" ] ];
+  ```
+*)
 
 calculation
   = normal value, "*", number value
@@ -102,13 +178,13 @@ number value = "fixing ref";
   ==================
 *)
 
-comments = comment in choice with optional | comment in one or more before | comment in one or more in
+comments = comment in choice with optional | comment in one or more before | comment_in_one_or_more_in
   | comment in one or more after | comment in one or more with repeater
   | comment in nested choices with multiple optionals | comment in one or more with repeater after;
 
 comment in choice with optional = [ "a" | "b" (* comment *) ];
 comment in one or more before = "a" (* comment *), { "a" };
-comment in one or more in = "a", { "a" (* comment *) };
+comment_in_one_or_more_in = "a", { "a" (* comment *) };
 comment in one or more after = "a", { "a" } (* comment *);
 comment in one or more with repeater = "a", "b" (* comment *), "c", { "d", "e", "b", "c" };
 comment in nested choices with multiple optionals = "a" | [ "b" (* comment *)
@@ -135,6 +211,23 @@ big parts = "item", { "item" };
 *)
 
 definition main characters = "item" | "item2" | ["optional"], { "repeater" };
+(*
+
+  Original fragment:
+
+  ```
+  definition main characters = "item" | "item2" | ["optional"], { "repeater" };
+  ```
+*)
+
 alternative main characters = "item" / "item2" ! (/ "optional" /), (:  "repeater" :).
+(*
+
+  Original fragment:
+
+  ```
+  alternative main characters = "item" / "item2" ! (/ "optional" /), (:  "repeater" :).
+  ```
+*)
 
 lowercase letter = "a" | "b" | "c" | "d" | "e" | "f" | "ghij" | "k" | "l" | "m" | "n" | "o" | "pqr" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";

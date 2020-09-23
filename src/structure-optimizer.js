@@ -316,7 +316,11 @@ const optimizeProduction = (production, options = {}) => {
         // pass 1: unpack comments
         .map(
           item =>
-            item.comment ? [item.group, { comment: item.comment }] : [item]
+            item.comment && !item.group.optional
+              ? item.before
+                ? [{ comment: item.comment }, item.group]
+                : [item.group, { comment: item.comment }]
+              : [item]
         )
         .reduce((acc, item) => acc.concat(item), [])
         // pass 2: optimize structure

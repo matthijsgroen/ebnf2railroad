@@ -185,6 +185,14 @@ const productionToDiagram = (production, options) => {
     return Choice(1, Skip(), productionToDiagram(production.optional, options));
   }
   if (production.comment) {
+    const commentOnOptional = production.group && production.group.optional;
+    if (commentOnOptional) {
+      return Choice(
+        0,
+        CommentWithLine(production.comment, {}),
+        productionToDiagram(commentOnOptional, options)
+      );
+    }
     return production.group
       ? Sequence(
           productionToDiagram(production.group, options),
