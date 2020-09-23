@@ -76,8 +76,8 @@ string = '"', { ? Any unicode character except " or \ or control character ?
 
 number = [ "-" ],
   ( "0" | digit without zero , { digit } ),
-  [ ".", digit, { digit } ],
-  [ ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ];
+  (* fraction *) [ ".", digit, { digit } ],
+  (* exponent *) [ ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ];
 
 (*
 
