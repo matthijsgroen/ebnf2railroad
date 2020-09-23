@@ -20,7 +20,7 @@ const isCharacterSet = production => {
   return rootChoice.every(element => element.terminal);
 };
 
-const createPath = (production, ast, path) => {
+const createPath = (production, ast, path, cache = {}) => {
   const leaf = {
     name: production.identifier,
     characterSet: isCharacterSet(production)
@@ -29,16 +29,24 @@ const createPath = (production, ast, path) => {
     leaf.recursive = true;
   } else {
     const subPath = path.concat(production.identifier);
-    const children = searchReferencesFromIdentifier(production.identifier, ast)
-      // Protect against missing references
-      .filter(child => ast.find(production => production.identifier === child))
-      .map(child =>
-        createPath(
-          ast.find(production => production.identifier === child),
-          ast,
-          subPath
-        )
-      );
+    const cacheEntry = cache[production.identifier];
+    const children =
+      cacheEntry !== undefined
+        ? cacheEntry
+        : searchReferencesFromIdentifier(production.identifier, ast)
+            // Protect against missing references
+            .filter(child =>
+              ast.find(production => production.identifier === child)
+            )
+            .map(child =>
+              createPath(
+                ast.find(production => production.identifier === child),
+                ast,
+                subPath,
+                cache
+              )
+            );
+    cache[production.identifier] = children;
 
     if (children.length > 0) {
       leaf.children = children;
@@ -63,21 +71,20 @@ const flatList = children =>
     .reduce((acc, elem) => acc.concat(elem), []);
 
 const createStructuralToc = ast => {
-  const declarations = ast
-    .filter(production => production.identifier)
-    .map(production => production.identifier);
+  const productions = ast.filter(production => production.identifier);
+  const declarations = productions.map(production => production.identifier);
+  const cache = {};
 
-  const cleanRoots = ast
-    .filter(production => production.identifier)
+  const cleanRoots = productions
     .filter(
       production =>
-        searchReferencesToIdentifier(production.identifier, ast).length === 0
+        searchReferencesToIdentifier(production.identifier, productions)
+          .length === 0
     )
-    .map(production => createPath(production, ast, []));
+    .map(production => createPath(production, productions, [], cache));
 
-  const recursiveTrees = ast
-    .filter(production => production.identifier)
-    .map(production => createPath(production, ast, []))
+  const recursiveTrees = productions
+    .map(production => createPath(production, productions, [], cache))
     // Check if tree is recursive
     .filter(tree => flatList(tree.children || []).includes(tree.name))
     // Tree contained in a clean (non-recursive) root? remove.
