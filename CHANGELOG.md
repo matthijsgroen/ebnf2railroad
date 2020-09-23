@@ -10,7 +10,9 @@ and this project adheres to
 
 ### Added
 
-- Support for optimizing source diagram using `--rewrite`
+- Support for generation overview diagrams on root elements, skippable with
+  `--no-overview-diagram`
+- Support for optimizing source definition file using `--rewrite`
 - Skip only diagram wrapping with `--no-diagram-wrap`
 - Breaking of long elements over multiple lines in optional items `[]`
 - Plain text will now also be optimized when reasonable: Text will not be

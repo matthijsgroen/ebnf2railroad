@@ -30,6 +30,10 @@ program
     "--no-optimizations",
     "does not try to optimize the diagrams and texts"
   )
+  .option(
+    "--no-overview-diagram",
+    "skip creating overview diagrams for root elements"
+  )
   .option("--no-diagram-wrap", "does not wrap diagrams for width minimization")
   .option(
     "--no-text-formatting",
@@ -46,6 +50,7 @@ async function run(args) {
   }
   const allowOutput = !program.quiet;
   const optimizeDiagrams = program.optimizations;
+  const overviewDiagram = program.overviewDiagram;
   const optimizeText = program.optimizations;
   const textFormatting = program.textFormatting;
   const diagramWrap = program.diagramWrap;
@@ -112,6 +117,7 @@ async function run(args) {
         optimizeDiagrams,
         optimizeText,
         textFormatting,
+        overviewDiagram,
         diagramWrap
       });
       await writeFile(targetFilename, report, "utf8");
