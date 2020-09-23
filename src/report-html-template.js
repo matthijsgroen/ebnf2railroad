@@ -403,6 +403,11 @@ svg.railroad-diagram g.special-sequence text {
 svg.railroad-diagram rect {
   stroke-width: 3;
 }
+svg.railroad-diagram rect.group-box {
+  stroke: gray;
+  stroke-dasharray: 10 5;
+  fill: none;
+}
 svg.railroad-diagram g.non-terminal rect {
   fill: var(--nonTerminalFill);
   stroke: var(--nonTerminalLines);
