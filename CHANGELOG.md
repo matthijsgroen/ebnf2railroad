@@ -30,6 +30,7 @@ and this project adheres to
 ## Fixes
 
 - When elements in choices are grouped, it will now maintain the original order
+- Running out of memory for big documents
 
 ### Changed
 
