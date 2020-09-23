@@ -65,6 +65,7 @@ document.querySelector("body").addEventListener("click", function(event) {
 let lastValidAst = [];
 let textFormatting = true;
 let optimizeDiagrams = true;
+let overviewDiagram = true;
 
 const updateAst = ast => {
   lastValidAst = ast;
@@ -72,7 +73,8 @@ const updateAst = ast => {
     title: "Demo",
     full: false,
     optimizeDiagrams,
-    textFormatting
+    textFormatting,
+    overviewDiagram
   });
   const elem = document.getElementById("result");
   elem.innerHTML = contents;
@@ -230,6 +232,14 @@ editor.commands.addCommand({
   bindKey: { win: "Ctrl-Shift-O", mac: "Command-Shift-O" },
   exec: function(editor) {
     optimizeDiagrams = !optimizeDiagrams;
+    invalidateDocument();
+  }
+});
+editor.commands.addCommand({
+  name: "Overview Diagram",
+  bindKey: { win: "Ctrl-Alt-O", mac: "Command-Option-O" },
+  exec: function(editor) {
+    overviewDiagram = !overviewDiagram;
     invalidateDocument();
   }
 });
