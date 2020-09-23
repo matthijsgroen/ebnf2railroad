@@ -270,8 +270,12 @@ const createDiagram = (production, metadata, ast, options) => {
       if (expand) {
         const nested = ast.find(node => node.identifier === item);
         expanded.push(item);
+        const renderNested =
+          options.optimizeDiagrams === false
+            ? nested
+            : optimizeProduction(nested);
         return Group(
-          productionToDiagram(nested.definition, {
+          productionToDiagram(renderNested.definition, {
             ...baseOptions,
             renderNonTerminal
           }),
