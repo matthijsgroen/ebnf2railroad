@@ -2,6 +2,7 @@ const { ebnfTransform } = require("./ast/ebnf-transform");
 const optimizeUngroup = require("./ast/transformers/optimize-ungroup");
 const optimizeMergeChoices = require("./ast/transformers/optimize-merge-choices");
 const optimizeDeduplicateChoices = require("./ast/transformers/optimize-deduplicate-choices");
+const optimizeUnwrapOptional = require("./ast/transformers/optimize-unwrap-optional");
 
 const skipFirst = list =>
   [
@@ -369,7 +370,8 @@ const optimizeAST = (ast, options) => {
   const ast2 = ebnfTransform([
     optimizeUngroup,
     optimizeMergeChoices,
-    optimizeDeduplicateChoices
+    optimizeDeduplicateChoices,
+    optimizeUnwrapOptional
   ])(ast);
   return optimizeProduction(ast2, options);
 };
