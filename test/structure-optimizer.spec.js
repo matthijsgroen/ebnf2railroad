@@ -259,6 +259,30 @@ describe("AST structure optimizer", () => {
     );
   });
 
+  it("keeps `( a | b ) , a` ", () => {
+    compareAst(
+      "foo = ( a | b ) , a ;",
+      {
+        sequence: [
+          { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
+          { nonTerminal: "a" }
+        ]
+      },
+      {
+        sequence: [
+          { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
+          { nonTerminal: "a" }
+        ]
+      },
+      {
+        sequence: [
+          { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
+          { nonTerminal: "a" }
+        ]
+      }
+    );
+  });
+
   it("changes `( a ) , { a }` in ast to a+", () => {
     compareAst(
       "foo = ( a ) , { a };",
@@ -274,7 +298,7 @@ describe("AST structure optimizer", () => {
       },
       {
         sequence: [
-          { group: { nonTerminal: "a" } },
+          { nonTerminal: "a" },
           { repetition: { nonTerminal: "a" }, skippable: true }
         ]
       }

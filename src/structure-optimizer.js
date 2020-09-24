@@ -1,14 +1,15 @@
+const { ebnfTransform } = require("./ast/ebnf-transform");
+const optimizeUngroup = require("./ast/transformers/optimize-ungroup");
+const optimizeMergeChoices = require("./ast/transformers/optimize-merge-choices");
+
 const skipFirst = list =>
   [
     list.some(e => e === "skip" || e.skip) && { skip: true },
     ...list.filter(e => e !== "skip" && !e.skip)
   ].filter(Boolean);
 
-const ungroup = elem =>
-  elem.group && !elem.comment ? ungroup(elem.group) : elem;
-
 const equalElements = (first, second) =>
-  JSON.stringify(ungroup(first)) === JSON.stringify(ungroup(second));
+  JSON.stringify(first) === JSON.stringify(second);
 
 const optimizeProduction = (production, options = {}) => {
   if (Array.isArray(production)) {
@@ -25,10 +26,10 @@ const optimizeProduction = (production, options = {}) => {
   if (production.choice) {
     // Check if rewrites are possible.
     const allChoicesTheSame = production.choice
-      .map(elem => ungroup(optimizeProduction(elem, options)))
+      .map(elem => optimizeProduction(elem, options))
       .every((item, idx, list) => equalElements(item, list[0]));
     if (allChoicesTheSame) {
-      return ungroup(optimizeProduction(production.choice[0], options));
+      return optimizeProduction(production.choice[0], options);
     }
 
     // if choice contains an optional, make whole choice optional.
@@ -208,7 +209,7 @@ const optimizeProduction = (production, options = {}) => {
       choice: skipFirst(
         production.choice
           .map(item => {
-            const optimizedItem = ungroup(optimizeProduction(item, options));
+            const optimizedItem = optimizeProduction(item, options);
             if (
               optimizedItem.repetition &&
               optimizedItem.skippable &&
@@ -371,7 +372,10 @@ const optimizeProduction = (production, options = {}) => {
   return production;
 };
 
-const optimizeAST = (ast, options) => optimizeProduction(ast, options);
+const optimizeAST = (ast, options) => {
+  const ast2 = ebnfTransform([optimizeUngroup, optimizeMergeChoices])(ast);
+  return optimizeProduction(ast2, options);
+};
 
 module.exports = {
   optimizeAST
