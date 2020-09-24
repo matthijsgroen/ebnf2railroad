@@ -11,11 +11,11 @@ rule = lhs , "=" , rhs , ";" ;
 lhs = identifier ;
 rhs = identifier
      | terminal
-     | "[" , rhs , "]"
-     | "{" , rhs , "}"
-     | "(" , rhs , ")"
-     | rhs , "|" , rhs
-     | rhs , "," , rhs ;
+     | "[" , rhs , "]" (* optional *)
+     | "{" , rhs , "}" (* repetition *)
+     | "(" , rhs , ")" (* group *)
+     | rhs , "|" , rhs (* choice *)
+     | rhs , "," , rhs (* sequence *);
 
 identifier = letter , { letter | digit | " " } ;
 terminal = "'" , character , { character } , "'"

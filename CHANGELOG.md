@@ -6,11 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.11.0] - UNRELEASED
+## [1.11.1] - 2020-09-23
+
+## Fixes
+
+- Overview diagrams should also optimize its sub elements
+
+## [1.11.0] - 2020-09-23
 
 ### Added
 
-- Support for optimizing source diagram using `--rewrite`
+- Support for generation overview diagrams on root elements, skippable with
+  `--no-overview-diagram`
+- Support for optimizing source definition file using `--rewrite`
 - Skip only diagram wrapping with `--no-diagram-wrap`
 - Breaking of long elements over multiple lines in optional items `[]`
 - Plain text will now also be optimized when reasonable: Text will not be
@@ -33,6 +41,7 @@ and this project adheres to
 ## Fixes
 
 - When elements in choices are grouped, it will now maintain the original order
+- Running out of memory for big documents
 
 ### Changed
 

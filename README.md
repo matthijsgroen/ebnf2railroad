@@ -17,6 +17,9 @@ based on the ISO/IEC 14977 specification
 - Validates if document is complete and has no duplicate declarations
 - Shows pretty printed text syntax in the document
 - Pretty printing of the sourcefile
+- Table of contents indicating root elements, character sets, common elements
+  and recursion
+- Generation of large overview diagrams for root elements
 
 ## Installation
 
@@ -41,6 +44,7 @@ Options:
   --lint                 exit with status code 2 if EBNF document has warnings
   --write-style          rewrites the source document with styled text
   --no-optimizations     does not try to optimize the diagrams
+  --no-overview-diagram  skip creating overview diagrams for root elements
   --no-diagram-wrap      does not wrap diagrams for width minimization
   --no-text-formatting   does not format the output text version (becomes single line)
   --dump-ast             dump EBNF file AST to target destination for further processing

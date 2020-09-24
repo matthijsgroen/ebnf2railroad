@@ -1,4 +1,10 @@
-const { FakeSVG, Path, Diagram } = require("railroad-diagrams");
+const {
+  FakeSVG,
+  Path,
+  Diagram,
+  Comment,
+  Terminal
+} = require("railroad-diagrams");
 
 const subclassOf = (baseClass, superClass) => {
   baseClass.prototype = Object.create(superClass.prototype);
@@ -61,6 +67,73 @@ CommentWithLine.prototype.format = function(x, y, width) {
   return this;
 };
 
+function wrapString(value) {
+  return value instanceof FakeSVG ? value : new Terminal("" + value);
+}
+
+const Group = function Group(item, label) {
+  if (!(this instanceof Group)) return new Group(item, label);
+  FakeSVG.call(this, "g");
+  this.item = wrapString(item);
+  this.label =
+    label instanceof FakeSVG ? label : label ? new Comment(label) : undefined;
+
+  this.width = Math.max(
+    this.item.width + (this.item.needsSpace ? 20 : 0),
+    this.label ? this.label.width : 0,
+    Diagram.ARC_RADIUS * 2
+  );
+  this.height = this.item.height;
+  this.boxUp = this.up = Math.max(
+    this.item.up + Diagram.VERTICAL_SEPARATION,
+    Diagram.ARC_RADIUS
+  );
+  if (this.label) {
+    this.up += this.label.up + this.label.height + this.label.down;
+  }
+  this.down = Math.max(
+    this.item.down + Diagram.VERTICAL_SEPARATION,
+    Diagram.ARC_RADIUS
+  );
+  this.needsSpace = true;
+  if (Diagram.DEBUG) {
+    this.attrs["data-updown"] = this.up + " " + this.height + " " + this.down;
+    this.attrs["data-type"] = "group";
+  }
+};
+subclassOf(Group, FakeSVG);
+Group.prototype.needsSpace = true;
+Group.prototype.format = function(x, y, width) {
+  var gaps = determineGaps(width, this.width);
+  new Path(x, y).h(gaps[0]).addTo(this);
+  new Path(x + gaps[0] + this.width, y + this.height).h(gaps[1]).addTo(this);
+  x += gaps[0];
+
+  new FakeSVG("rect", {
+    x,
+    y: y - this.boxUp,
+    width: this.width,
+    height: this.boxUp + this.height + this.down,
+    rx: Diagram.ARC_RADIUS,
+    ry: Diagram.ARC_RADIUS,
+    class: "group-box"
+  }).addTo(this);
+
+  this.item.format(x, y, this.width).addTo(this);
+  if (this.label) {
+    this.label
+      .format(
+        x,
+        y - (this.boxUp + this.label.down + this.label.height),
+        this.label.width
+      )
+      .addTo(this);
+  }
+
+  return this;
+};
+
 module.exports = {
-  CommentWithLine
+  CommentWithLine,
+  Group
 };

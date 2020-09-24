@@ -30,7 +30,7 @@ const {
   createDefinitionMetadata
 } = require("./toc");
 const { productionToEBNF } = require("./ebnf-builder");
-const { CommentWithLine } = require("./extra-diagram-elements");
+const { CommentWithLine, Group } = require("./extra-diagram-elements");
 
 const dasherize = str => str.replace(/\s+/g, "-");
 
@@ -94,6 +94,9 @@ const productionToDiagram = (production, options) => {
     return Terminal(production.terminal);
   }
   if (production.nonTerminal) {
+    if (options.renderNonTerminal) {
+      return options.renderNonTerminal(production.nonTerminal);
+    }
     return NonTerminal(production.nonTerminal, {
       href: `#${dasherize(production.nonTerminal)}`
     });
@@ -247,6 +250,55 @@ const createTocStructure = (tocData, metadata) =>
     )
     .join("");
 
+const createDiagram = (production, metadata, ast, options) => {
+  const renderProduction =
+    options.optimizeDiagrams === false ? production : optimizeAST(production);
+
+  const baseOptions = {
+    maxChoiceLength: options.optimizeDiagrams ? MAX_CHOICE_LENGTH : Infinity,
+    optimizeSequenceLength: options.diagramWrap && options.optimizeDiagrams
+  };
+
+  const expanded = [];
+
+  const renderNonTerminal = item => {
+    if (options.overview) {
+      const expand = !expanded.includes(item) && !metadata[item].characterSet;
+
+      if (expand) {
+        const nested = ast.find(node => node.identifier === item);
+        expanded.push(item);
+        const renderNested =
+          options.optimizeDiagrams === false ? nested : optimizeAST(nested);
+
+        return Group(
+          productionToDiagram(renderNested.definition, {
+            ...baseOptions,
+            renderNonTerminal
+          }),
+          Comment(item, { href: `#${dasherize(item)}` })
+        );
+      }
+    }
+    return NonTerminal(item, {
+      href: `#${dasherize(item)}`
+    });
+  };
+
+  const diagram = productionToDiagram(
+    {
+      ...renderProduction,
+      complex: options.complex
+    },
+    {
+      ...baseOptions,
+      renderNonTerminal
+    }
+  );
+
+  return diagram;
+};
+
 const createDocumentation = (ast, options) => {
   const structuralToc = createStructuralToc(ast);
   const metadata = createDefinitionMetadata(structuralToc);
@@ -256,28 +308,19 @@ const createDocumentation = (ast, options) => {
       if (production.comment) {
         return commentTemplate(production.comment);
       }
+
       const outgoingReferences = searchReferencesFromIdentifier(
         production.identifier,
         ast
       );
-      const renderProduction =
-        options.optimizeDiagrams === false
-          ? production
-          : optimizeAST(production);
 
-      const diagram = productionToDiagram(
-        {
-          ...renderProduction,
-          complex: outgoingReferences.length > 0
-        },
-        {
-          maxChoiceLength: options.optimizeDiagrams
-            ? MAX_CHOICE_LENGTH
-            : Infinity,
-          optimizeSequenceLength:
-            options.diagramWrap && options.optimizeDiagrams
-        }
-      );
+      const diagram = createDiagram(production, metadata, ast, {
+        ...options,
+        overview:
+          metadata[production.identifier].root && options.overviewDiagram,
+        complex: outgoingReferences.length > 0
+      });
+
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(

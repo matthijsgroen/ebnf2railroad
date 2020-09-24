@@ -84,7 +84,7 @@ const createStructuralToc = ast => {
     .map(production => createPath(production, productions, [], cache));
 
   const recursiveTrees = productions
-    .map(production => createPath(production, ast, [], cache))
+    .map(production => createPath(production, productions, [], cache))
     // Check if tree is recursive
     .filter(tree => flatList(tree.children || []).includes(tree.name))
     // Tree contained in a clean (non-recursive) root? remove.
