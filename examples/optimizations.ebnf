@@ -119,6 +119,9 @@ nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
 *)
 
 nested choices = "a" | ( "b" | "c" );
+
+duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
+
 (*
 
   ## Optimization: Ungrouping
@@ -130,6 +133,7 @@ nested choices = "a" | ( "b" | "c" );
 
   ```
   nested choices = "a" | ( "b" | "c" );
+  duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
   ```
 *)
 

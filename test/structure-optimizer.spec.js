@@ -63,6 +63,28 @@ describe("AST structure optimizer", () => {
     );
   });
 
+  it("removes duplicates from `a | b | b | c | a` ", () => {
+    compareAst(
+      "foo = a | b | b | c | a;",
+      {
+        choice: [
+          { nonTerminal: "a" },
+          { nonTerminal: "b" },
+          { nonTerminal: "b" },
+          { nonTerminal: "c" },
+          { nonTerminal: "a" }
+        ]
+      },
+      {
+        choice: [
+          { nonTerminal: "a" },
+          { nonTerminal: "b" },
+          { nonTerminal: "c" }
+        ]
+      }
+    );
+  });
+
   it("changes `a | [ b | [ c ] ]` in ast to choice with skip without duplicates", () => {
     compareAst(
       "foo = a | [ b | [ c ] ];",

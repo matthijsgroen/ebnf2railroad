@@ -12,9 +12,9 @@ const traverse = classifier => travelers => transformers => {
     return transformers.reduce(
       (res, transformer) =>
         typeof transformer === "function"
-          ? transformer(node, res, parents)
+          ? transformer(res, node, parents)
           : transformer[nodeType]
-            ? transformer[nodeType](node, res, parents)
+            ? transformer[nodeType](res, node, parents)
             : res,
       startResult
     );

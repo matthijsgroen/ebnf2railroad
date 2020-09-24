@@ -1,6 +1,7 @@
 const { ebnfTransform } = require("./ast/ebnf-transform");
 const optimizeUngroup = require("./ast/transformers/optimize-ungroup");
 const optimizeMergeChoices = require("./ast/transformers/optimize-merge-choices");
+const optimizeDeduplicateChoices = require("./ast/transformers/optimize-deduplicate-choices");
 
 const skipFirst = list =>
   [
@@ -24,14 +25,6 @@ const optimizeProduction = (production, options = {}) => {
     };
   }
   if (production.choice) {
-    // Check if rewrites are possible.
-    const allChoicesTheSame = production.choice
-      .map(elem => optimizeProduction(elem, options))
-      .every((item, idx, list) => equalElements(item, list[0]));
-    if (allChoicesTheSame) {
-      return optimizeProduction(production.choice[0], options);
-    }
-
     // if choice contains an optional, make whole choice optional.
     const hasOptional = production.choice.some(e => e.optional && !e.comment);
     if (hasOptional) {
@@ -373,7 +366,11 @@ const optimizeProduction = (production, options = {}) => {
 };
 
 const optimizeAST = (ast, options) => {
-  const ast2 = ebnfTransform([optimizeUngroup, optimizeMergeChoices])(ast);
+  const ast2 = ebnfTransform([
+    optimizeUngroup,
+    optimizeMergeChoices,
+    optimizeDeduplicateChoices
+  ])(ast);
   return optimizeProduction(ast2, options);
 };
 
