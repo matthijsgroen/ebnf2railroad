@@ -11,7 +11,7 @@ const {
   Stack,
   Terminal
 } = require("railroad-diagrams");
-const { optimizeProduction } = require("./structure-optimizer");
+const { optimizeAST } = require("./structure-optimizer");
 const {
   documentContent,
   documentFrame,
@@ -263,7 +263,7 @@ const createDocumentation = (ast, options) => {
       const renderProduction =
         options.optimizeDiagrams === false
           ? production
-          : optimizeProduction(production);
+          : optimizeAST(production);
 
       const diagram = productionToDiagram(
         {
@@ -282,7 +282,7 @@ const createDocumentation = (ast, options) => {
         identifier: production.identifier,
         ebnf: productionToEBNF(
           options.optimizeText
-            ? optimizeProduction(production, { textMode: true })
+            ? optimizeAST(production, { textMode: true })
             : production,
           {
             markup: true,

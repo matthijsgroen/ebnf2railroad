@@ -11,6 +11,11 @@ const equalElements = (first, second) =>
   JSON.stringify(ungroup(first)) === JSON.stringify(ungroup(second));
 
 const optimizeProduction = (production, options = {}) => {
+  if (Array.isArray(production)) {
+    return production.map(production =>
+      optimizeProduction(production, options)
+    );
+  }
   if (production.definition) {
     return {
       ...production,
@@ -366,6 +371,8 @@ const optimizeProduction = (production, options = {}) => {
   return production;
 };
 
+const optimizeAST = (ast, options) => optimizeProduction(ast, options);
+
 module.exports = {
-  optimizeProduction
+  optimizeAST
 };
