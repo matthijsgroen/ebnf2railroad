@@ -2,17 +2,17 @@ const { ebnfTransform, NodeTypes } = require("./ebnf-transform");
 
 const prettyPrint = ebnfTransform([
   {
-    [NodeTypes.Root]: (a, b) => b.join("\n"),
-    [NodeTypes.Production]: (a, b) => `${b.identifier} = ${b.definition} ;`,
+    [NodeTypes.Root]: a => a.join("\n"),
+    [NodeTypes.Production]: a => `${a.identifier} = ${a.definition} ;`,
     [NodeTypes.Terminal]: a => `"${a.terminal}"`,
     [NodeTypes.NonTerminal]: a => `${a.nonTerminal}`,
-    [NodeTypes.Choice]: (a, b) => b.choice.join(" | "),
+    [NodeTypes.Choice]: a => a.choice.join(" | "),
     [NodeTypes.Comment]: a => `(*${a.comment}*)`,
-    [NodeTypes.Group]: (a, b) =>
-      a.comment ? `${b.group} (*${a.comment}*)` : `( ${b.group} )`,
-    [NodeTypes.Sequence]: (a, b) => b.sequence.join(" , "),
-    [NodeTypes.Optional]: (a, b) => `[ ${b.optional} ]`,
-    [NodeTypes.Repetition]: (a, b) => `{ ${b.repetition} }`,
+    [NodeTypes.Group]: a =>
+      a.comment ? `${a.group} (*${a.comment}*)` : `( ${a.group} )`,
+    [NodeTypes.Sequence]: a => a.sequence.join(" , "),
+    [NodeTypes.Optional]: a => `[ ${a.optional} ]`,
+    [NodeTypes.Repetition]: a => `{ ${a.repetition} }`,
     [NodeTypes.Special]: a => `? ${a.specialSequence} ?`
   }
 ]);
