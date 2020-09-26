@@ -263,7 +263,10 @@ const createDiagram = (production, metadata, ast, options) => {
 
   const renderNonTerminal = item => {
     if (options.overview) {
-      const expand = !expanded.includes(item) && !metadata[item].characterSet;
+      const expand =
+        !expanded.includes(item) &&
+        metadata[item] &&
+        !metadata[item].characterSet;
 
       if (expand) {
         const nested = ast.find(node => node.identifier === item);

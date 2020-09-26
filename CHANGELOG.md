@@ -12,6 +12,10 @@ and this project adheres to
 
 - Deduplication of choices now also works for text output
 
+### Fixes
+
+- Exception when non-terminal lacks definition
+
 ## [1.11.1] - 2020-09-23
 
 ### Fixes
