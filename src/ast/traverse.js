@@ -2,10 +2,23 @@ const traverse = classifier => travelers => transformers => {
   const transform = (node, initialResult = undefined, parents = []) => {
     const nodeType = classifier(node);
 
+    let transformed = false;
     // Travel
     const traveler = travelers[nodeType];
+    const updatedNode = traveler
+      ? traveler(node, aNext => {
+          const result = transform(aNext, aNext, [node, ...parents]);
+          if (result !== aNext) {
+            transformed = true;
+          }
+          return result;
+        })
+      : initialResult;
+
     const startResult = traveler
-      ? traveler(node, aNext => transform(aNext, aNext, [node, ...parents]))
+      ? transformed
+        ? updatedNode
+        : node
       : initialResult;
 
     // Transform
