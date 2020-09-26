@@ -11,6 +11,7 @@ module.exports = {
     return current.group;
   },
   [NodeTypes.Sequence]: current => {
+    if (!current.sequence) return current;
     const hasSubSequence = current.sequence.some(node => node.sequence);
     if (hasSubSequence) {
       return {
@@ -21,6 +22,9 @@ module.exports = {
           []
         )
       };
+    }
+    if (current.sequence.length === 1) {
+      return current.sequence[0];
     }
     return current;
   },
