@@ -132,7 +132,7 @@ describe("traverse", () => {
       const transformers = [];
       const result = traverse(classifier)(travelers)(transformers)(ast);
 
-      expect(result).to.eql(ast);
+      expect(result).to.eq(ast);
     });
 
     it("returns the same node if no transformation happened", () => {
@@ -142,7 +142,7 @@ describe("traverse", () => {
       const transformers = [node => node];
       const result = traverse(classifier)(travelers)(transformers)(ast);
 
-      expect(result).to.eql(ast);
+      expect(result).to.eq(ast);
     });
 
     it("can transform the AST into something else", () => {

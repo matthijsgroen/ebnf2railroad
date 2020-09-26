@@ -56,4 +56,15 @@ const ebnfTransform = traverse(identifyNode)({
   })
 });
 
-module.exports = { ebnfTransform, NodeTypes };
+const ebnfOptimizer = transformers => ast => {
+  const optimize = ebnfTransform(transformers);
+  let current = ast;
+  let transformed = optimize(ast);
+  while (current !== transformed) {
+    current = transformed;
+    transformed = optimize(current);
+  }
+  return transformed;
+};
+
+module.exports = { ebnfTransform, ebnfOptimizer, NodeTypes };

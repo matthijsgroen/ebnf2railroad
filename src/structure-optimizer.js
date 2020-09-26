@@ -1,6 +1,5 @@
-const { ebnfTransform } = require("./ast/ebnf-transform");
+const { ebnfOptimizer } = require("./ast/ebnf-transform");
 const ungroup = require("./ast/optimizers/ungroup");
-const mergeChoices = require("./ast/optimizers/merge-choices");
 const deduplicateChoices = require("./ast/optimizers/deduplicate-choices");
 const unwrapOptional = require("./ast/optimizers/unwrap-optional");
 
@@ -14,6 +13,7 @@ const equalElements = (first, second) =>
   JSON.stringify(first) === JSON.stringify(second);
 
 const optimizeProduction = (production, options = {}) => {
+  // Travel only
   if (Array.isArray(production)) {
     return production.map(production =>
       optimizeProduction(production, options)
@@ -25,6 +25,21 @@ const optimizeProduction = (production, options = {}) => {
       definition: optimizeProduction(production.definition, options)
     };
   }
+  if (production.repetition) {
+    return {
+      ...production,
+      repetition: optimizeProduction(production.repetition, options)
+    };
+  }
+  if (production.group) {
+    return {
+      ...production,
+      group: optimizeProduction(production.group, options)
+    };
+  }
+
+  // Optimizations (need to refactor)
+
   if (production.choice) {
     // if choice contains an optional, make whole choice optional.
     const hasOptional = production.choice.some(e => e.optional && !e.comment);
@@ -333,12 +348,6 @@ const optimizeProduction = (production, options = {}) => {
       ? optimizedSequence.sequence[0]
       : optimizedSequence;
   }
-  if (production.repetition) {
-    return {
-      ...production,
-      repetition: optimizeProduction(production.repetition, options)
-    };
-  }
   if (production.optional) {
     if (production.optional.choice && options.textMode !== true) {
       return optimizeProduction(
@@ -357,22 +366,13 @@ const optimizeProduction = (production, options = {}) => {
       optional: optimizeProduction(production.optional, options)
     };
   }
-  if (production.group) {
-    return {
-      ...production,
-      group: optimizeProduction(production.group, options)
-    };
-  }
   return production;
 };
 
 const optimizeAST = (ast, options) => {
-  const ast2 = ebnfTransform([
-    ungroup,
-    mergeChoices,
-    deduplicateChoices,
-    unwrapOptional
-  ])(ast);
+  const ast2 = ebnfOptimizer([ungroup, deduplicateChoices, unwrapOptional])(
+    ast
+  );
   return optimizeProduction(ast2, options);
 };
 
