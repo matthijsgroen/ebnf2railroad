@@ -3,6 +3,7 @@ const ungroup = require("./ast/optimizers/ungroup");
 const deduplicateChoices = require("./ast/optimizers/deduplicate-choices");
 const unwrapOptional = require("./ast/optimizers/unwrap-optional");
 const optionalChoices = require("./ast/optimizers/optional-choices");
+const choiceWithSkip = require("./ast/optimizers/choice-with-skip");
 
 const skipFirst = list =>
   [
@@ -36,6 +37,12 @@ const optimizeProduction = (production, options = {}) => {
     return {
       ...production,
       group: optimizeProduction(production.group, options)
+    };
+  }
+  if (production.optional) {
+    return {
+      ...production,
+      optional: optimizeProduction(production.optional, options)
     };
   }
 
@@ -200,37 +207,17 @@ const optimizeProduction = (production, options = {}) => {
         production.choice
           .map(item => {
             const optimizedItem = optimizeProduction(item, options);
-            if (
-              optimizedItem.repetition &&
-              optimizedItem.skippable &&
-              options.textMode !== true
-            ) {
-              return [
-                "skip",
-                {
-                  ...optimizedItem,
-                  skippable: false
-                }
-              ];
-            } else if (optimizedItem.optional && options.textMode !== true) {
-              return ["skip", optimizedItem.optional];
-            } else if (optimizedItem.choice) {
+            if (optimizedItem.choice) {
               return optimizedItem.choice;
             } else {
               return [optimizedItem];
             }
           })
           .reduce((acc, item) => acc.concat(item), [])
-          .map(e => JSON.stringify(e))
-          .filter((item, index, list) => list.indexOf(item) === index)
-          .map(e => JSON.parse(e))
       )
     };
   }
   if (production.sequence) {
-    if (options.textMode === true) {
-      return production;
-    }
     const optimizeStructure = (item, idx, list) => {
       if (item.repetition && idx > 0) {
         if (!item.repetition.sequence) {
@@ -329,32 +316,20 @@ const optimizeProduction = (production, options = {}) => {
       ? optimizedSequence.sequence[0]
       : optimizedSequence;
   }
-  if (production.optional) {
-    if (production.optional.choice && options.textMode !== true) {
-      return optimizeProduction(
-        {
-          ...production.optional,
-          choice: [{ skip: true }, ...production.optional.choice]
-        },
-        options
-      );
-    }
-    return {
-      ...production,
-      optional: optimizeProduction(production.optional, options)
-    };
-  }
   return production;
 };
 
-const optimizeAST = (ast, options) => {
-  const ast2 = ebnfOptimizer([
-    ungroup,
-    deduplicateChoices,
-    unwrapOptional,
-    optionalChoices
-  ])(ast);
-  return optimizeProduction(ast2, options);
+const optimizeAST = (ast, options = {}) => {
+  const ast2 = ebnfOptimizer(
+    [
+      ungroup,
+      deduplicateChoices,
+      unwrapOptional,
+      optionalChoices,
+      !options.textMode && choiceWithSkip
+    ].filter(Boolean)
+  )(ast);
+  return options.textMode ? ast2 : optimizeProduction(ast2, options);
 };
 
 module.exports = {

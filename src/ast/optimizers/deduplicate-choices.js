@@ -2,6 +2,9 @@ const { NodeTypes } = require("../ebnf-transform");
 
 module.exports = {
   [NodeTypes.Choice]: current => {
+    if (!current.choice) {
+      return current;
+    }
     const stringChoices = current.choice.map(item => JSON.stringify(item));
     const uniqueDirectChoices = current.choice.filter(
       (item, idx) => !(stringChoices.indexOf(JSON.stringify(item)) < idx)
