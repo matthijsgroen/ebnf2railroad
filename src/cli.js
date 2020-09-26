@@ -6,7 +6,7 @@ const { parseEbnf } = require("./main");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
-const { optimizeAST } = require("./structure-optimizer");
+const { optimizeText: optimize } = require("./structure-optimizer");
 
 program
   .version(version)
@@ -96,9 +96,7 @@ async function run(args) {
       warnings.forEach(warning => outputErrorStruct(warning));
 
     if (program.writeStyle || program.rewrite) {
-      const optimizedAST = program.rewrite
-        ? optimizeAST(ast, { textMode: true })
-        : ast;
+      const optimizedAST = program.rewrite ? optimize(ast) : ast;
 
       const prettyOutput =
         optimizedAST

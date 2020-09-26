@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { parser } = require("../src/ebnf-parser");
-const { optimizeAST } = require("../src/structure-optimizer");
+const { optimizeAST, optimizeText } = require("../src/structure-optimizer");
 
 describe("AST structure optimizer", () => {
   const compareAst = (text, before, after, textMode = after) => {
@@ -8,7 +8,7 @@ describe("AST structure optimizer", () => {
     expect(ast[0].definition).to.eql(before);
     const optimizedDefinition = optimizeAST(ast);
     expect(optimizedDefinition[0].definition).to.eql(after);
-    const optimizedTextDefinition = optimizeAST(ast, { textMode: true });
+    const optimizedTextDefinition = optimizeText(ast);
     expect(optimizedTextDefinition[0].definition).to.eql(textMode);
     expect(ast[0].definition).to.eql(before);
   };

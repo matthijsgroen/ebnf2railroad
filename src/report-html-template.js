@@ -464,8 +464,7 @@ const ebnfTemplate = ({
 }) =>
   `<section>
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
-  <div class="diagram-container">
-  ${diagram}  </div>
+  <div class="diagram-container">${diagram}</div>
   <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +

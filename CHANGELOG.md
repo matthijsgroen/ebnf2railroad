@@ -17,6 +17,8 @@ and this project adheres to
   a | a | a (* comment *) | b => a (* comment *) | b
   ```
 
+- Improve height of overview diagrams
+
 ### Fixes
 
 - Exception when non-terminal lacks definition

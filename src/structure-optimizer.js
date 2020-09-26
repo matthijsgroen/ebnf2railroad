@@ -7,13 +7,24 @@ const choiceWithSkip = require("./ast/optimizers/choice-with-skip");
 const repetition = require("./ast/optimizers/repetition");
 const choiceClustering = require("./ast/optimizers/choice-clustering");
 
-const optimizeAST = (ast, options = {}) =>
-  ebnfOptimizer(
-    [ungroup, deduplicateChoices, unwrapOptional, optionalChoices].concat(
-      options.textMode ? [] : [choiceWithSkip, repetition, choiceClustering]
-    )
-  )(ast);
+const optimizeAST = ebnfOptimizer([
+  ungroup,
+  deduplicateChoices,
+  unwrapOptional,
+  optionalChoices,
+  choiceWithSkip,
+  repetition,
+  choiceClustering
+]);
+
+const optimizeText = ebnfOptimizer([
+  ungroup,
+  deduplicateChoices,
+  unwrapOptional,
+  optionalChoices
+]);
 
 module.exports = {
-  optimizeAST
+  optimizeAST,
+  optimizeText
 };

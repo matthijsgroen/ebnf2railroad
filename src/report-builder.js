@@ -11,7 +11,7 @@ const {
   Stack,
   Terminal
 } = require("railroad-diagrams");
-const { optimizeAST } = require("./structure-optimizer");
+const { optimizeAST, optimizeText } = require("./structure-optimizer");
 const {
   documentContent,
   documentFrame,
@@ -297,9 +297,9 @@ const createDiagram = (production, metadata, ast, options) => {
       ...baseOptions,
       renderNonTerminal
     }
-  );
+  ).toString();
 
-  return diagram;
+  return options.overview ? diagram.replace(/height="\d+"/, "") : diagram;
 };
 
 const createDocumentation = (ast, options) => {
@@ -327,9 +327,7 @@ const createDocumentation = (ast, options) => {
       return ebnfTemplate({
         identifier: production.identifier,
         ebnf: productionToEBNF(
-          options.optimizeText
-            ? optimizeAST(production, { textMode: true })
-            : production,
+          options.optimizeText ? optimizeText(production) : production,
           {
             markup: true,
             format: options.textFormatting
@@ -337,7 +335,7 @@ const createDocumentation = (ast, options) => {
         ),
         referencedBy: searchReferencesToIdentifier(production.identifier, ast),
         referencesTo: outgoingReferences,
-        diagram: vacuum(diagram.toString())
+        diagram: vacuum(diagram)
       });
     })
     .join("");
