@@ -55,6 +55,28 @@ describe("repetition", () => {
     ]);
   });
 
+  it("supports grouped choice to turn into repeat", () => {
+    const text = 'definition = "a" , ( "b" | "c" ) , { "b" | "c" } , "d" ;';
+    const ast = parseEbnf(text);
+    const result = ebnfOptimizer([repetition])(ast);
+    expect(result).to.eql([
+      {
+        identifier: "definition",
+        definition: {
+          sequence: [
+            { terminal: "a" },
+            {
+              repetition: { choice: [{ terminal: "b" }, { terminal: "c" }] },
+              skippable: false
+            },
+            { terminal: "d" }
+          ]
+        },
+        location: 1
+      }
+    ]);
+  });
+
   it("recognizes 'between' elements of repetition", () => {
     const text = 'definition = "a" , "b", "c", { "v", "g", "b", "c" } , "d" ;';
     const ast = parseEbnf(text);

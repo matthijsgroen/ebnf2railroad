@@ -3,19 +3,23 @@ const { NodeTypes } = require("../ebnf-transform");
 const equalElements = (first, second) =>
   JSON.stringify(first) === JSON.stringify(second);
 
+const ungroup = item => (item.group && !item.comment ? item.group : item);
+
 module.exports = {
   [NodeTypes.Sequence]: current => {
     if (!current.sequence) return current;
+    const hasRepeats = current.sequence.some(item => item.repetition);
+    if (!hasRepeats) return current;
 
     const optimizeStructure = (item, idx, list) => {
       if (item.repetition && idx > 0) {
         if (!item.repetition.sequence) {
           const lastElem = item.repetition;
           const previousElem = list[idx - 1];
-          if (equalElements(lastElem, previousElem)) {
+          if (equalElements(ungroup(lastElem), ungroup(previousElem))) {
             return {
               clearPrevious: 1,
-              repetition: lastElem,
+              repetition: ungroup(lastElem),
               skippable: false
             };
           }
