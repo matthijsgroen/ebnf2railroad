@@ -2,6 +2,7 @@ const { ebnfOptimizer } = require("./ast/ebnf-transform");
 const ungroup = require("./ast/optimizers/ungroup");
 const deduplicateChoices = require("./ast/optimizers/deduplicate-choices");
 const unwrapOptional = require("./ast/optimizers/unwrap-optional");
+const optionalChoices = require("./ast/optimizers/optional-choices");
 
 const skipFirst = list =>
   [
@@ -39,27 +40,7 @@ const optimizeProduction = (production, options = {}) => {
   }
 
   // Optimizations (need to refactor)
-
   if (production.choice) {
-    // if choice contains an optional, make whole choice optional.
-    const hasOptional = production.choice.some(e => e.optional && !e.comment);
-    if (hasOptional) {
-      const newDef = {
-        optional: optimizeProduction(
-          {
-            choice: production.choice.map(item =>
-              optimizeProduction(
-                item.optional && !item.comment ? item.optional : item,
-                options
-              )
-            )
-          },
-          options
-        )
-      };
-      return optimizeProduction(newDef, options);
-    }
-
     const isCertain = elem =>
       (elem.terminal && elem) || (elem.nonTerminal && elem);
 
@@ -358,9 +339,6 @@ const optimizeProduction = (production, options = {}) => {
         options
       );
     }
-    if (production.optional.repetition || production.optional.optional) {
-      return optimizeProduction(production.optional, options);
-    }
     return {
       ...production,
       optional: optimizeProduction(production.optional, options)
@@ -370,9 +348,12 @@ const optimizeProduction = (production, options = {}) => {
 };
 
 const optimizeAST = (ast, options) => {
-  const ast2 = ebnfOptimizer([ungroup, deduplicateChoices, unwrapOptional])(
-    ast
-  );
+  const ast2 = ebnfOptimizer([
+    ungroup,
+    deduplicateChoices,
+    unwrapOptional,
+    optionalChoices
+  ])(ast);
   return optimizeProduction(ast2, options);
 };
 

@@ -4,7 +4,7 @@ const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
 const { prettyPrint } = require("../../../src/ast/pretty-print");
 const unwrapOptional = require("../../../src/ast/optimizers/unwrap-optional");
 
-describe("ungroup", () => {
+describe("unwrap optionals", () => {
   it("leaves optionals that cannot be optmized alone", () => {
     const text = 'definition = "a", "b", [ "c" | "d" ] ;';
     const ast = parseEbnf(text);
