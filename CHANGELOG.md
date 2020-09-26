@@ -8,9 +8,14 @@ and this project adheres to
 
 ## [1.12.0] - UNRELEASED
 
-### Added
+### Changes
 
-- Deduplication of choices now also works for text output
+- Deduplication of choices is improved. Now also works for text output, and can
+  deduplicate items when one of them has a comment.
+
+  ```
+  a | a | a (* comment *) | b => a (* comment *) | b
+  ```
 
 ### Fixes
 
