@@ -1,5 +1,5 @@
 const traverse = classifier => travelers => transformers => {
-  const transform = (node, initialResult = undefined, parents = []) => {
+  const transform = (node, initialResult = node, parents = []) => {
     const nodeType = classifier(node);
 
     let transformed = false;

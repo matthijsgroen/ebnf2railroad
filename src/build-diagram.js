@@ -141,22 +141,20 @@ const optimizeSequenceLength = {
 
 const MAX_CHOICE_LENGTH = 10;
 
-const createDiagram = (production, metadata, ast, options) => {
-  const renderProduction =
-    options.optimizeDiagrams === false ? production : optimizeAST(production);
+const identity = x => x;
+const dot = f => g => x => f(g(x));
 
+const createDiagram = (production, metadata, ast, options) => {
   const expanded = [];
 
-  const renderDiagram = production =>
+  const renderDiagram = dot(
     diagramTraverse(
       [
         baseDiagramRendering,
         options.optimizeDiagrams && maxChoiceLength(MAX_CHOICE_LENGTH),
-
         options.diagramWrap &&
           options.optimizeDiagrams &&
           optimizeSequenceLength,
-
         options.overview && {
           [NodeTypes.NonTerminal]: node => {
             const expand =
@@ -164,27 +162,24 @@ const createDiagram = (production, metadata, ast, options) => {
               metadata[node.text] &&
               !metadata[node.text].characterSet;
 
-            if (expand) {
-              const nested = ast.find(item => item.identifier === node.text);
-              expanded.push(node.text);
-              const renderNested =
-                options.optimizeDiagrams === false
-                  ? nested
-                  : optimizeAST(nested);
-
-              return Group(
-                renderDiagram(renderNested.definition),
-                Comment(node.text, { href: `#${dasherize(node.text)}` })
-              );
+            const nested = ast.find(item => item.identifier === node.text);
+            if (!expand || !nested) {
+              return node;
             }
-            return node;
+            expanded.push(node.text);
+
+            return Group(
+              renderDiagram(nested.definition),
+              Comment(node.text, { href: `#${dasherize(node.text)}` })
+            );
           }
         }
       ].filter(Boolean)
-    )(production, production);
+    )
+  )(options.optimizeDiagrams === false ? identity : optimizeAST);
 
   const diagram = renderDiagram({
-    ...renderProduction,
+    ...production,
     complex: options.complex
   });
 
