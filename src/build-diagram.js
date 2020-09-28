@@ -186,9 +186,11 @@ const createDiagram = (production, metadata, ast, options) => {
   const diagram = renderDiagram({
     ...renderProduction,
     complex: options.complex
-  }).toString();
+  });
 
-  return options.overview ? diagram.replace(/height="\d+"/, "") : diagram;
+  return diagram
+    .toString()
+    .replace(/height="(\d+)"/, `style="max-height: $1px;"`);
 };
 
 module.exports = {
