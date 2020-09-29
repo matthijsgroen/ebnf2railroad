@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { parseEbnf } = require("../../../src/main");
 const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
-const { prettyPrint } = require("../../../src/ast/pretty-print");
+const { print } = require("../../../src/ast/pretty-print");
 const optionalChoices = require("../../../src/ast/optimizers/optional-choices");
 
 describe("optional choices", () => {
@@ -16,9 +16,7 @@ describe("optional choices", () => {
     const text = 'definition = "a" | "b" | [ "c" ] | "d" ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([optionalChoices])(ast);
-    expect(prettyPrint(result)).to.eql(
-      'definition = [ "a" | "b" | "c" | "d" ] ;'
-    );
+    expect(print(result)).to.eql('definition = [ "a" | "b" | "c" | "d" ] ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -41,9 +39,7 @@ describe("optional choices", () => {
     const text = 'definition = "a" | "b" | [ "c" ] | "d" ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([optionalChoices, optionalChoices])(ast);
-    expect(prettyPrint(result)).to.eql(
-      'definition = [ "a" | "b" | "c" | "d" ] ;'
-    );
+    expect(print(result)).to.eql('definition = [ "a" | "b" | "c" | "d" ] ;');
     expect(result).to.eql([
       {
         identifier: "definition",

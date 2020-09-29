@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { parseEbnf } = require("../../../src/main");
 const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
-const { prettyPrint } = require("../../../src/ast/pretty-print");
+const { print } = require("../../../src/ast/pretty-print");
 const deduplicate = require("../../../src/ast/optimizers/deduplicate-choices");
 
 describe("deduplicate choices", () => {
@@ -16,7 +16,7 @@ describe("deduplicate choices", () => {
     const text = 'definition = "a" | "b" |  "a" | "b"  ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([deduplicate])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" | "b" ;');
+    expect(print(result)).to.eql('definition = "a" | "b" ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -32,7 +32,7 @@ describe("deduplicate choices", () => {
     const text = 'definition = "a" | "a" ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([deduplicate])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" ;');
+    expect(print(result)).to.eql('definition = "a" ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -46,7 +46,7 @@ describe("deduplicate choices", () => {
     const text = 'definition = "a"| "b"| "c" (* comment *)| "c" ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([deduplicate])(ast);
-    expect(prettyPrint(result)).to.eql(
+    expect(print(result)).to.eql(
       'definition = "a" | "b" | "c" (* comment *) ;'
     );
     expect(result).to.eql([
@@ -77,7 +77,7 @@ describe("deduplicate choices", () => {
       'definition = "a"| "b"| "c" (* comment 1 *)| "c" (* comment 1 *) ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([deduplicate])(ast);
-    expect(prettyPrint(result)).to.eql(
+    expect(print(result)).to.eql(
       'definition = "a" | "b" | "c" (* comment 1 *) ;'
     );
     expect(result).to.eql([

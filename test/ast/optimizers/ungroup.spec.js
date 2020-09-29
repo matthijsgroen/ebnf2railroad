@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { parseEbnf } = require("../../../src/main");
 const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
-const { prettyPrint } = require("../../../src/ast/pretty-print");
+const { print } = require("../../../src/ast/pretty-print");
 const ungroup = require("../../../src/ast/optimizers/ungroup");
 
 describe("ungroup", () => {
@@ -23,7 +23,7 @@ describe("ungroup", () => {
     const text = 'definition = "a" | "b" | ( "c" , "d" ) ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([ungroup])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" | "b" | "c" , "d" ;');
+    expect(print(result)).to.eql('definition = "a" | "b" | "c" , "d" ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -45,7 +45,7 @@ describe("ungroup", () => {
     const text = 'definition = "a", "b", ( "c" ), ( d ) ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([ungroup])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" , "b" , "c" , d ;');
+    expect(print(result)).to.eql('definition = "a" , "b" , "c" , d ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -66,7 +66,7 @@ describe("ungroup", () => {
     const text = 'definition = "a", "b", ( "c" , "d" ) ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([ungroup])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" , "b" , "c" , "d" ;');
+    expect(print(result)).to.eql('definition = "a" , "b" , "c" , "d" ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -87,7 +87,7 @@ describe("ungroup", () => {
     const text = 'definition = "a" | "b" | ( "c" | "d" ) ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([ungroup])(ast);
-    expect(prettyPrint(result)).to.eql('definition = "a" | "b" | "c" | "d" ;');
+    expect(print(result)).to.eql('definition = "a" | "b" | "c" | "d" ;');
     expect(result).to.eql([
       {
         identifier: "definition",

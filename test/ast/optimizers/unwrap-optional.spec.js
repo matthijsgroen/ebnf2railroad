@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { parseEbnf } = require("../../../src/main");
 const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
-const { prettyPrint } = require("../../../src/ast/pretty-print");
+const { print } = require("../../../src/ast/pretty-print");
 const unwrapOptional = require("../../../src/ast/optimizers/unwrap-optional");
 
 describe("unwrap optionals", () => {
@@ -16,9 +16,7 @@ describe("unwrap optionals", () => {
     const text = 'definition = "a", "b", [ [ [ "c" | "d" ] ] ];';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([unwrapOptional])(ast);
-    expect(prettyPrint(result)).to.eql(
-      'definition = "a" , "b" , [ "c" | "d" ] ;'
-    );
+    expect(print(result)).to.eql('definition = "a" , "b" , [ "c" | "d" ] ;');
     expect(result).to.eql([
       {
         identifier: "definition",
@@ -38,9 +36,7 @@ describe("unwrap optionals", () => {
     const text = 'definition = "a", "b", [ { "c" | "d" } ] ;';
     const ast = parseEbnf(text);
     const result = ebnfOptimizer([unwrapOptional])(ast);
-    expect(prettyPrint(result)).to.eql(
-      'definition = "a" , "b" , { "c" | "d" } ;'
-    );
+    expect(print(result)).to.eql('definition = "a" , "b" , { "c" | "d" } ;');
     expect(result).to.eql([
       {
         identifier: "definition",
