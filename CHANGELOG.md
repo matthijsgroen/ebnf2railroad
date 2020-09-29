@@ -18,6 +18,7 @@ and this project adheres to
   ```
 
 - Improve height of overview diagrams
+- Update color scheme of dark theme
 
 ### Fixes
 
