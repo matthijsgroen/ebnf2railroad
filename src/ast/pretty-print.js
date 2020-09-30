@@ -3,7 +3,8 @@ const { ebnfTransform, NodeTypes } = require("./ebnf-transform");
 const defaultPrinters = {
   [NodeTypes.Root]: a => a.join("\n"),
   [NodeTypes.Production]: a => `${a.identifier} = ${a.definition} ;`,
-  [NodeTypes.Terminal]: a => `"${a.terminal}"`,
+  [NodeTypes.Terminal]: a =>
+    a.terminal.includes('"') ? `'${a.terminal}'` : `"${a.terminal}"`,
   [NodeTypes.NonTerminal]: a => `${a.nonTerminal}`,
   [NodeTypes.Choice]: a => a.choice.join(" | "),
   [NodeTypes.Comment]: a => `(*${a.comment}*)`,
@@ -101,10 +102,14 @@ const formattedPrinters = enrich(defaultPrinters)({
       renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
     };`;
   },
+  [NodeTypes.Repetition]: (result, node) => {
+    const renderConfig = detectRenderConfig(node.repetition);
+    return `${renderConfig.multiline ? lineIndent(renderConfig.indent) : ""}{ ${
+      result.repetition
+    }${renderConfig.multiline ? lineIndent(renderConfig.indent) : " "}}`;
+  },
   [NodeTypes.Choice]: (result, node) => {
-    const renderConfig = detectRenderConfig(node, {
-      ...DEFAULT_OPTIONS
-    });
+    const renderConfig = detectRenderConfig(node);
     if (renderConfig.multiline) {
       return (
         result.choice
@@ -140,6 +145,59 @@ const formattedPrinters = enrich(defaultPrinters)({
           .join("\n")
       );
     }
+  },
+  [NodeTypes.Sequence]: (result, node, parents) => {
+    const sequenceLength = (list, offset, till = undefined) =>
+      list
+        .slice(0, till)
+        .reduce(
+          (acc, elem) => (elem.length === -1 ? 0 : acc + elem.length + 3),
+          offset
+        );
+
+    let offset = 0;
+    if (parents[0].definition) {
+      offset = parents[0].identifier.length + 3; // " = "
+    }
+
+    return (
+      result.sequence
+        .map(element => ({
+          element,
+          length: element.includes("\n") ? -1 : element.length
+        }))
+        .map(({ element }, index, list) => {
+          if (index === 0) return element;
+          const indent = 1;
+
+          const currentLength = sequenceLength(list, offset, index);
+
+          const nextLength = sequenceLength(list, offset, index + 1);
+          //const totalLength = sequenceLength(list, options.offsetLength || 0);
+          const totalLength = sequenceLength(list, 0);
+          const addBreak =
+            currentLength > DEFAULT_OPTIONS.maxLineLength &&
+            nextLength >
+              DEFAULT_OPTIONS.maxLineLength + DEFAULT_OPTIONS.lineMargin / 2 &&
+            totalLength - currentLength > 10;
+          if (addBreak) list[index - 1].length = -1;
+
+          //const offsetLength = addBreak ? 0 : currentLength;
+          // TODO: Indent item??
+          const output = element;
+          if (output.includes("\n")) {
+            const lastLineLength = output.split("\n").slice(-1)[0].length;
+            list[index].length = lastLineLength - currentLength;
+          }
+
+          return ` ,${addBreak ? lineIndent(indent) : " "}${output}`;
+        })
+        .join("")
+        // Remove potentially added whitespace paddings at the end of the line
+        .split("\n")
+        .map(line => line.trimEnd())
+        .join("\n")
+    );
   }
 });
 

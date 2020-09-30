@@ -15,11 +15,7 @@ const traverse = classifier => travelers => transformers => {
         })
       : initialResult;
 
-    const startResult = traveler
-      ? transformed
-        ? updatedNode
-        : node
-      : initialResult;
+    const startResult = transformed ? updatedNode : initialResult;
 
     // Transform
     return transformers.reduce(
