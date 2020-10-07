@@ -54,7 +54,7 @@ const baseDiagramRendering = {
   },
   [NodeTypes.Choice]: node => Choice(0, ...node.choice),
   [NodeTypes.Sequence]: node => Sequence(...node.sequence),
-  [NodeTypes.Comment]: (node, production) => CommentWithLine(node.comment, {}),
+  [NodeTypes.Comment]: node => CommentWithLine(node.comment, {}),
   [NodeTypes.Group]: (node, production) => {
     if (node.comment) {
       const commentOnOptional = production.group && production.group.optional;
