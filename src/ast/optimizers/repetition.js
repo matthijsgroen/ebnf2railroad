@@ -92,7 +92,7 @@ module.exports = {
         // pass 1: unpack comments
         .map(
           item =>
-            item.comment && !item.group.optional
+            item.comment && item.group && !item.group.optional
               ? item.before
                 ? [{ comment: item.comment }, item.group]
                 : [item.group, { comment: item.comment }]

@@ -98,13 +98,10 @@ async function run(args) {
     if (program.writeStyle || program.rewrite) {
       const optimizedAST = program.rewrite ? optimize(ast) : ast;
 
-      const prettyOutput =
-        optimizedAST
-          .map(production =>
-            productionToEBNF(production, { markup: false, format: true })
-          )
-          .join("\n\n") + "\n";
-
+      const prettyOutput = productionToEBNF(optimizedAST, {
+        markup: false,
+        format: true
+      });
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
     }

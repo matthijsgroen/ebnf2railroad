@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { parseEbnf } = require("../../../src/main");
 const { ebnfOptimizer } = require("../../../src/ast/ebnf-transform");
-const { print } = require("../../../src/ast/pretty-print");
+const { productionToEBNF: print } = require("../../../src/ebnf-builder");
 const optionalChoices = require("../../../src/ast/optimizers/optional-choices");
 
 describe("optional choices", () => {
