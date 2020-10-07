@@ -33,6 +33,29 @@ describe("repetition", () => {
     ]);
   });
 
+  it("collapses items in repeats to non-skippable, with comment behind", () => {
+    const text = 'definition = "a" , "b" , { "b" } (* comment *) , "c" ;';
+    const ast = parseEbnf(text);
+    const result = ebnfOptimizer([repetition])(ast);
+    expect(result).to.eql([
+      {
+        identifier: "definition",
+        definition: {
+          sequence: [
+            { terminal: "a" },
+            {
+              repetition: { terminal: "b" },
+              skippable: false
+            },
+            { comment: " comment " },
+            { terminal: "c" }
+          ]
+        },
+        location: 1
+      }
+    ]);
+  });
+
   it("supports picking fragments to collapse into repeats", () => {
     const text = 'definition = "a" , "b", "c", { "b", "c" } , "d" ;';
     const ast = parseEbnf(text);

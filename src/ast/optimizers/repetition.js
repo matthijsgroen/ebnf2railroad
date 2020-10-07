@@ -8,7 +8,9 @@ const ungroup = item => (item.group && !item.comment ? item.group : item);
 module.exports = {
   [NodeTypes.Sequence]: current => {
     if (!current.sequence) return current;
-    const hasRepeats = current.sequence.some(item => item.repetition);
+    const hasRepeats = current.sequence.some(
+      item => item.repetition || (item.group && item.group.repetition)
+    );
     if (!hasRepeats) return current;
 
     const optimizeStructure = (item, idx, list) => {
