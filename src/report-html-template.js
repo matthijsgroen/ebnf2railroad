@@ -263,6 +263,14 @@ h4 {
     font-size: 125%;
 }
 
+blockquote {
+    margin-left: 0;
+    margin-top: calc(1em - 1px);
+    margin-bottom: calc(1em - 1px);
+    padding: 1px 0 1px 1rem;
+    border-left: 1rem solid var(--ebnfCodeBackground);
+}
+
 dfn {
     font-style: normal;
     cursor: default;
