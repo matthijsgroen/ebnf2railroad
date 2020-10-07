@@ -19,6 +19,7 @@ and this project adheres to
 
 - Improve height of overview diagrams
 - Update color scheme of dark theme
+- Improved styling of blockquotes in markdown `>`
 
 ### Fixes
 
