@@ -2226,6 +2226,11 @@ html-minifier@^3.2.3:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
+html-webpack-exclude-assets-plugin@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/html-webpack-exclude-assets-plugin/-/html-webpack-exclude-assets-plugin-0.0.7.tgz#ee69906adb3d869e4e29f29b0f3e99b53fa87c99"
+  integrity sha512-gaYKMGBPDts3Fb1WXyDEEcS/0TSRg2IDl3EsbQL2AkKWTqdjSKwfQ8Iz0RhPiWErJfqhq5/wkhoYyjQoG55pug==
+
 html-webpack-plugin@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-3.2.0.tgz#b01abbd723acaaa7b37b6af4492ebda03d9dd37b"
@@ -3848,6 +3853,11 @@ postcss@^7.0.1, postcss@^7.0.27:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+prettier@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
+  integrity sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
+
 pretty-error@^2.0.2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -3961,9 +3971,9 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
+"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
   version "1.1.0"
-  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
+  resolved "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
   version "2.1.0"

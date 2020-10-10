@@ -1,18 +1,41 @@
-html, body {
-    height: 100%;
-    padding: 0;
-    margin: 0;
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
 }
 
 main {
-    text-align: center;
-    flex: 0 0 auto;
+  text-align: center;
+  flex: 0 0 auto;
 }
 
+h1 small {
+  background: #eee;
+  font-size: 0.5em;
+  padding: 0.25em;
+  border-radius: 0.25em;
+}
+
+a {
+  color: #111;
+}
+code {
+  background: #e8e8e8;
+  border-radius: 0.5em;
+  display: inline-block;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+code pre {
+  margin: 0;
+}

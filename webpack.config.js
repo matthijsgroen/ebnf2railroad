@@ -1,13 +1,16 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackExcludeAssetsPlugin = require("html-webpack-exclude-assets-plugin");
 const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ebnf = require("ebnf2railroad");
 
 module.exports = {
   entry: "./src/index.js",
   mode: "production",
   entry: {
-    "ebnf2railroad-online": "./src/index.js"
+    "ebnf2railroad-online": "./src/index.js",
+    index: "./src/index.css"
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -20,13 +23,20 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       filename: "index.html",
-      inject: false
+      templateParameters: {
+        version: ebnf.version
+      },
+      inject: "head",
+      excludeChunks: ["ebnf2railroad-online"],
+      excludeAssets: [/index.js/]
     }),
     new HtmlWebpackPlugin({
       template: "./src/try-yourself.html",
       filename: "try-yourself.html",
-      inject: "body"
-    })
+      inject: "body",
+      chunks: ["ebnf2railroad-online"]
+    }),
+    new HtmlWebpackExcludeAssetsPlugin()
   ],
   module: {
     rules: [
