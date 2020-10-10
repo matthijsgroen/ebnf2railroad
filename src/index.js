@@ -49,7 +49,7 @@ collapseExpand.addEventListener("click", event => {
   updatePosition(position + 1);
 });
 
-document.querySelector("body").addEventListener("click", function(event) {
+document.querySelector("body").addEventListener("click", function (event) {
   if (event.target === document.querySelector("header button")) {
     document.getElementsByTagName("html")[0].classList.toggle("menu-open");
   }
@@ -140,11 +140,7 @@ const getCursorInfo = (session, pos) => {
   const text = session.getValue();
   const line = text.split("\n")[pos.row];
   const preLine = line.slice(0, pos.column);
-  const preLineText =
-    text
-      .split("\n")
-      .slice(0, pos.row)
-      .join("\n") + "\n";
+  const preLineText = text.split("\n").slice(0, pos.row).join("\n") + "\n";
   const preText = preLineText + preLine;
   const identifierNaming = /(^|;)[^=]*$/.test(preText);
   const preTextInclusive = preLineText + line;
@@ -161,7 +157,7 @@ const getCursorInfo = (session, pos) => {
 
 editor.completers = [
   {
-    getCompletions: function(editor, session, pos, prefix, callback) {
+    getCompletions: function (editor, session, pos, prefix, callback) {
       const { identifierNaming } = getCursorInfo(session, pos);
 
       const definitions = lastValidAst
@@ -209,7 +205,7 @@ editor.getSession().setUseWrapMode(true);
 editor.commands.addCommand({
   name: "Create terminal choices",
   bindKey: { win: "Ctrl-Shift-C", mac: "Command-Shift-C" },
-  exec: function(editor) {
+  exec: function (editor) {
     const range = editor.getSelectionRange();
     const selection = editor.session.getTextRange(range);
     const choices = selection
@@ -222,7 +218,7 @@ editor.commands.addCommand({
 editor.commands.addCommand({
   name: "Prettify text",
   bindKey: { win: "Ctrl-Shift-P", mac: "Command-Shift-P" },
-  exec: function(editor) {
+  exec: function (editor) {
     textFormatting = !textFormatting;
     invalidateDocument();
   }
@@ -230,7 +226,7 @@ editor.commands.addCommand({
 editor.commands.addCommand({
   name: "Optimize Diagrams",
   bindKey: { win: "Ctrl-Shift-O", mac: "Command-Shift-O" },
-  exec: function(editor) {
+  exec: function (editor) {
     optimizeDiagrams = !optimizeDiagrams;
     invalidateDocument();
   }
@@ -238,7 +234,7 @@ editor.commands.addCommand({
 editor.commands.addCommand({
   name: "Overview Diagram",
   bindKey: { win: "Ctrl-Alt-O", mac: "Command-Option-O" },
-  exec: function(editor) {
+  exec: function (editor) {
     overviewDiagram = !overviewDiagram;
     invalidateDocument();
   }
@@ -283,21 +279,21 @@ const toggleMarkup = (editor, markup) => {
 editor.commands.addCommand({
   name: "Make markdown text bold",
   bindKey: { win: "Ctrl-B", mac: "Command-B" },
-  exec: function(editor) {
+  exec: function (editor) {
     toggleMarkup(editor, "**");
   }
 });
 editor.commands.addCommand({
   name: "Make markdown text italic",
   bindKey: { win: "Ctrl-I", mac: "Command-I" },
-  exec: function(editor) {
+  exec: function (editor) {
     toggleMarkup(editor, "_");
   }
 });
 editor.commands.addCommand({
   name: "toggle edit mode",
   bindKey: { win: "Ctrl-Shift-M", mac: "Command-Shift-M" },
-  exec: function(editor) {
+  exec: function (editor) {
     const isEBNF = editor.session.getMode().$id === "ace/mode/ebnf";
     if (isEBNF) {
       editor.session.setMode("ace/mode/plain_text");
@@ -336,10 +332,8 @@ const dasherize = text => text.replace(/\s+/g, "-");
 
 const result = document.getElementById("result");
 const siteHeader = document.getElementById("header");
-const versionSpan = document.querySelector("#header h1 span");
-versionSpan && (versionSpan.innerText = `- Version ${version}`);
 
-editor.session.selection.on("changeCursor", function() {
+editor.session.selection.on("changeCursor", function () {
   const cursorPosition = editor.selection.getCursor();
   const info = getCursorInfo(editor.getSession(), cursorPosition);
   if (info.currentIdentifierName) {

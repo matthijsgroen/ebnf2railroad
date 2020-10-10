@@ -33,6 +33,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/try-yourself.html",
       filename: "try-yourself.html",
+      templateParameters: {
+        version: ebnf.version
+      },
       inject: "body",
       chunks: ["ebnf2railroad-online"]
     }),
