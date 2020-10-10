@@ -18,7 +18,7 @@
   Also, links to sites, like https://github.com/matthijsgroen/ebnf2railroad
   will be converted into a clickable link.
 
-  ### Text decration
+  ### Text decoration
 
   Text markup is also a **breeze**. Using asterisks and _underscores_ to place
   emphasis.
@@ -119,6 +119,9 @@ nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
 *)
 
 nested choices = "a" | ( "b" | "c" );
+
+duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
+
 (*
 
   ## Optimization: Ungrouping
@@ -130,6 +133,7 @@ nested choices = "a" | ( "b" | "c" );
 
   ```
   nested choices = "a" | ( "b" | "c" );
+  duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
   ```
 *)
 
@@ -180,13 +184,14 @@ number value = "fixing ref";
 
 comments = comment in choice with optional | comment in one or more before | comment_in_one_or_more_in
   | comment in one or more after | comment in one or more with repeater
-  | comment in nested choices with multiple optionals | comment in one or more with repeater after;
+  | comment in nested choices with multiple optionals | comment in one or more with repeater after | comment before optional ;
 
 comment in choice with optional = [ "a" | "b" (* comment *) ];
 comment in one or more before = "a" (* comment *), { "a" };
 comment_in_one_or_more_in = "a", { "a" (* comment *) };
 comment in one or more after = "a", { "a" } (* comment *);
 comment in one or more with repeater = "a", "b" (* comment *), "c", { "d", "e", "b", "c" };
+comment before optional = "a", (* comment *) [ "d", "e", "b", "c" ];
 comment in nested choices with multiple optionals = "a" | [ "b" (* comment *)
   | "c"] (* comment *) | [ "d" | "e" ];
 

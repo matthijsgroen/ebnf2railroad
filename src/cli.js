@@ -6,7 +6,7 @@ const { parseEbnf } = require("./main");
 const { createDocumentation, validateEbnf } = require("./report-builder");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
-const { optimizeProduction } = require("./structure-optimizer");
+const { optimizeText: optimize } = require("./structure-optimizer");
 
 program
   .version(version)
@@ -96,18 +96,12 @@ async function run(args) {
       warnings.forEach(warning => outputErrorStruct(warning));
 
     if (program.writeStyle || program.rewrite) {
-      const prettyOutput =
-        ast
-          .map(production =>
-            productionToEBNF(
-              program.rewrite
-                ? optimizeProduction(production, { textMode: true })
-                : production,
-              { markup: false, format: true }
-            )
-          )
-          .join("\n\n") + "\n";
+      const optimizedAST = program.rewrite ? optimize(ast) : ast;
 
+      const prettyOutput = productionToEBNF(optimizedAST, {
+        markup: false,
+        format: true
+      });
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
     }

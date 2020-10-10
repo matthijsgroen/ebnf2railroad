@@ -83,7 +83,7 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
     ${contents}
   </article>
   <footer>
-    <p>Date: ${currentDate()} - <a href="?theme=dark">Dark</a> - <a href="?theme=light">Light</a></p>
+    <p>Date: ${currentDate()} - <a href="?theme=dark" data-theme="dark">Dark</a> - <a href="?theme=light" data-theme="light">Light</a></p>
   </footer>
   </main>
   <script type="text/javascript">
@@ -94,6 +94,15 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
       if (event.target.tagName !== "A") return;
       htmlTag.classList.remove("menu-open");
     });
+    document.querySelectorAll("footer a").forEach(element =>
+      element.addEventListener("click", function(event) {
+        event.preventDefault();
+        const theme = event.target.getAttribute("data-theme");
+        const remove = Array.from(htmlTag.classList).filter(className => className.startsWith("theme-"));
+        remove.forEach(name => htmlTag.classList.remove(name));
+        htmlTag.classList.add("theme-" + theme);
+      })
+    );
   </script>
 `;
 
@@ -140,14 +149,14 @@ html {
     --textColor: #ddd;
 
     --diagramBackground: #222;
-    --diagramLines: lightblue;
+    --diagramLines: #3e432e;
     --diagramText: #a7d129;
     --terminalLines: #a7d129;
     --terminalFill: #3e432e;
     --nonTerminalLines: #a7d129;
     --nonTerminalFill: #3e432e;
     --specialSequenceLines: #a7d129;
-    --specialSequenceFill: #616f39;
+    --specialSequenceFill: #444;
 
     --ebnfCodeBackground: #3e432e;
     --ebnfIdentifier: lightblue;
@@ -252,6 +261,14 @@ h4 {
     margin: 4rem -2rem 1rem -2rem;
     background: var(--itemHeadingBackground);
     font-size: 125%;
+}
+
+blockquote {
+    margin-left: 0;
+    margin-top: calc(1em - 1px);
+    margin-bottom: calc(1em - 1px);
+    padding: 1px 0 1px 1rem;
+    border-left: 1rem solid var(--ebnfCodeBackground);
 }
 
 dfn {
@@ -464,8 +481,7 @@ const ebnfTemplate = ({
 }) =>
   `<section>
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
-  <div class="diagram-container">
-  ${diagram}  </div>
+  <div class="diagram-container">${diagram}</div>
   <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
     ? "\n  " + referencesTemplate(identifier, referencedBy)
     : "") +

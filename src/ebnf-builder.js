@@ -83,6 +83,10 @@ const productionToEBNF = (production, setOptions) => {
     ...defaultOptions,
     ...setOptions
   };
+
+  if (Array.isArray(production)) {
+    return production.map(item => productionToEBNF(item, options)).join("\n\n");
+  }
   if (production.identifier) {
     const renderConfig = detectRenderConfig(production.definition, {
       ...options,
@@ -96,7 +100,7 @@ const productionToEBNF = (production, setOptions) => {
     )}${
       renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
     }= ${productionToEBNF(production.definition, renderConfig)}${
-      renderConfig.multiline ? lineIndent(renderConfig.indent) : ""
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
     }${wrapSpan("ebnf-end", ";", options.markup)}`;
   }
   if (production.terminal) {

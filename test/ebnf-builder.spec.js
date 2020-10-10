@@ -24,7 +24,9 @@ describe("EBNF Builder", () => {
       const text = "statement = item, (* Comment data *) [ extra ];";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0]);
-      expect(result).to.eql("statement = item , (* Comment data *) [ extra ];");
+      expect(result).to.eql(
+        "statement = item , (* Comment data *) [ extra ] ;"
+      );
     });
   });
 
@@ -53,7 +55,7 @@ describe("EBNF Builder", () => {
       const text = "hello = a / b, (: c :), (/ d /) ! e .";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false });
-      expect(result).to.eql("hello = a | b , { c } , [ d ] | e;");
+      expect(result).to.eql("hello = a | b , { c } , [ d ] | e ;");
     });
   });
 
@@ -62,7 +64,7 @@ describe("EBNF Builder", () => {
       const text = "statement = function call | if condition;";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
-      expect(result).to.eql("statement = function call | if condition;");
+      expect(result).to.eql("statement = function call | if condition ;");
     });
 
     it("converts a root choice list to a multiline statement, when 2 long items", () => {
@@ -108,7 +110,7 @@ describe("EBNF Builder", () => {
         format: false
       });
       expect(rawResult).to.eql(
-        "statement = a | b | cd | e | f | ghi | jkl | m | n | o | p | q | rs | t;"
+        "statement = a | b | cd | e | f | ghi | jkl | m | n | o | p | q | rs | t ;"
       );
     });
 
@@ -116,7 +118,7 @@ describe("EBNF Builder", () => {
       const text = "statement = a, { b | d | e | gh| j }, e;";
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
-      expect(result).to.eql("statement = a , { b | d | e | gh | j } , e;");
+      expect(result).to.eql("statement = a , { b | d | e | gh | j } , e ;");
     });
 
     it("converts a repeater choice list to a multiline statement", () => {
@@ -131,7 +133,7 @@ describe("EBNF Builder", () => {
           "  | e\n" +
           "  | gh\n" +
           "  | j\n" +
-          "  } , e;"
+          "  } , e ;"
       );
     });
   });
@@ -145,7 +147,7 @@ describe("EBNF Builder", () => {
       expect(result).to.eql(
         "statement = a , b , c , d , e , f , g , h , i , j ,\n" +
           "  k , l , m , n , o , p , q , r , s , t , uu , v , w ,\n" +
-          "  q , y , z;"
+          "  q , y , z ;"
       );
     });
 
@@ -156,14 +158,14 @@ describe("EBNF Builder", () => {
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
         "statement = abcdef something very long , g , hijklm ,\n" +
-          "  n , o , p , q , r , s , t , uu , v , w , q , y , z;"
+          "  n , o , p , q , r , s , t , uu , v , w , q , y , z ;"
       );
       const rawResult = productionToEBNF(ast[0], {
         markup: false,
         format: false
       });
       expect(rawResult).to.eql(
-        "statement = abcdef something very long , g , hijklm , n , o , p , q , r , s , t , uu , v , w , q , y , z;"
+        "statement = abcdef something very long , g , hijklm , n , o , p , q , r , s , t , uu , v , w , q , y , z ;"
       );
     });
 
@@ -172,7 +174,7 @@ describe("EBNF Builder", () => {
       const ast = parser.parse(text);
       const result = productionToEBNF(ast[0], { markup: false, format: true });
       expect(result).to.eql(
-        'gamut = "[" , gamut float , "," , gamut float , "]";'
+        'gamut = "[" , gamut float , "," , gamut float , "]" ;'
       );
     });
 
@@ -185,7 +187,7 @@ describe("EBNF Builder", () => {
       expect(result).to.eql(
         "function call with priority support = identifier ,\n" +
           '  [ "!" ] , "(" , [ argument value with mutators ,\n' +
-          '  { "," , argument value with mutators } ] , ")";'
+          '  { "," , argument value with mutators } ] , ")" ;'
       );
     });
   });
@@ -205,7 +207,7 @@ describe("EBNF Builder", () => {
           '  [ "else" , end of statement , indent , statement ,\n' +
           "    { statement } , unindent\n" +
           '  | "else" , if statement\n' +
-          "  ];"
+          "  ] ;"
       );
     });
   });
