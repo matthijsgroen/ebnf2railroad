@@ -3,7 +3,10 @@ const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parseEbnf } = require("./main");
-const { createDocumentation, validateEbnf } = require("./report-builder");
+const {
+  createDocumentation: createHtmlDocumentation
+} = require("./report-builder");
+const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
 const { optimizeText: optimize } = require("./structure-optimizer");
@@ -70,10 +73,7 @@ async function run(args) {
     const filename = program.args[0];
     const ebnf = await readFile(filename, "utf8");
 
-    const basename = filename
-      .split(".")
-      .slice(0, -1)
-      .join(".");
+    const basename = filename.split(".").slice(0, -1).join(".");
     const defaultOutputFilename = basename + ".html";
     const documentTitle = program.title || basename;
 
@@ -106,7 +106,7 @@ async function run(args) {
       output(`💅 Source updated at ${filename}`);
     }
     if (targetFilename) {
-      const report = createDocumentation(ast, {
+      const report = createHtmlDocumentation(ast, {
         title: documentTitle,
         optimizeDiagrams,
         optimizeText,
