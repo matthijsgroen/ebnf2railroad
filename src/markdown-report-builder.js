@@ -5,11 +5,6 @@ const { createStructuralToc, createDefinitionMetadata } = require("./toc");
 const { draw } = require("utf-railroad");
 const { createDiagram } = require("./build-ascii-diagram");
 
-// TODO:
-// - Leverage prettier
-// - Draw ASCII diagrams
-// - Decide on links / toc
-
 const dedent = text => {
   const lines = text.split("\n");
   const minimalIndentation = lines.reduce((acc, line) => {
