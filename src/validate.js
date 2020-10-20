@@ -14,7 +14,9 @@ const validateEbnf = ast => {
       return {
         line: declaration.location,
         type: "Duplicate declaration",
-        message: `"${declaration.identifier}" already declared on line ${ast[firstDeclaration].location}`
+        message: `"${declaration.identifier}" already declared on line ${
+          ast[firstDeclaration].location
+        }`
       };
     })
     .filter(Boolean);

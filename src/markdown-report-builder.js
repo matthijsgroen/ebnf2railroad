@@ -4,6 +4,7 @@ const { productionToEBNF } = require("./ebnf-builder");
 const { createStructuralToc, createDefinitionMetadata } = require("./toc");
 const { draw } = require("utf-railroad");
 const { createDiagram } = require("./build-ascii-diagram");
+const prettier = require("prettier");
 
 const dedent = text => {
   const lines = text.split("\n");
@@ -54,7 +55,7 @@ const createDocumentation = (ast, options) => {
     })
     .join("\n");
 
-  return contents;
+  return prettier.format(contents, { parser: "markdown", proseWrap: "always" });
 };
 
 module.exports = {
