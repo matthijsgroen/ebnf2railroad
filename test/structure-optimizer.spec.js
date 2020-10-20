@@ -452,6 +452,35 @@ describe("AST structure optimizer", () => {
     );
   });
 
+  it("leaves `[ a, { a } ]` alone", () => {
+    compareAst(
+      "foo = [ a, { a } ];",
+      {
+        optional: {
+          sequence: [
+            { nonTerminal: "a" },
+            {
+              repetition: { nonTerminal: "a" },
+              skippable: true
+            }
+          ]
+        }
+      },
+      { optional: { repetition: { nonTerminal: "a" }, skippable: false } },
+      {
+        optional: {
+          sequence: [
+            { nonTerminal: "a" },
+            {
+              repetition: { nonTerminal: "a" },
+              skippable: true
+            }
+          ]
+        }
+      }
+    );
+  });
+
   it("changes `[ [ a ] ]` into `[ a ]`", () => {
     compareAst(
       "foo = [ [ a ] ];",
