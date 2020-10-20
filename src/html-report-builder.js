@@ -29,8 +29,8 @@ const createTocStructure = (tocData, metadata) =>
           (metadata[tocNode.name] || {}).root
             ? ' class="root-node"'
             : (metadata[tocNode.name] || {}).common
-            ? ' class="common-node"'
-            : ""
+              ? ' class="common-node"'
+              : ""
         }><a href="#${dasherize(
           tocNode.name.trim()
         )}">${tocNode.name.trim()}</a>

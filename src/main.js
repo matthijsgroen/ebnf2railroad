@@ -1,5 +1,5 @@
 const { parse } = require("./ebnf-parser");
-const { createDocumentation, documentStyle } = require("./report-builder");
+const { createDocumentation, documentStyle } = require("./html-report-builder");
 const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
 const {

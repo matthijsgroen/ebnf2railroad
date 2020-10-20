@@ -1425,6 +1425,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+utf-railroad@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/utf-railroad/-/utf-railroad-1.0.1.tgz#706249d2db6d8d3f9045a23b1f3f552df97f7b8f"
+  integrity sha512-1VteJ4LvNiaIzOeyf/h+7+CBY4BSX1BGO2tWOefgu6OjBXL+bOho2Tm2NE9+ywM05rVETt4dzgC/xceyNZXVBQ==
+
 v8-compile-cache@^2.0.3:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.1.1.tgz#54bc3cdd43317bca91e35dcaf305b1a7237de745"
