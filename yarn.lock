@@ -1478,13 +1478,15 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.12.0.tgz#e97b5e5264d59f344d71d64ac27f7dbc3ee3b67f"
-  integrity sha512-PR9JWLCAC0L+T3G81Hb5Cb8GE0Cl0p7MbOfb76yxhk8qzsFm48M+j0xQ8AUhTItnuPcJ8hok99FqI5t4wrIWHg==
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.13.0.tgz#ecac691977b3178d1032998826005871ec5f6bcc"
+  integrity sha512-FZQ+EGliLd1WTr9lLRiGRCE7YNKCusjc+t9j1m+YQPMOv+Qa40NetvlbO+LKCpI8/n5TRf3szhfZuCx31WG92w==
   dependencies:
     commander "^2.19.0"
+    prettier "^1.14.3"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
     showdown "^1.0.0"
+    utf-railroad "^1.0.1"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -3853,6 +3855,11 @@ postcss@^7.0.1, postcss@^7.0.27:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
+prettier@^1.14.3:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+
 prettier@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
@@ -3971,9 +3978,9 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
+"railroad-diagrams@git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
   version "1.1.0"
-  resolved "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
+  resolved "git+https://github.com/tabatkins/railroad-diagrams.git#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
   version "2.1.0"
@@ -4874,6 +4881,11 @@ use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
+
+utf-railroad@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/utf-railroad/-/utf-railroad-1.0.1.tgz#706249d2db6d8d3f9045a23b1f3f552df97f7b8f"
+  integrity sha512-1VteJ4LvNiaIzOeyf/h+7+CBY4BSX1BGO2tWOefgu6OjBXL+bOho2Tm2NE9+ywM05rVETt4dzgC/xceyNZXVBQ==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
