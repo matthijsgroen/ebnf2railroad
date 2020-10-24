@@ -3,7 +3,13 @@ const util = require("util");
 const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parseEbnf } = require("./main");
-const { createDocumentation, validateEbnf } = require("./report-builder");
+const {
+  createDocumentation: createHtmlDocumentation
+} = require("./html-report-builder");
+const {
+  createDocumentation: createMarkdownDocumentation
+} = require("./markdown-report-builder");
+const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
 const { productionToEBNF } = require("./ebnf-builder");
 const { optimizeText: optimize } = require("./structure-optimizer");
@@ -15,7 +21,7 @@ program
   .option("-q, --quiet", "suppress output to STDOUT")
 
   .description(
-    "Converts an ISO/IEC 14977 EBNF file to a HTML file with SVG railroad diagrams"
+    "Converts an ISO/IEC 14977 EBNF file to a HTML/Markdown file with SVG railroad diagrams"
   )
   .option("-o, --target [target]", "output the file to target destination.")
   .option("--no-target", "skip writing output HTML", null)
@@ -105,8 +111,21 @@ async function run(args) {
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
     }
-    if (targetFilename) {
-      const report = createDocumentation(ast, {
+    const markdown = targetFilename.endsWith(".md");
+    if (targetFilename && !markdown) {
+      const report = createHtmlDocumentation(ast, {
+        title: documentTitle,
+        optimizeDiagrams,
+        optimizeText,
+        textFormatting,
+        overviewDiagram,
+        diagramWrap
+      });
+      await writeFile(targetFilename, report, "utf8");
+      output(`📜 Document created at ${targetFilename}`);
+    }
+    if (targetFilename && markdown) {
+      const report = createMarkdownDocumentation(ast, {
         title: documentTitle,
         optimizeDiagrams,
         optimizeText,

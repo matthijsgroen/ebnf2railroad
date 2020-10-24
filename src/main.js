@@ -1,9 +1,9 @@
 const { parse } = require("./ebnf-parser");
+const { createDocumentation, documentStyle } = require("./html-report-builder");
 const {
-  createDocumentation,
-  documentStyle,
-  validateEbnf
-} = require("./report-builder");
+  createDocumentation: createMarkdownDocumentation
+} = require("./markdown-report-builder");
+const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
 const {
   getReferences,
@@ -33,6 +33,7 @@ module.exports = {
   version,
   parseEbnf: improveErrors(parse),
   createDocumentation,
+  createMarkdownDocumentation,
   documentStyle,
   validateEbnf,
   getReferences,
