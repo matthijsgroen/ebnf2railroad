@@ -1,6 +1,6 @@
 {
   "name": "ebnf2railroad",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "description": "EBNF to Railroad diagram",
   "keywords": [
     "ebnf",
@@ -28,10 +28,13 @@
     "publish": ".travis/publish-site.sh"
   },
   "private": false,
-  "files": ["src/*", "bin/*"],
+  "files": [
+    "src/*",
+    "bin/*"
+  ],
   "dependencies": {
     "commander": "^2.19.0",
-    "prettier": "^1.14.3",
+    "prettier": "2.8.4",
     "railroad-diagrams": "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963",
     "showdown": "^1.0.0",
     "utf-railroad": "^1.0.1"

@@ -32,12 +32,12 @@ describe("ungroup", () => {
             { terminal: "a" },
             { terminal: "b" },
             {
-              sequence: [{ terminal: "c" }, { terminal: "d" }]
-            }
-          ]
+              sequence: [{ terminal: "c" }, { terminal: "d" }],
+            },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -54,11 +54,11 @@ describe("ungroup", () => {
             { terminal: "a" },
             { terminal: "b" },
             { terminal: "c" },
-            { nonTerminal: "d" }
-          ]
+            { nonTerminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -75,11 +75,11 @@ describe("ungroup", () => {
             { terminal: "a" },
             { terminal: "b" },
             { terminal: "c" },
-            { terminal: "d" }
-          ]
+            { terminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -96,11 +96,11 @@ describe("ungroup", () => {
             { terminal: "a" },
             { terminal: "b" },
             { terminal: "c" },
-            { terminal: "d" }
-          ]
+            { terminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 });

@@ -1,7 +1,7 @@
 const { NodeTypes } = require("../ebnf-transform");
 
 module.exports = {
-  [NodeTypes.Optional]: current => {
+  [NodeTypes.Optional]: (current) => {
     if (current.optional.optional) {
       return current.optional;
     }
@@ -9,5 +9,5 @@ module.exports = {
       return current.optional;
     }
     return current;
-  }
+  },
 };

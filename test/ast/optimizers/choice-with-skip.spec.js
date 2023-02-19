@@ -26,11 +26,11 @@ describe("choice-with-skip", () => {
             { terminal: "a" },
             { terminal: "b" },
             {
-              choice: [{ skip: true }, { terminal: "c" }, { terminal: "d" }]
-            }
-          ]
-        }
-      }
+              choice: [{ skip: true }, { terminal: "c" }, { terminal: "d" }],
+            },
+          ],
+        },
+      },
     ]);
   });
 
@@ -50,12 +50,12 @@ describe("choice-with-skip", () => {
               choice: [
                 { skip: true },
                 { terminal: "c" },
-                { repetition: { terminal: "d" }, skippable: false }
-              ]
-            }
-          ]
-        }
-      }
+                { repetition: { terminal: "d" }, skippable: false },
+              ],
+            },
+          ],
+        },
+      },
     ]);
   });
 
@@ -71,10 +71,10 @@ describe("choice-with-skip", () => {
           choice: [
             { skip: true },
             { terminal: "a" },
-            { repetition: { terminal: "d" }, skippable: false }
-          ]
-        }
-      }
+            { repetition: { terminal: "d" }, skippable: false },
+          ],
+        },
+      },
     ]);
   });
 });

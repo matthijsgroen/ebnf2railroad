@@ -8,8 +8,8 @@ describe("EBNF parser", () => {
     const result = parseEbnf(text);
     expect(result).to.eql([
       {
-        comment: " Comment data "
-      }
+        comment: " Comment data ",
+      },
     ]);
   });
 
@@ -17,9 +17,7 @@ describe("EBNF parser", () => {
     const text = 'foo = "bar";';
     const result = parseEbnf(text);
     expect(result).to.have.lengthOf(1);
-    expect(result[0])
-      .to.have.property("identifier")
-      .eq("foo");
+    expect(result[0]).to.have.property("identifier").eq("foo");
     expect(result[0]).to.have.property("definition");
   });
 
@@ -27,9 +25,7 @@ describe("EBNF parser", () => {
     const text = 'FooBar = "baz";';
     const result = parseEbnf(text);
     expect(result).to.have.lengthOf(1);
-    expect(result[0])
-      .to.have.property("identifier")
-      .eq("FooBar");
+    expect(result[0]).to.have.property("identifier").eq("FooBar");
     expect(result[0]).to.have.property("definition");
   });
 
@@ -40,12 +36,8 @@ describe("EBNF parser", () => {
       `);
     const result = parseEbnf(text);
     expect(result).to.have.lengthOf(2);
-    expect(result[0])
-      .to.have.property("identifier")
-      .eq("foo");
-    expect(result[1])
-      .to.have.property("identifier")
-      .eq("baz");
+    expect(result[0]).to.have.property("identifier").eq("foo");
+    expect(result[1]).to.have.property("identifier").eq("baz");
   });
 
   it("adds line numbers of start of definition", () => {
@@ -57,12 +49,8 @@ describe("EBNF parser", () => {
       `);
     const result = parseEbnf(text);
     expect(result).to.have.lengthOf(2);
-    expect(result[0])
-      .to.have.property("location")
-      .eq(2);
-    expect(result[1])
-      .to.have.property("location")
-      .eq(5);
+    expect(result[0]).to.have.property("location").eq(2);
+    expect(result[1]).to.have.property("location").eq(5);
   });
 
   it("supports terminals", () => {
@@ -87,7 +75,7 @@ describe("EBNF parser", () => {
     const result = parseEbnf(text);
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
-      sequence: [{ terminal: "a" }, { nonTerminal: "b" }, { terminal: "c" }]
+      sequence: [{ terminal: "a" }, { nonTerminal: "b" }, { terminal: "c" }],
     });
   });
 
@@ -100,8 +88,8 @@ describe("EBNF parser", () => {
         { terminal: "a" },
         { nonTerminal: "b" },
         { nonTerminal: "c" },
-        { terminal: "d" }
-      ]
+        { terminal: "d" },
+      ],
     });
   });
 
@@ -112,8 +100,8 @@ describe("EBNF parser", () => {
     expect(firstDefinition).to.eql({
       choice: [
         { terminal: "a" },
-        { sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }] }
-      ]
+        { sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }] },
+      ],
     });
   });
 
@@ -125,11 +113,11 @@ describe("EBNF parser", () => {
       sequence: [
         {
           group: {
-            choice: [{ terminal: "a" }, { nonTerminal: "b" }]
-          }
+            choice: [{ terminal: "a" }, { nonTerminal: "b" }],
+          },
         },
-        { nonTerminal: "c" }
-      ]
+        { nonTerminal: "c" },
+      ],
     });
   });
 
@@ -140,8 +128,8 @@ describe("EBNF parser", () => {
     expect(firstDefinition).to.eql({
       sequence: [
         { optional: { terminal: "a" } },
-        { optional: { terminal: "b" } }
-      ]
+        { optional: { terminal: "b" } },
+      ],
     });
   });
 
@@ -152,8 +140,8 @@ describe("EBNF parser", () => {
     expect(firstDefinition).to.eql({
       choice: [
         { repetition: { terminal: "a" }, skippable: true },
-        { repetition: { terminal: "b" }, skippable: true }
-      ]
+        { repetition: { terminal: "b" }, skippable: true },
+      ],
     });
   });
 
@@ -163,7 +151,7 @@ describe("EBNF parser", () => {
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
       repetition: { terminal: "a" },
-      amount: "5"
+      amount: "5",
     });
   });
 
@@ -172,7 +160,7 @@ describe("EBNF parser", () => {
     const result = parseEbnf(text);
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
-      specialSequence: "a-z"
+      specialSequence: "a-z",
     });
   });
 
@@ -182,7 +170,7 @@ describe("EBNF parser", () => {
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
       include: "bar",
-      exceptTerminal: "baz"
+      exceptTerminal: "baz",
     });
   });
 
@@ -192,7 +180,7 @@ describe("EBNF parser", () => {
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
       include: "bar",
-      exceptNonTerminal: "baz"
+      exceptNonTerminal: "baz",
     });
   });
 
@@ -202,7 +190,7 @@ describe("EBNF parser", () => {
     const firstDefinition = result[0].definition;
     expect(firstDefinition).to.eql({
       group: { terminal: "bar" },
-      comment: " baz "
+      comment: " baz ",
     });
   });
 
@@ -226,7 +214,7 @@ describe("EBNF parser", () => {
         "'}'",
         "')'",
         "']'",
-        "'COMMENT'"
+        "'COMMENT'",
       ]);
       expect(exception.data.token).to.eql("'('");
     });

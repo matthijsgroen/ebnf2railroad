@@ -3,7 +3,8 @@ const {
   Path,
   Diagram,
   Comment,
-  Terminal
+  Terminal,
+  DiagramMultiContainer,
 } = require("railroad-diagrams");
 
 const subclassOf = (baseClass, superClass) => {
@@ -42,15 +43,11 @@ const CommentWithLine = function CommentWithLine(text, { href, title } = {}) {
 };
 subclassOf(CommentWithLine, FakeSVG);
 CommentWithLine.prototype.needsSpace = true;
-CommentWithLine.prototype.format = function(x, y, width) {
+CommentWithLine.prototype.format = function (x, y, width) {
   // Hook up the two sides if this is narrower than its stated width.
   var gaps = determineGaps(width, this.width);
-  Path(x, y)
-    .h(gaps[0])
-    .addTo(this);
-  Path(x, y)
-    .right(width)
-    .addTo(this);
+  Path(x, y).h(gaps[0]).addTo(this);
+  Path(x, y).right(width).addTo(this);
   Path(x + gaps[0] + this.width, y + this.height)
     .h(gaps[1])
     .addTo(this);
@@ -103,7 +100,7 @@ const Group = function Group(item, label) {
 };
 subclassOf(Group, FakeSVG);
 Group.prototype.needsSpace = true;
-Group.prototype.format = function(x, y, width) {
+Group.prototype.format = function (x, y, width) {
   var gaps = determineGaps(width, this.width);
   new Path(x, y).h(gaps[0]).addTo(this);
   new Path(x + gaps[0] + this.width, y + this.height).h(gaps[1]).addTo(this);
@@ -116,7 +113,7 @@ Group.prototype.format = function(x, y, width) {
     height: this.boxUp + this.height + this.down,
     rx: Diagram.ARC_RADIUS,
     ry: Diagram.ARC_RADIUS,
-    class: "group-box"
+    class: "group-box",
   }).addTo(this);
 
   this.item.format(x, y, this.width).addTo(this);
@@ -133,7 +130,163 @@ Group.prototype.format = function(x, y, width) {
   return this;
 };
 
+var Choice = function Choice(normal, items) {
+  if (!(this instanceof Choice))
+    return new Choice(normal, [].slice.call(arguments, 1));
+  DiagramMultiContainer.call(this, "g", items);
+  if (typeof normal !== "number" || normal !== Math.floor(normal)) {
+    throw new TypeError("The first argument of Choice() must be an integer.");
+  } else if (normal < 0 || normal >= items.length) {
+    throw new RangeError(
+      "The first argument of Choice() must be an index for one of the items."
+    );
+  } else {
+    this.normal = normal;
+  }
+  var first = 0;
+  var last = items.length - 1;
+  this.width =
+    Math.max.apply(
+      null,
+      this.items.map(function (el) {
+        return el.width;
+      })
+    ) +
+    Diagram.ARC_RADIUS * 4;
+  this.height = this.items[normal].height;
+  this.up = this.items[first].up;
+  for (var i = first; i < normal; i++) {
+    let arcs = i == normal + 1 ? Diagram.ARC_RADIUS * 2 : Diagram.ARC_RADIUS;
+    this.up += Math.max(
+      arcs,
+      this.items[i].height +
+        this.items[i].down +
+        Diagram.VERTICAL_SEPARATION +
+        this.items[i + 1].up
+    );
+  }
+  // Fix over the Choice of 'railroad-diagrams': height of the last item had to be added as well.
+  this.down = this.items[last].down + this.items[last].height;
+  for (let i = normal + 1; i <= last; i++) {
+    let arcs = i == normal + 1 ? Diagram.ARC_RADIUS * 2 : Diagram.ARC_RADIUS;
+    this.down += Math.max(
+      arcs,
+      this.items[i - 1].height +
+        this.items[i - 1].down +
+        Diagram.VERTICAL_SEPARATION +
+        this.items[i].up
+    );
+  }
+  this.down -= this.items[normal].height; // already counted in Choice.height
+  if (Diagram.DEBUG) {
+    this.attrs["data-updown"] = this.up + " " + this.height + " " + this.down;
+    this.attrs["data-type"] = "choice";
+  }
+};
+subclassOf(Choice, DiagramMultiContainer);
+Choice.prototype.format = function (x, y, width) {
+  // Hook up the two sides if this is narrower than its stated width.
+  var gaps = determineGaps(width, this.width);
+  Path(x, y).h(gaps[0]).addTo(this);
+  Path(x + gaps[0] + this.width, y + this.height)
+    .h(gaps[1])
+    .addTo(this);
+  x += gaps[0];
+
+  var last = this.items.length - 1;
+  var innerWidth = this.width - Diagram.ARC_RADIUS * 4;
+
+  let distanceFromY = 0;
+  // Do the elements that curve above
+  for (var i = this.normal - 1; i >= 0; i--) {
+    var item = this.items[i];
+    if (i == this.normal - 1) {
+      distanceFromY = Math.max(
+        Diagram.ARC_RADIUS * 2,
+        this.items[this.normal].up +
+          Diagram.VERTICAL_SEPARATION +
+          item.down +
+          item.height
+      );
+    }
+    Path(x, y)
+      .arc("se")
+      .up(distanceFromY - Diagram.ARC_RADIUS * 2)
+      .arc("wn")
+      .addTo(this);
+    item
+      .format(x + Diagram.ARC_RADIUS * 2, y - distanceFromY, innerWidth)
+      .addTo(this);
+    Path(
+      x + Diagram.ARC_RADIUS * 2 + innerWidth,
+      y - distanceFromY + item.height
+    )
+      .arc("ne")
+      .down(distanceFromY - item.height + this.height - Diagram.ARC_RADIUS * 2)
+      .arc("ws")
+      .addTo(this);
+    distanceFromY += Math.max(
+      Diagram.ARC_RADIUS,
+      item.up +
+        Diagram.VERTICAL_SEPARATION +
+        (i == 0 ? 0 : this.items[i - 1].down + this.items[i - 1].height)
+    );
+  }
+
+  // Do the straight-line path.
+  Path(x, y)
+    .right(Diagram.ARC_RADIUS * 2)
+    .addTo(this);
+  this.items[this.normal]
+    .format(x + Diagram.ARC_RADIUS * 2, y, innerWidth)
+    .addTo(this);
+  Path(x + Diagram.ARC_RADIUS * 2 + innerWidth, y + this.height)
+    .right(Diagram.ARC_RADIUS * 2)
+    .addTo(this);
+
+  // Do the elements that curve below
+  distanceFromY = 0;
+  for (let i = this.normal + 1; i <= last; i++) {
+    let item = this.items[i];
+    if (i == this.normal + 1) {
+      distanceFromY = Math.max(
+        Diagram.ARC_RADIUS * 2,
+        this.height +
+          this.items[this.normal].down +
+          Diagram.VERTICAL_SEPARATION +
+          item.up
+      );
+    }
+    Path(x, y)
+      .arc("ne")
+      .down(distanceFromY - Diagram.ARC_RADIUS * 2)
+      .arc("ws")
+      .addTo(this);
+    item
+      .format(x + Diagram.ARC_RADIUS * 2, y + distanceFromY, innerWidth)
+      .addTo(this);
+    Path(
+      x + Diagram.ARC_RADIUS * 2 + innerWidth,
+      y + distanceFromY + item.height
+    )
+      .arc("se")
+      .up(distanceFromY - Diagram.ARC_RADIUS * 2 + item.height - this.height)
+      .arc("wn")
+      .addTo(this);
+    distanceFromY += Math.max(
+      Diagram.ARC_RADIUS,
+      item.height +
+        item.down +
+        Diagram.VERTICAL_SEPARATION +
+        (i == last ? 0 : this.items[i + 1].up)
+    );
+  }
+
+  return this;
+};
+
 module.exports = {
+  Choice,
   CommentWithLine,
-  Group
+  Group,
 };

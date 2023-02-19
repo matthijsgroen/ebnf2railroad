@@ -14,17 +14,17 @@ const optimizeAST = ebnfOptimizer([
   optionalChoices,
   choiceWithSkip,
   repetition,
-  choiceClustering
+  choiceClustering,
 ]);
 
 const optimizeText = ebnfOptimizer([
   ungroup,
   deduplicateChoices,
   unwrapOptional,
-  optionalChoices
+  optionalChoices,
 ]);
 
 module.exports = {
   optimizeAST,
-  optimizeText
+  optimizeText,
 };

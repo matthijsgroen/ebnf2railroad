@@ -1,4 +1,4 @@
-const dedent = text => {
+const dedent = (text) => {
   const lines = text.split("\n");
   let minimalIndent = Infinity;
 
@@ -14,10 +14,10 @@ const dedent = text => {
 
   return text
     .split("\n")
-    .map(v => v.slice(minimalIndent))
+    .map((v) => v.slice(minimalIndent))
     .reduce((r, l) => r + l + "\n", "");
 };
 
 module.exports = {
-  dedent
+  dedent,
 };

@@ -4,7 +4,7 @@ const { dedent } = require("../src/dedent");
 const {
   createAlphabeticalToc,
   createStructuralToc,
-  createDefinitionMetadata
+  createDefinitionMetadata,
 } = require("../src/toc");
 
 describe("table of contents", () => {
@@ -41,7 +41,7 @@ describe("table of contents", () => {
         { name: "set char" },
         { name: "set num" },
         { name: "statement" },
-        { name: "string" }
+        { name: "string" },
       ]);
     });
   });
@@ -61,24 +61,24 @@ describe("table of contents", () => {
                 {
                   name: "string",
                   characterSet: false,
-                  children: [{ name: "lowercase letter", characterSet: false }]
+                  children: [{ name: "lowercase letter", characterSet: false }],
                 },
                 {
                   name: "condition",
                   characterSet: false,
                   children: [
                     { name: "condition", characterSet: false, recursive: true },
-                    { name: "statement", characterSet: false, recursive: true }
-                  ]
-                }
-              ]
+                    { name: "statement", characterSet: false, recursive: true },
+                  ],
+                },
+              ],
             },
             {
               name: "comment",
               characterSet: false,
-              children: [{ name: "lowercase letter", characterSet: false }]
-            }
-          ]
+              children: [{ name: "lowercase letter", characterSet: false }],
+            },
+          ],
         },
         {
           name: "second root",
@@ -95,14 +95,14 @@ describe("table of contents", () => {
                   characterSet: true,
                   children: [
                     { name: "set num", characterSet: true },
-                    { name: "set", characterSet: true }
-                  ]
-                }
-              ]
+                    { name: "set", characterSet: true },
+                  ],
+                },
+              ],
             },
-            { name: "leaf", characterSet: false }
-          ]
-        }
+            { name: "leaf", characterSet: false },
+          ],
+        },
       ]);
     });
   });
@@ -111,55 +111,37 @@ describe("table of contents", () => {
     it("marks elements as 'root'", () => {
       const tree = createStructuralToc(ast);
       const metadata = createDefinitionMetadata(tree);
-      expect(metadata)
-        .have.nested.property("root.root")
-        .eq(true);
-      expect(metadata)
-        .have.nested.property("second root.root")
-        .eq(true);
+      expect(metadata).have.nested.property("root.root").eq(true);
+      expect(metadata).have.nested.property("second root.root").eq(true);
       expect(metadata).not.have.nested.property("set.root");
     });
 
     it("counts element encounters", () => {
       const tree = createStructuralToc(ast);
       const metadata = createDefinitionMetadata(tree);
-      expect(metadata)
-        .have.nested.property("root.counted")
-        .eq(1);
-      expect(metadata)
-        .have.nested.property("condition.counted")
-        .eq(2);
+      expect(metadata).have.nested.property("root.counted").eq(1);
+      expect(metadata).have.nested.property("condition.counted").eq(2);
     });
 
     it("marks if elements are recursive", () => {
       const tree = createStructuralToc(ast);
       const metadata = createDefinitionMetadata(tree);
-      expect(metadata)
-        .have.nested.property("condition.recursive")
-        .eq(true);
+      expect(metadata).have.nested.property("condition.recursive").eq(true);
     });
 
     it("marks if elements are common in structure", () => {
       const tree = createStructuralToc(ast);
       const metadata = createDefinitionMetadata(tree);
-      expect(metadata)
-        .have.nested.property("root.common")
-        .eq(false);
-      expect(metadata)
-        .have.nested.property("statement.common")
-        .eq(true);
+      expect(metadata).have.nested.property("root.common").eq(false);
+      expect(metadata).have.nested.property("statement.common").eq(true);
     });
 
     it("marks if elements are character sets", () => {
       const tree = createStructuralToc(ast);
       const metadata = createDefinitionMetadata(tree);
       expect(metadata).not.have.nested.property("root.characterSet");
-      expect(metadata)
-        .have.nested.property("set.characterSet")
-        .eq(true);
-      expect(metadata)
-        .have.nested.property("set char.characterSet")
-        .eq(true);
+      expect(metadata).have.nested.property("set.characterSet").eq(true);
+      expect(metadata).have.nested.property("set char.characterSet").eq(true);
     });
   });
 });

@@ -2,7 +2,6 @@ const { travelers, identifyNode, NodeTypes } = require("./ast/ebnf-transform");
 const { traverse } = require("./ast/traverse");
 const { optimizeAST } = require("./structure-optimizer");
 const {
-  Choice,
   Comment,
   ComplexDiagram,
   Diagram,
@@ -12,17 +11,23 @@ const {
   Sequence,
   Skip,
   Stack,
-  Terminal
+  Terminal,
 } = require("railroad-diagrams");
-const { CommentWithLine, Group } = require("./extra-diagram-elements");
+const { CommentWithLine, Group, Choice } = require("./extra-diagram-elements");
 
-const dasherize = str => str.replace(/\s+/g, "-");
+/**
+ * Replaces one or multiple spaces with a dash
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+const dasherize = (str) => str.replace(/\s+/g, "-");
 
 const ExtraNodeTypes = {
-  Skip: 100
+  Skip: 100,
 };
 
-const diagramTraverse = traverse(node => {
+const diagramTraverse = traverse((node) => {
   const result = identifyNode(node);
   if (result !== undefined) return result;
   if (node.skip) return ExtraNodeTypes.Skip;
@@ -31,30 +36,30 @@ const diagramTraverse = traverse(node => {
   [NodeTypes.Repetition]: (node, next) => ({
     ...node,
     repetition: next(node.repetition),
-    ...(node.repeater && { repeater: next(node.repeater) })
-  })
+    ...(node.repeater && { repeater: next(node.repeater) }),
+  }),
 });
 
 const baseDiagramRendering = {
-  [NodeTypes.Production]: node =>
+  [NodeTypes.Production]: (node) =>
     node.complex ? ComplexDiagram(node.definition) : Diagram(node.definition),
-  [NodeTypes.ExceptNonTerminal]: node =>
+  [NodeTypes.ExceptNonTerminal]: (node) =>
     NonTerminal(`${node.include} - ${node.exceptNonTerminal}`, {}),
-  [NodeTypes.ExceptTerminal]: node =>
+  [NodeTypes.ExceptTerminal]: (node) =>
     NonTerminal(`${node.include} - ${node.exceptTerminal}`, {}),
-  [NodeTypes.Terminal]: node => Terminal(node.terminal),
-  [NodeTypes.NonTerminal]: node =>
+  [NodeTypes.Terminal]: (node) => Terminal(node.terminal),
+  [NodeTypes.NonTerminal]: (node) =>
     NonTerminal(node.nonTerminal, {
-      href: `#${dasherize(node.nonTerminal)}`
+      href: `#${dasherize(node.nonTerminal)}`,
     }),
-  [NodeTypes.Special]: node => {
+  [NodeTypes.Special]: (node) => {
     const sequence = NonTerminal(" " + node.specialSequence + " ", {});
     sequence.attrs.class = "special-sequence";
     return sequence;
   },
-  [NodeTypes.Choice]: node => Choice(0, ...node.choice),
-  [NodeTypes.Sequence]: node => Sequence(...node.sequence),
-  [NodeTypes.Comment]: node => CommentWithLine(node.comment, {}),
+  [NodeTypes.Choice]: (node) => Choice(0, ...node.choice),
+  [NodeTypes.Sequence]: (node) => Sequence(...node.sequence),
+  [NodeTypes.Comment]: (node) => CommentWithLine(node.comment, {}),
   [NodeTypes.Group]: (node, production) => {
     if (node.comment) {
       const commentOnOptional = production.group && production.group.optional;
@@ -72,9 +77,9 @@ const baseDiagramRendering = {
 
     return node.group;
   },
-  [NodeTypes.Optional]: node => Choice(1, Skip(), node.optional),
+  [NodeTypes.Optional]: (node) => Choice(1, Skip(), node.optional),
   [ExtraNodeTypes.Skip]: () => Skip(),
-  [NodeTypes.Repetition]: node => {
+  [NodeTypes.Repetition]: (node) => {
     if (node.skippable === true) {
       return Choice(1, Skip(), OneOrMore(node.repetition));
     }
@@ -86,12 +91,12 @@ const baseDiagramRendering = {
     if (node.amount !== undefined) {
       return OneOrMore(node.repetition, Comment(`${node.amount} ×`, {}));
     }
-  }
+  },
 };
 
-const maxChoiceLength = max => ({
-  [NodeTypes.Choice]: node => {
-    const makeChoice = items => new Choice(0, items);
+const maxChoiceLength = (max) => ({
+  [NodeTypes.Choice]: (node) => {
+    const makeChoice = (items) => new Choice(0, items);
     const choiceOptions = node.items;
     const choiceLists = [];
     while (choiceOptions.length > max) {
@@ -102,11 +107,11 @@ const maxChoiceLength = max => ({
     return choiceLists.length > 1
       ? HorizontalChoice(...choiceLists)
       : choiceLists[0];
-  }
+  },
 });
 
 const optimizeSequenceLength = {
-  [NodeTypes.Sequence]: node => {
+  [NodeTypes.Sequence]: (node) => {
     if (node.width > 450) {
       const subSequences = node.items
         .reduce(
@@ -131,19 +136,22 @@ const optimizeSequenceLength = {
           },
           [[]]
         )
-        .filter(array => array.length > 0);
+        .filter((array) => array.length > 0);
+      if (subSequences.length === 1) {
+        return Sequence(...subSequences[0]);
+      }
       return Stack(
-        ...subSequences.map(subSequence => Sequence(...subSequence))
+        ...subSequences.map((subSequence) => Sequence(...subSequence))
       );
     }
     return node;
-  }
+  },
 };
 
 const MAX_CHOICE_LENGTH = 10;
 
-const identity = x => x;
-const dot = f => g => x => f(g(x));
+const identity = (x) => x;
+const dot = (f) => (g) => (x) => f(g(x));
 
 const createDiagram = (production, metadata, ast, options) => {
   const expanded = [];
@@ -157,13 +165,13 @@ const createDiagram = (production, metadata, ast, options) => {
           options.optimizeDiagrams &&
           optimizeSequenceLength,
         options.overview && {
-          [NodeTypes.NonTerminal]: node => {
+          [NodeTypes.NonTerminal]: (node) => {
             const expand =
               !expanded.includes(node.text) &&
               metadata[node.text] &&
               !metadata[node.text].characterSet;
 
-            const nested = ast.find(item => item.identifier === node.text);
+            const nested = ast.find((item) => item.identifier === node.text);
             if (!expand || !nested) {
               return node;
             }
@@ -173,15 +181,15 @@ const createDiagram = (production, metadata, ast, options) => {
               renderDiagram(nested.definition),
               Comment(node.text, { href: `#${dasherize(node.text)}` })
             );
-          }
-        }
+          },
+        },
       ].filter(Boolean)
     )
   )(options.optimizeDiagrams === false ? identity : optimizeAST);
 
   const diagram = renderDiagram({
     ...production,
-    complex: options.complex
+    complex: options.complex,
   });
 
   return diagram
@@ -190,5 +198,5 @@ const createDiagram = (production, metadata, ast, options) => {
 };
 
 module.exports = {
-  createDiagram
+  createDiagram,
 };

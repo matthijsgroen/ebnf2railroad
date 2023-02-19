@@ -1,4 +1,4 @@
-const getReferences = production => {
+const getReferences = (production) => {
   if (production.definition) {
     return getReferences(production.definition);
   }
@@ -10,13 +10,13 @@ const getReferences = production => {
   }
   if (production.choice) {
     return production.choice
-      .map(item => getReferences(item))
+      .map((item) => getReferences(item))
       .reduce((acc, item) => acc.concat(item), [])
       .filter(Boolean);
   }
   if (production.sequence) {
     return production.sequence
-      .map(item => getReferences(item))
+      .map((item) => getReferences(item))
       .reduce((acc, item) => acc.concat(item), [])
       .filter(Boolean);
   }
@@ -40,15 +40,15 @@ const getReferences = production => {
 
 const searchReferencesToIdentifier = (identifier, productions) =>
   productions
-    .filter(production =>
-      getReferences(production).some(ref => ref === identifier)
+    .filter((production) =>
+      getReferences(production).some((ref) => ref === identifier)
     )
-    .map(production => production.identifier);
+    .map((production) => production.identifier);
 
 const searchReferencesFromIdentifier = (identifier, ast) =>
   ast
-    .filter(production => production.identifier === identifier)
-    .map(production => getReferences(production))
+    .filter((production) => production.identifier === identifier)
+    .map((production) => getReferences(production))
     .reduce((acc, item) => acc.concat(item), [])
     .filter(Boolean)
     .filter((item, index, list) => list.indexOf(item) === index);
@@ -56,5 +56,5 @@ const searchReferencesFromIdentifier = (identifier, ast) =>
 module.exports = {
   getReferences,
   searchReferencesFromIdentifier,
-  searchReferencesToIdentifier
+  searchReferencesToIdentifier,
 };

@@ -25,10 +25,10 @@ describe("unwrap optionals", () => {
           sequence: [
             { terminal: "a" },
             { terminal: "b" },
-            { optional: { choice: [{ terminal: "c" }, { terminal: "d" }] } }
-          ]
-        }
-      }
+            { optional: { choice: [{ terminal: "c" }, { terminal: "d" }] } },
+          ],
+        },
+      },
     ]);
   });
 
@@ -47,13 +47,13 @@ describe("unwrap optionals", () => {
             { terminal: "b" },
             {
               repetition: {
-                choice: [{ terminal: "c" }, { terminal: "d" }]
+                choice: [{ terminal: "c" }, { terminal: "d" }],
               },
-              skippable: true
-            }
-          ]
-        }
-      }
+              skippable: true,
+            },
+          ],
+        },
+      },
     ]);
   });
 });

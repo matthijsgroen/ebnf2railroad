@@ -15,19 +15,19 @@ const {
   sequence,
   skip,
   stack,
-  terminal
+  terminal,
 } = require("utf-railroad");
 
 const ExtraNodeTypes = {
-  Skip: 100
+  Skip: 100,
 };
 
 const MAX_CHOICE_LENGTH = 10;
 
-const identity = x => x;
-const dot = f => g => x => f(g(x));
+const identity = (x) => x;
+const dot = (f) => (g) => (x) => f(g(x));
 
-const diagramTraverse = traverse(node => {
+const diagramTraverse = traverse((node) => {
   const result = identifyNode(node);
   if (result !== undefined) return result;
   if (node.skip) return ExtraNodeTypes.Skip;
@@ -36,25 +36,25 @@ const diagramTraverse = traverse(node => {
   [NodeTypes.Repetition]: (node, next) => ({
     ...node,
     repetition: next(node.repetition),
-    ...(node.repeater && { repeater: next(node.repeater) })
-  })
+    ...(node.repeater && { repeater: next(node.repeater) }),
+  }),
 });
 
 const baseDiagramRendering = {
-  [NodeTypes.Production]: node => diagram(node.definition, node.complex),
-  [NodeTypes.ExceptNonTerminal]: node =>
+  [NodeTypes.Production]: (node) => diagram(node.definition, node.complex),
+  [NodeTypes.ExceptNonTerminal]: (node) =>
     nonTerminal(`${node.include} - ${node.exceptNonTerminal}`),
-  [NodeTypes.ExceptTerminal]: node =>
+  [NodeTypes.ExceptTerminal]: (node) =>
     nonTerminal(`${node.include} - ${node.exceptTerminal}`),
-  [NodeTypes.Terminal]: node => terminal(node.terminal),
-  [NodeTypes.NonTerminal]: node => nonTerminal(node.nonTerminal),
-  [NodeTypes.Special]: node => {
+  [NodeTypes.Terminal]: (node) => terminal(node.terminal),
+  [NodeTypes.NonTerminal]: (node) => nonTerminal(node.nonTerminal),
+  [NodeTypes.Special]: (node) => {
     const sequence = nonTerminal(" " + node.specialSequence + " ");
     return sequence;
   },
-  [NodeTypes.Choice]: node => choice(node.choice, 0),
-  [NodeTypes.Sequence]: node => sequence(node.sequence),
-  [NodeTypes.Comment]: node => commentWithLine(node.comment),
+  [NodeTypes.Choice]: (node) => choice(node.choice, 0),
+  [NodeTypes.Sequence]: (node) => sequence(node.sequence),
+  [NodeTypes.Comment]: (node) => commentWithLine(node.comment),
   [NodeTypes.Group]: (node, production) => {
     if (node.comment) {
       const commentOnOptional = production.group && production.group.optional;
@@ -68,9 +68,9 @@ const baseDiagramRendering = {
 
     return node.group;
   },
-  [NodeTypes.Optional]: node => optional(node.optional),
+  [NodeTypes.Optional]: (node) => optional(node.optional),
   [ExtraNodeTypes.Skip]: () => skip(),
-  [NodeTypes.Repetition]: node => {
+  [NodeTypes.Repetition]: (node) => {
     if (node.skippable === true) {
       return choice([skip(), repeater(node.repetition)], 1);
     }
@@ -82,12 +82,12 @@ const baseDiagramRendering = {
     if (node.amount !== undefined) {
       return repeater(node.repetition, comment(`${node.amount} ×`));
     }
-  }
+  },
 };
 
-const maxChoiceLength = max => ({
-  [NodeTypes.Choice]: node => {
-    const makeChoice = items => choice(items, 0);
+const maxChoiceLength = (max) => ({
+  [NodeTypes.Choice]: (node) => {
+    const makeChoice = (items) => choice(items, 0);
     const choiceOptions = node.items;
     const choiceLists = [];
     while (choiceOptions.length > max) {
@@ -98,11 +98,11 @@ const maxChoiceLength = max => ({
     return choiceLists.length > 1
       ? horizontalChoice(choiceLists)
       : choiceLists[0];
-  }
+  },
 });
 
 const optimizeSequenceLength = {
-  [NodeTypes.Sequence]: node => {
+  [NodeTypes.Sequence]: (node) => {
     if (node.width > 450) {
       const subSequences = node.items
         .reduce(
@@ -127,11 +127,11 @@ const optimizeSequenceLength = {
           },
           [[]]
         )
-        .filter(array => array.length > 0);
-      return stack(subSequences.map(subSequence => sequence(subSequence)));
+        .filter((array) => array.length > 0);
+      return stack(subSequences.map((subSequence) => sequence(subSequence)));
     }
     return node;
-  }
+  },
 };
 
 const createDiagram = (production, metadata, ast, options) => {
@@ -153,7 +153,7 @@ const createDiagram = (production, metadata, ast, options) => {
               !metadata[production.nonTerminal].characterSet;
 
             const nested = ast.find(
-              item => item.identifier === production.nonTerminal
+              (item) => item.identifier === production.nonTerminal
             );
             if (!expand || !nested) {
               return node;
@@ -164,20 +164,20 @@ const createDiagram = (production, metadata, ast, options) => {
               renderDiagram(nested.definition),
               production.nonTerminal
             );
-          }
-        }
+          },
+        },
       ].filter(Boolean)
     )
   )(options.optimizeDiagrams === false ? identity : optimizeAST);
 
   const diagram = renderDiagram({
     ...production,
-    complex: options.complex
+    complex: options.complex,
   });
 
   return diagram;
 };
 
 module.exports = {
-  createDiagram
+  createDiagram,
 };
