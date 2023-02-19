@@ -1,6 +1,6 @@
 {
   "name": "ebnf2railroad",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "description": "EBNF to Railroad diagram",
   "keywords": [
     "ebnf",
@@ -28,7 +28,10 @@
     "publish": ".travis/publish-site.sh"
   },
   "private": false,
-  "files": ["src/*", "bin/*"],
+  "files": [
+    "src/*",
+    "bin/*"
+  ],
   "dependencies": {
     "commander": "^2.19.0",
     "prettier": "^1.14.3",
