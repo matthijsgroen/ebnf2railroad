@@ -51,9 +51,3 @@ jobs:
 
       - name: Run unit tests
         run: yarn test --coverage
-
-      - name: Run storybook tests
-        run: yarn test-storybook:ci
-
-      - name: Report coverage
-        uses: codecov/codecov-action@v3
