@@ -1,13 +1,10 @@
-const dasherize = str => str.replace(/\s+/g, "-");
+const dasherize = (str) => str.replace(/\s+/g, "-");
 const sanitize = (str, markup) =>
   markup
-    ? str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
+    ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     : str;
 
-const lineIndent = indent => "\n" + "  ".repeat(indent);
+const lineIndent = (indent) => "\n" + "  ".repeat(indent);
 
 const wrapTag = (tag, attributes, content, markup) =>
   markup
@@ -27,7 +24,7 @@ const defaultOptions = {
   format: false,
   maxLineLength: MAX_LINE_LENGTH,
   lineMargin: LINE_MARGIN_LENGTH,
-  indent: 0
+  indent: 0,
 };
 
 const detectRenderConfig = (item, options) => {
@@ -44,7 +41,7 @@ const detectRenderConfig = (item, options) => {
       offsetLength: 0,
       multiline: true,
       indent: 1,
-      rowCount: 1
+      rowCount: 1,
     };
   }
 
@@ -52,7 +49,9 @@ const detectRenderConfig = (item, options) => {
     item.choice && item.choice.length > 6 && options.format;
   if (multiLineChoiceWithWrap) {
     const longestChoice = item.choice
-      .map(choice => productionToEBNF(choice, { format: false, markup: false }))
+      .map((choice) =>
+        productionToEBNF(choice, { format: false, markup: false })
+      )
       .reduce((acc, elem) => (acc.length > elem.length ? acc : elem));
     const padding = longestChoice.length;
     const rowCount =
@@ -65,7 +64,7 @@ const detectRenderConfig = (item, options) => {
       offsetLength: 0,
       rowCount,
       padding: true,
-      indent: options.indent + 1
+      indent: options.indent + 1,
     };
   }
 
@@ -81,16 +80,18 @@ const calculateMaxLength = (production, format) => {
 const productionToEBNF = (production, setOptions) => {
   const options = {
     ...defaultOptions,
-    ...setOptions
+    ...setOptions,
   };
 
   if (Array.isArray(production)) {
-    return production.map(item => productionToEBNF(item, options)).join("\n\n");
+    return production
+      .map((item) => productionToEBNF(item, options))
+      .join("\n\n");
   }
   if (production.identifier) {
     const renderConfig = detectRenderConfig(production.definition, {
       ...options,
-      offsetLength: production.identifier.length + 3
+      offsetLength: production.identifier.length + 3,
     });
 
     return `${wrapSpan(
@@ -121,7 +122,7 @@ const productionToEBNF = (production, setOptions) => {
       "a",
       {
         class: "ebnf-non-terminal",
-        href: `#${dasherize(production.nonTerminal)}`
+        href: `#${dasherize(production.nonTerminal)}`,
       },
       production.nonTerminal,
       options.markup
@@ -139,7 +140,7 @@ const productionToEBNF = (production, setOptions) => {
             const longestOfColumn = choices
               .filter((elem, index) => index % options.rowCount === inColumn)
               .map(
-                elem =>
+                (elem) =>
                   productionToEBNF(elem, { format: false, markup: false })
                     .length
               )
@@ -147,7 +148,7 @@ const productionToEBNF = (production, setOptions) => {
 
             const length = productionToEBNF(choice, {
               markup: false,
-              format: false
+              format: false,
             }).length;
             const padding = " ".repeat(Math.max(longestOfColumn - length, 0));
 
@@ -165,12 +166,12 @@ const productionToEBNF = (production, setOptions) => {
           .join("")
           // Remove potentially added whitespace paddings at the end of the line
           .split("\n")
-          .map(line => line.trimEnd())
+          .map((line) => line.trimEnd())
           .join("\n")
       );
     }
     return production.choice
-      .map(choice => productionToEBNF(choice, options))
+      .map((choice) => productionToEBNF(choice, options))
       .join(" | ");
   }
   if (production.sequence) {
@@ -184,9 +185,9 @@ const productionToEBNF = (production, setOptions) => {
 
     return (
       production.sequence
-        .map(element => ({
+        .map((element) => ({
           element,
-          length: calculateMaxLength(element, options.format)
+          length: calculateMaxLength(element, options.format),
         }))
         .map(({ element }, index, list) => {
           if (index === 0) return productionToEBNF(element, options);
@@ -214,7 +215,7 @@ const productionToEBNF = (production, setOptions) => {
           const offsetLength = addBreak ? 0 : currentLength;
           const output = productionToEBNF(element, {
             ...options,
-            offsetLength
+            offsetLength,
           });
           if (options.format && output.indexOf("\n") !== -1) {
             const lastLineLength = output.split("\n").slice(-1)[0].length;
@@ -226,7 +227,7 @@ const productionToEBNF = (production, setOptions) => {
         .join("")
         // Remove potentially added whitespace paddings at the end of the line
         .split("\n")
-        .map(line => line.trimEnd())
+        .map((line) => line.trimEnd())
         .join("\n")
     );
   }
@@ -291,7 +292,7 @@ const productionToEBNF = (production, setOptions) => {
   if (production.exceptNonTerminal) {
     return `${productionToEBNF(
       {
-        nonTerminal: production.include
+        nonTerminal: production.include,
       },
       options
     )} - ${productionToEBNF(
@@ -302,7 +303,7 @@ const productionToEBNF = (production, setOptions) => {
   if (production.exceptTerminal) {
     return `${productionToEBNF(
       {
-        nonTerminal: production.include
+        nonTerminal: production.include,
       },
       options
     )} - ${productionToEBNF({ terminal: production.exceptTerminal }, options)}`;
@@ -311,5 +312,5 @@ const productionToEBNF = (production, setOptions) => {
 };
 
 module.exports = {
-  productionToEBNF
+  productionToEBNF,
 };

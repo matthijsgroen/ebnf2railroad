@@ -167,7 +167,7 @@ var Choice = function Choice(normal, items) {
   }
   // Fix over the Choice of 'railroad-diagrams': height of the last item had to be added as well.
   this.down = this.items[last].down + this.items[last].height;
-  for (var i = normal + 1; i <= last; i++) {
+  for (let i = normal + 1; i <= last; i++) {
     let arcs = i == normal + 1 ? Diagram.ARC_RADIUS * 2 : Diagram.ARC_RADIUS;
     this.down += Math.max(
       arcs,
@@ -196,11 +196,12 @@ Choice.prototype.format = function (x, y, width) {
   var last = this.items.length - 1;
   var innerWidth = this.width - Diagram.ARC_RADIUS * 4;
 
+  let distanceFromY = 0;
   // Do the elements that curve above
   for (var i = this.normal - 1; i >= 0; i--) {
     var item = this.items[i];
     if (i == this.normal - 1) {
-      var distanceFromY = Math.max(
+      distanceFromY = Math.max(
         Diagram.ARC_RADIUS * 2,
         this.items[this.normal].up +
           Diagram.VERTICAL_SEPARATION +
@@ -244,10 +245,11 @@ Choice.prototype.format = function (x, y, width) {
     .addTo(this);
 
   // Do the elements that curve below
-  for (var i = this.normal + 1; i <= last; i++) {
-    var item = this.items[i];
+  distanceFromY = 0;
+  for (let i = this.normal + 1; i <= last; i++) {
+    let item = this.items[i];
     if (i == this.normal + 1) {
-      var distanceFromY = Math.max(
+      distanceFromY = Math.max(
         Diagram.ARC_RADIUS * 2,
         this.height +
           this.items[this.normal].down +

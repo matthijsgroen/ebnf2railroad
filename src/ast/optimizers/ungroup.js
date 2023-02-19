@@ -10,9 +10,9 @@ module.exports = {
     }
     return current.group;
   },
-  [NodeTypes.Sequence]: current => {
+  [NodeTypes.Sequence]: (current) => {
     if (!current.sequence) return current;
-    const hasSubSequence = current.sequence.some(node => node.sequence);
+    const hasSubSequence = current.sequence.some((node) => node.sequence);
     if (hasSubSequence) {
       return {
         ...current,
@@ -20,7 +20,7 @@ module.exports = {
           (items, elem) =>
             elem.sequence ? items.concat(elem.sequence) : items.concat(elem),
           []
-        )
+        ),
       };
     }
     if (current.sequence.length === 1) {
@@ -28,8 +28,8 @@ module.exports = {
     }
     return current;
   },
-  [NodeTypes.Choice]: current => {
-    const hasSubChoice = current.choice.some(node => node.choice);
+  [NodeTypes.Choice]: (current) => {
+    const hasSubChoice = current.choice.some((node) => node.choice);
     if (hasSubChoice) {
       return {
         ...current,
@@ -37,9 +37,9 @@ module.exports = {
           (items, elem) =>
             elem.choice ? items.concat(elem.choice) : items.concat(elem),
           []
-        )
+        ),
       };
     }
     return current;
-  }
+  },
 };

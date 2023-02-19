@@ -1,4 +1,4 @@
-const traverse = classifier => travelers => transformers => {
+const traverse = (classifier) => (travelers) => (transformers) => {
   const transform = (node, initialResult = node, parents = []) => {
     const nodeType = classifier(node);
 
@@ -6,7 +6,7 @@ const traverse = classifier => travelers => transformers => {
     // Travel
     const traveler = travelers[nodeType];
     const updatedNode = traveler
-      ? traveler(node, aNext => {
+      ? traveler(node, (aNext) => {
           const result = transform(aNext, aNext, [node, ...parents]);
           if (result !== aNext) {
             transformed = true;
@@ -23,8 +23,8 @@ const traverse = classifier => travelers => transformers => {
         typeof transformer === "function"
           ? transformer(res, node, parents)
           : transformer[nodeType]
-            ? transformer[nodeType](res, node, parents)
-            : res,
+          ? transformer[nodeType](res, node, parents)
+          : res,
       startResult
     );
   };

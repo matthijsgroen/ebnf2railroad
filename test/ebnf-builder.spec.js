@@ -107,7 +107,7 @@ describe("EBNF Builder", () => {
       );
       const rawResult = productionToEBNF(ast[0], {
         markup: false,
-        format: false
+        format: false,
       });
       expect(rawResult).to.eql(
         "statement = a | b | cd | e | f | ghi | jkl | m | n | o | p | q | rs | t ;"
@@ -162,7 +162,7 @@ describe("EBNF Builder", () => {
       );
       const rawResult = productionToEBNF(ast[0], {
         markup: false,
-        format: false
+        format: false,
       });
       expect(rawResult).to.eql(
         "statement = abcdef something very long , g , hijklm , n , o , p , q , r , s , t , uu , v , w , q , y , z ;"

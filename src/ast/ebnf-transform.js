@@ -13,10 +13,10 @@ const NodeTypes = {
   Repetition: 9,
   Special: 10,
   ExceptTerminal: 11,
-  ExceptNonTerminal: 12
+  ExceptNonTerminal: 12,
 };
 
-const identifyNode = node => {
+const identifyNode = (node) => {
   if (Array.isArray(node)) return NodeTypes.Root;
   if (node.definition) return NodeTypes.Production;
   if (node.choice) return NodeTypes.Choice;
@@ -37,33 +37,33 @@ const travelers = {
   [NodeTypes.Root]: (node, next) => node.map(next),
   [NodeTypes.Production]: (node, next) => ({
     ...node,
-    definition: next(node.definition)
+    definition: next(node.definition),
   }),
   [NodeTypes.Choice]: (node, next) => ({
     ...node,
-    choice: node.choice.map(next)
+    choice: node.choice.map(next),
   }),
   [NodeTypes.Group]: (node, next) => ({
     ...node,
-    group: next(node.group)
+    group: next(node.group),
   }),
   [NodeTypes.Sequence]: (node, next) => ({
     ...node,
-    sequence: node.sequence.map(next)
+    sequence: node.sequence.map(next),
   }),
   [NodeTypes.Optional]: (node, next) => ({
     ...node,
-    optional: next(node.optional)
+    optional: next(node.optional),
   }),
   [NodeTypes.Repetition]: (node, next) => ({
     ...node,
-    repetition: next(node.repetition)
-  })
+    repetition: next(node.repetition),
+  }),
 };
 
 const ebnfTransform = traverse(identifyNode)(travelers);
 
-const ebnfOptimizer = transformers => ast => {
+const ebnfOptimizer = (transformers) => (ast) => {
   const optimize = ebnfTransform(transformers);
   let current = ast;
   let transformed = optimize(ast);
@@ -79,5 +79,5 @@ module.exports = {
   ebnfOptimizer,
   NodeTypes,
   identifyNode,
-  travelers
+  travelers,
 };

@@ -21,10 +21,10 @@ describe("deduplicate choices", () => {
       {
         identifier: "definition",
         definition: {
-          choice: [{ terminal: "a" }, { terminal: "b" }]
+          choice: [{ terminal: "a" }, { terminal: "b" }],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -37,8 +37,8 @@ describe("deduplicate choices", () => {
       {
         identifier: "definition",
         definition: { terminal: "a" },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -56,11 +56,11 @@ describe("deduplicate choices", () => {
           choice: [
             { terminal: "a" },
             { terminal: "b" },
-            { group: { terminal: "c" }, comment: " comment " }
-          ]
+            { group: { terminal: "c" }, comment: " comment " },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -87,11 +87,11 @@ describe("deduplicate choices", () => {
           choice: [
             { terminal: "a" },
             { terminal: "b" },
-            { group: { terminal: "c" }, comment: " comment 1 " }
-          ]
+            { group: { terminal: "c" }, comment: " comment 1 " },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 });

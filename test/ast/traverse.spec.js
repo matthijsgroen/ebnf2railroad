@@ -9,11 +9,11 @@ describe("traverse", () => {
       const ast = parseEbnf(text);
       let classified = false;
 
-      const classifier = node => (Array.isArray(node) ? "root" : "other");
+      const classifier = (node) => (Array.isArray(node) ? "root" : "other");
       const travelers = {
         root: () => {
           classified = true;
-        }
+        },
       };
       const transformers = [];
 
@@ -27,13 +27,13 @@ describe("traverse", () => {
       const ast = parseEbnf(text);
       let traveled = false;
 
-      const classifier = node =>
+      const classifier = (node) =>
         Array.isArray(node) ? "root" : node.identifier ? "branch" : "leaf";
       const travelers = {
         root: (root, next) => root.map(next),
         branch: () => {
           traveled = true;
-        }
+        },
       };
       const transformers = [];
 
@@ -47,44 +47,44 @@ describe("traverse", () => {
       const ast = parseEbnf(text);
       let leafs = [];
 
-      const classifier = node =>
+      const classifier = (node) =>
         Array.isArray(node)
           ? "root"
           : node.identifier
-            ? "definition"
-            : node.sequence
-              ? "sequence"
-              : node.group
-                ? "group"
-                : node.choice
-                  ? "choice"
-                  : "leaf";
+          ? "definition"
+          : node.sequence
+          ? "sequence"
+          : node.group
+          ? "group"
+          : node.choice
+          ? "choice"
+          : "leaf";
 
       const travelers = {
         root: (root, next) => root.map(next),
         definition: (definition, next) => ({
           ...definition,
-          defintion: next(definition.definition)
+          defintion: next(definition.definition),
         }),
         sequence: (sequence, next) => ({
           ...sequence,
-          sequence: sequence.sequence.map(next)
+          sequence: sequence.sequence.map(next),
         }),
         group: (group, next) => ({
           ...group,
-          group: next(group.group)
+          group: next(group.group),
         }),
         choice: (choice, next) => ({
           ...choice,
-          choice: choice.choice.map(next)
-        })
+          choice: choice.choice.map(next),
+        }),
       };
       const transformers = [
-        node => {
+        (node) => {
           if (node.terminal) {
             leafs.push(node.terminal);
           }
-        }
+        },
       ];
       traverse(classifier)(travelers)(transformers)(ast);
 
@@ -92,37 +92,37 @@ describe("traverse", () => {
     });
   });
   describe("transforming", () => {
-    const classifier = node =>
+    const classifier = (node) =>
       Array.isArray(node)
         ? "root"
         : node.identifier
-          ? "definition"
-          : node.sequence
-            ? "sequence"
-            : node.group
-              ? "group"
-              : node.choice
-                ? "choice"
-                : "leaf";
+        ? "definition"
+        : node.sequence
+        ? "sequence"
+        : node.group
+        ? "group"
+        : node.choice
+        ? "choice"
+        : "leaf";
 
     const travelers = {
       root: (root, next) => root.map(next),
       definition: (definition, next) => ({
         ...definition,
-        definition: next(definition.definition)
+        definition: next(definition.definition),
       }),
       sequence: (sequence, next) => ({
         ...sequence,
-        sequence: sequence.sequence.map(next)
+        sequence: sequence.sequence.map(next),
       }),
       group: (group, next) => ({
         ...group,
-        group: next(group.group)
+        group: next(group.group),
       }),
       choice: (choice, next) => ({
         ...choice,
-        choice: choice.choice.map(next)
-      })
+        choice: choice.choice.map(next),
+      }),
     };
 
     it("returns the same node if no transformers specified", () => {
@@ -139,7 +139,7 @@ describe("traverse", () => {
       const text = 'definition = "a", "b", ( "c" | "d" ) ;';
       const ast = parseEbnf(text);
 
-      const transformers = [node => node];
+      const transformers = [(node) => node];
       const result = traverse(classifier)(travelers)(transformers)(ast);
 
       expect(result).to.eq(ast);
@@ -151,14 +151,14 @@ describe("traverse", () => {
 
       const transformers = [
         {
-          root: root => root.join("\n"),
-          definition: definition =>
+          root: (root) => root.join("\n"),
+          definition: (definition) =>
             `${definition.identifier} = ${definition.definition};`,
-          sequence: sequence => sequence.sequence.join(", "),
-          group: group => `( ${group.group} )`,
-          choice: choice => choice.choice.join(" | "),
-          leaf: terminal => `"${terminal.terminal}${terminal.terminal}"`
-        }
+          sequence: (sequence) => sequence.sequence.join(", "),
+          group: (group) => `( ${group.group} )`,
+          choice: (choice) => choice.choice.join(" | "),
+          leaf: (terminal) => `"${terminal.terminal}${terminal.terminal}"`,
+        },
       ];
       const result = traverse(classifier)(travelers)(transformers)(ast);
 

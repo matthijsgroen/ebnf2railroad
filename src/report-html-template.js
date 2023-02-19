@@ -4,7 +4,7 @@ const converter = new Converter({
   simplifiedAutoLink: true,
   strikethrough: true,
   tasklists: true,
-  tables: true
+  tables: true,
 });
 
 const documentFrame = ({ head, body, title }) =>
@@ -25,7 +25,7 @@ ${body}
 
 const currentDate = () => {
   const date = new Date();
-  const pad = number => (number < 10 ? "0" + number : number);
+  const pad = (number) => (number < 10 ? "0" + number : number);
 
   return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(
     date.getUTCDate()
@@ -63,19 +63,19 @@ const documentContent = ({ title, contents, toc, singleRoot }) =>
   <nav>
     ${navigation({
       title: singleRoot ? "Root element" : "Root elements",
-      content: toc.roots
+      content: toc.roots,
     })}
     ${navigation({
       title: "Quick navigation",
-      content: toc.other
+      content: toc.other,
     })}
     ${navigation({
       title: "Common elements",
-      content: toc.common
+      content: toc.common,
     })}
     ${navigation({
       title: "Character sets",
-      content: toc.characterSets
+      content: toc.characterSets,
     })}
   </nav>
   <main>
@@ -444,32 +444,32 @@ svg.railroad-diagram g.diagram-text:hover path.diagram-text {
 }
 `;
 
-const dasherize = str => str.replace(/\s+/g, "-");
+const dasherize = (str) => str.replace(/\s+/g, "-");
 
 const referencesTemplate = (identifier, references) =>
   `<p>Items referencing <strong>${identifier}</strong>:<p>
 <ul>
 ${references
-    .map(
-      reference =>
-        `<li><a href="#${dasherize(
-          reference.trim()
-        )}">${reference.trim()}</a></li>`
-    )
-    .join("")}
+  .map(
+    (reference) =>
+      `<li><a href="#${dasherize(
+        reference.trim()
+      )}">${reference.trim()}</a></li>`
+  )
+  .join("")}
 </ul>`;
 
 const referencesToTemplate = (identifier, references) =>
   `<p><strong>${identifier}</strong> is referencing:<p>
 <ul>
 ${references
-    .map(
-      reference =>
-        `<li><a href="#${dasherize(
-          reference.trim()
-        )}">${reference.trim()}</a></li>`
-    )
-    .join("")}
+  .map(
+    (reference) =>
+      `<li><a href="#${dasherize(
+        reference.trim()
+      )}">${reference.trim()}</a></li>`
+  )
+  .join("")}
 </ul>`;
 
 const ebnfTemplate = ({
@@ -477,26 +477,28 @@ const ebnfTemplate = ({
   ebnf,
   diagram,
   referencedBy,
-  referencesTo
+  referencesTo,
 }) =>
   `<section>
   <h4 id="${dasherize(identifier)}">${identifier}</h4>
   <div class="diagram-container">${diagram}</div>
-  <code class="ebnf">${ebnf}</code>${(referencedBy.length > 0
-    ? "\n  " + referencesTemplate(identifier, referencedBy)
-    : "") +
+  <code class="ebnf">${ebnf}</code>${
+    (referencedBy.length > 0
+      ? "\n  " + referencesTemplate(identifier, referencedBy)
+      : "") +
     (referencesTo.length > 0
       ? "\n  " + referencesToTemplate(identifier, referencesTo)
-      : "")}
+      : "")
+  }
 </section>
 `;
 
-const commentTemplate = comment => converter.makeHtml(dedent(comment));
+const commentTemplate = (comment) => converter.makeHtml(dedent(comment));
 
 module.exports = {
   documentContent,
   documentFrame,
   documentStyle,
   ebnfTemplate,
-  commentTemplate
+  commentTemplate,
 };

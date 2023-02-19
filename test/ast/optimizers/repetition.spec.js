@@ -23,13 +23,13 @@ describe("repetition", () => {
             { terminal: "a" },
             {
               repetition: { terminal: "b" },
-              skippable: false
+              skippable: false,
             },
-            { terminal: "c" }
-          ]
+            { terminal: "c" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -45,14 +45,14 @@ describe("repetition", () => {
             { terminal: "a" },
             {
               repetition: { terminal: "b" },
-              skippable: false
+              skippable: false,
             },
             { comment: " comment " },
-            { terminal: "c" }
-          ]
+            { terminal: "c" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -68,13 +68,13 @@ describe("repetition", () => {
             { terminal: "a" },
             {
               repetition: { sequence: [{ terminal: "b" }, { terminal: "c" }] },
-              skippable: false
+              skippable: false,
             },
-            { terminal: "d" }
-          ]
+            { terminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -90,13 +90,13 @@ describe("repetition", () => {
             { terminal: "a" },
             {
               repetition: { choice: [{ terminal: "b" }, { terminal: "c" }] },
-              skippable: false
+              skippable: false,
             },
-            { terminal: "d" }
-          ]
+            { terminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -113,13 +113,13 @@ describe("repetition", () => {
             {
               repetition: { sequence: [{ terminal: "b" }, { terminal: "c" }] },
               repeater: { sequence: [{ terminal: "g" }, { terminal: "v" }] },
-              skippable: false
+              skippable: false,
             },
-            { terminal: "d" }
-          ]
+            { terminal: "d" },
+          ],
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -133,10 +133,10 @@ describe("repetition", () => {
         definition: {
           repetition: { sequence: [{ terminal: "b" }, { terminal: "c" }] },
           repeater: { sequence: [{ terminal: "g" }, { terminal: "v" }] },
-          skippable: false
+          skippable: false,
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 });

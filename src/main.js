@@ -1,17 +1,17 @@
 const { parse } = require("./ebnf-parser");
 const { createDocumentation, documentStyle } = require("./html-report-builder");
 const {
-  createDocumentation: createMarkdownDocumentation
+  createDocumentation: createMarkdownDocumentation,
 } = require("./markdown-report-builder");
 const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
 const {
   getReferences,
   searchReferencesFromIdentifier,
-  searchReferencesToIdentifier
+  searchReferencesToIdentifier,
 } = require("./references");
 
-const improveErrors = parser => input => {
+const improveErrors = (parser) => (input) => {
   try {
     return parser(input);
   } catch (e) {
@@ -22,7 +22,7 @@ const improveErrors = parser => input => {
         expected: e.hash.expected,
         token: `'${e.hash.token[0]}'`,
         line: e.hash.line + 1,
-        pos: e.hash.loc.last_column + 1
+        pos: e.hash.loc.last_column + 1,
       };
     }
     throw error;
@@ -38,5 +38,5 @@ module.exports = {
   validateEbnf,
   getReferences,
   searchReferencesFromIdentifier,
-  searchReferencesToIdentifier
+  searchReferencesToIdentifier,
 };

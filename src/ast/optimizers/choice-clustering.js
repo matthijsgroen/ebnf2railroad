@@ -1,23 +1,23 @@
 const { NodeTypes } = require("../ebnf-transform");
 
-const skipFirst = list =>
+const skipFirst = (list) =>
   [
-    list.some(e => e === "skip" || e.skip) && { skip: true },
-    ...list.filter(e => e !== "skip" && !e.skip)
+    list.some((e) => e === "skip" || e.skip) && { skip: true },
+    ...list.filter((e) => e !== "skip" && !e.skip),
   ].filter(Boolean);
 
 const equalElements = (first, second) =>
   JSON.stringify(first) === JSON.stringify(second);
 
 module.exports = {
-  [NodeTypes.Choice]: current => {
+  [NodeTypes.Choice]: (current) => {
     if (!current.choice) return current;
 
-    const isCertain = elem =>
+    const isCertain = (elem) =>
       (elem.terminal && elem) || (elem.nonTerminal && elem);
 
-    const groupElements = elements => {
-      const allSet = elements.every(f => f);
+    const groupElements = (elements) => {
+      const allSet = elements.every((f) => f);
       if (!allSet) return {};
       return elements.reduce((acc, elem) => {
         const key = JSON.stringify(elem);
@@ -25,16 +25,17 @@ module.exports = {
         return acc;
       }, {});
     };
-    const countSame = groupElements => {
+    const countSame = (groupElements) => {
       const amounts = Object.values(groupElements);
       return Math.max(...amounts);
     };
 
     const collectCertainFirstElements = current.choice.map(
-      elem => isCertain(elem) || (elem.sequence && isCertain(elem.sequence[0]))
+      (elem) =>
+        isCertain(elem) || (elem.sequence && isCertain(elem.sequence[0]))
     );
     const collectCertainLastElements = current.choice.map(
-      elem =>
+      (elem) =>
         isCertain(elem) ||
         (elem.sequence && isCertain(elem.sequence[elem.sequence.length - 1]))
     );
@@ -80,11 +81,11 @@ module.exports = {
           newChoices.length > 0 &&
             hasEmpty && {
               optional:
-                newChoices.length == 1 ? newChoices[0] : { choice: newChoices }
+                newChoices.length == 1 ? newChoices[0] : { choice: newChoices },
             },
           newChoices.length > 0 &&
             !hasEmpty &&
-            (newChoices.length == 1 ? newChoices[0] : { choice: newChoices })
+            (newChoices.length == 1 ? newChoices[0] : { choice: newChoices }),
         ].filter(Boolean);
         const replacementElement =
           newElements.length > 1 ? { sequence: newElements } : newElements[0];
@@ -95,7 +96,7 @@ module.exports = {
                 choice: []
                   .concat(beforeChoices)
                   .concat(replacementElement)
-                  .concat(afterChoices)
+                  .concat(afterChoices),
               }
             : replacementElement;
 
@@ -132,12 +133,12 @@ module.exports = {
           newChoices.length > 0 &&
             hasEmpty && {
               optional:
-                newChoices.length == 1 ? newChoices[0] : { choice: newChoices }
+                newChoices.length == 1 ? newChoices[0] : { choice: newChoices },
             },
           newChoices.length > 0 &&
             !hasEmpty &&
             (newChoices.length == 1 ? newChoices[0] : { choice: newChoices }),
-          JSON.parse(lastElement)
+          JSON.parse(lastElement),
         ].filter(Boolean);
         const replacementElement =
           newElements.length > 1 ? { sequence: newElements } : newElements[0];
@@ -148,7 +149,7 @@ module.exports = {
                 choice: []
                   .concat(beforeChoices)
                   .concat(replacementElement)
-                  .concat(afterChoices)
+                  .concat(afterChoices),
               }
             : replacementElement;
 
@@ -161,7 +162,7 @@ module.exports = {
       ...current,
       choice: skipFirst(
         current.choice
-          .map(item => {
+          .map((item) => {
             const optimizedItem = item;
             if (optimizedItem.choice) {
               return optimizedItem.choice;
@@ -170,11 +171,11 @@ module.exports = {
             }
           })
           .reduce((acc, item) => acc.concat(item), [])
-      )
+      ),
     };
     if (equalElements(result, current)) {
       return current;
     }
     return result;
-  }
+  },
 };

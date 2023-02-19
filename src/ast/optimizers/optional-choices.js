@@ -1,11 +1,11 @@
 const { NodeTypes } = require("../ebnf-transform");
 
 module.exports = {
-  [NodeTypes.Choice]: current => {
+  [NodeTypes.Choice]: (current) => {
     if (!current.choice) {
       return current;
     }
-    const hasOptional = current.choice.some(node => node.optional);
+    const hasOptional = current.choice.some((node) => node.optional);
     if (hasOptional) {
       return {
         optional: {
@@ -15,10 +15,10 @@ module.exports = {
                 ? options.concat(option.optional)
                 : options.concat(option),
             []
-          )
-        }
+          ),
+        },
       };
     }
     return current;
-  }
+  },
 };

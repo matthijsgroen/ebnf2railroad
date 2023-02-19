@@ -4,33 +4,33 @@ const {
   documentFrame,
   documentStyle,
   ebnfTemplate,
-  commentTemplate
+  commentTemplate,
 } = require("./report-html-template");
 const {
   searchReferencesFromIdentifier,
-  searchReferencesToIdentifier
+  searchReferencesToIdentifier,
 } = require("./references");
 const {
   createAlphabeticalToc,
   createStructuralToc,
-  createDefinitionMetadata
+  createDefinitionMetadata,
 } = require("./toc");
 const { productionToEBNF } = require("./ebnf-builder");
 const { createDiagram } = require("./build-diagram");
 
-const dasherize = str => str.replace(/\s+/g, "-");
-const vacuum = htmlContents => htmlContents.replace(/>\s+</g, "><");
+const dasherize = (str) => str.replace(/\s+/g, "-");
+const vacuum = (htmlContents) => htmlContents.replace(/>\s+</g, "><");
 
 const createTocStructure = (tocData, metadata) =>
   tocData
     .map(
-      tocNode =>
+      (tocNode) =>
         `<li${
           (metadata[tocNode.name] || {}).root
             ? ' class="root-node"'
             : (metadata[tocNode.name] || {}).common
-              ? ' class="common-node"'
-              : ""
+            ? ' class="common-node"'
+            : ""
         }><a href="#${dasherize(
           tocNode.name.trim()
         )}">${tocNode.name.trim()}</a>
@@ -53,7 +53,7 @@ const createDocumentation = (ast, options) => {
   const metadata = createDefinitionMetadata(structuralToc);
 
   const contents = ast
-    .map(production => {
+    .map((production) => {
       if (production.comment) {
         return commentTemplate(production.comment);
       }
@@ -67,7 +67,7 @@ const createDocumentation = (ast, options) => {
         ...options,
         overview:
           metadata[production.identifier].root && options.overviewDiagram,
-        complex: outgoingReferences.length > 0
+        complex: outgoingReferences.length > 0,
       });
 
       return ebnfTemplate({
@@ -76,29 +76,29 @@ const createDocumentation = (ast, options) => {
           options.optimizeText ? optimizeText(production) : production,
           {
             markup: true,
-            format: options.textFormatting
+            format: options.textFormatting,
           }
         ),
         referencedBy: searchReferencesToIdentifier(production.identifier, ast),
         referencesTo: outgoingReferences,
-        diagram: vacuum(diagram)
+        diagram: vacuum(diagram),
       });
     })
     .join("");
 
   const alphabetical = createAlphabeticalToc(ast);
-  const isRoot = item => (metadata[item.name] || {}).root;
-  const isCommon = item => (metadata[item.name] || {}).common;
-  const isCharacterSet = item => (metadata[item.name] || {}).characterSet;
+  const isRoot = (item) => (metadata[item.name] || {}).root;
+  const isCommon = (item) => (metadata[item.name] || {}).common;
+  const isCharacterSet = (item) => (metadata[item.name] || {}).characterSet;
   const rootItems = alphabetical.filter(
-    item => isRoot(item) && !isCharacterSet(item)
+    (item) => isRoot(item) && !isCharacterSet(item)
   );
-  const characterSetItems = alphabetical.filter(item => isCharacterSet(item));
+  const characterSetItems = alphabetical.filter((item) => isCharacterSet(item));
   const commonItems = alphabetical.filter(
-    item => !isRoot(item) && !isCharacterSet(item) && isCommon(item)
+    (item) => !isRoot(item) && !isCharacterSet(item) && isCommon(item)
   );
   const otherItems = alphabetical.filter(
-    item => !isRoot(item) && !isCommon(item) && !isCharacterSet(item)
+    (item) => !isRoot(item) && !isCommon(item) && !isCharacterSet(item)
   );
   const hierarchicalToc = createTocStructure(structuralToc, metadata);
 
@@ -111,19 +111,19 @@ const createDocumentation = (ast, options) => {
       common: createTocStructure(commonItems, metadata),
       roots: createTocStructure(rootItems, metadata),
       characterSets: createTocStructure(characterSetItems, metadata),
-      other: createTocStructure(otherItems, metadata)
-    }
+      other: createTocStructure(otherItems, metadata),
+    },
   });
   return options.full !== false
     ? documentFrame({
         body: htmlContent,
         head: `<style type="text/css">${documentStyle()}</style>`,
-        title: options.title
+        title: options.title,
       })
     : htmlContent;
 };
 
 module.exports = {
   createDocumentation,
-  documentStyle
+  documentStyle,
 };

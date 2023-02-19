@@ -3,13 +3,13 @@ const { NodeTypes } = require("../ebnf-transform");
 const equalElements = (first, second) =>
   JSON.stringify(first) === JSON.stringify(second);
 
-const ungroup = item => (item.group && !item.comment ? item.group : item);
+const ungroup = (item) => (item.group && !item.comment ? item.group : item);
 
 module.exports = {
-  [NodeTypes.Sequence]: current => {
+  [NodeTypes.Sequence]: (current) => {
     if (!current.sequence) return current;
     const hasRepeats = current.sequence.some(
-      item => item.repetition || (item.group && item.group.repetition)
+      (item) => item.repetition || (item.group && item.group.repetition)
     );
     if (!hasRepeats) return current;
 
@@ -22,7 +22,7 @@ module.exports = {
             return {
               clearPrevious: 1,
               repetition: ungroup(lastElem),
-              skippable: false
+              skippable: false,
             };
           }
         } else {
@@ -55,7 +55,7 @@ module.exports = {
             const resultObject = {
               clearPrevious: matches.length,
               repetition: { sequence: matches.reverse() },
-              skippable: false
+              skippable: false,
             };
 
             if (repeaterSequence.length > 0) {
@@ -92,20 +92,19 @@ module.exports = {
       ...current,
       sequence: current.sequence
         // pass 1: unpack comments
-        .map(
-          item =>
-            item.comment && item.group && !item.group.optional
-              ? item.before
-                ? [{ comment: item.comment }, item.group]
-                : [item.group, { comment: item.comment }]
-              : [item]
+        .map((item) =>
+          item.comment && item.group && !item.group.optional
+            ? item.before
+              ? [{ comment: item.comment }, item.group]
+              : [item.group, { comment: item.comment }]
+            : [item]
         )
         .reduce((acc, item) => acc.concat(item), [])
         // pass 2: optimize structure
         .map(optimizeStructure)
         .filter(vacuumResults)
-        .map(elem => (elem.sequence ? elem.sequence : [elem]))
-        .reduce((acc, elem) => acc.concat(elem), [])
+        .map((elem) => (elem.sequence ? elem.sequence : [elem]))
+        .reduce((acc, elem) => acc.concat(elem), []),
     };
     if (equalElements(optimizedSequence, current)) {
       return current;
@@ -114,5 +113,5 @@ module.exports = {
     return optimizedSequence.sequence.length == 1
       ? optimizedSequence.sequence[0]
       : optimizedSequence;
-  }
+  },
 };

@@ -26,12 +26,12 @@ describe("optional choices", () => {
               { terminal: "a" },
               { terminal: "b" },
               { terminal: "c" },
-              { terminal: "d" }
-            ]
-          }
+              { terminal: "d" },
+            ],
+          },
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 
@@ -49,12 +49,12 @@ describe("optional choices", () => {
               { terminal: "a" },
               { terminal: "b" },
               { terminal: "c" },
-              { terminal: "d" }
-            ]
-          }
+              { terminal: "d" },
+            ],
+          },
         },
-        location: 1
-      }
+        location: 1,
+      },
     ]);
   });
 });

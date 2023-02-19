@@ -21,27 +21,27 @@ describe("AST structure optimizer", () => {
           { nonTerminal: "a" },
           {
             optional: {
-              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
-            }
-          }
-        ]
+              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
+            },
+          },
+        ],
       },
       {
         choice: [
           { skip: true },
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       },
       {
         optional: {
           choice: [
             { nonTerminal: "a" },
             { nonTerminal: "b" },
-            { nonTerminal: "c" }
-          ]
-        }
+            { nonTerminal: "c" },
+          ],
+        },
       }
     );
   });
@@ -50,15 +50,15 @@ describe("AST structure optimizer", () => {
     compareAst(
       "foo = a | [ b ];",
       {
-        choice: [{ nonTerminal: "a" }, { optional: { nonTerminal: "b" } }]
+        choice: [{ nonTerminal: "a" }, { optional: { nonTerminal: "b" } }],
       },
       {
-        choice: [{ skip: true }, { nonTerminal: "a" }, { nonTerminal: "b" }]
+        choice: [{ skip: true }, { nonTerminal: "a" }, { nonTerminal: "b" }],
       },
       {
         optional: {
-          choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }]
-        }
+          choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }],
+        },
       }
     );
   });
@@ -72,15 +72,15 @@ describe("AST structure optimizer", () => {
           { nonTerminal: "b" },
           { nonTerminal: "b" },
           { nonTerminal: "c" },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       },
       {
         choice: [
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       }
     );
   });
@@ -93,27 +93,30 @@ describe("AST structure optimizer", () => {
           { nonTerminal: "a" },
           {
             optional: {
-              choice: [{ nonTerminal: "b" }, { optional: { nonTerminal: "c" } }]
-            }
-          }
-        ]
+              choice: [
+                { nonTerminal: "b" },
+                { optional: { nonTerminal: "c" } },
+              ],
+            },
+          },
+        ],
       },
       {
         choice: [
           { skip: true },
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       },
       {
         optional: {
           choice: [
             { nonTerminal: "a" },
             { nonTerminal: "b" },
-            { nonTerminal: "c" }
-          ]
-        }
+            { nonTerminal: "c" },
+          ],
+        },
       }
     );
   });
@@ -125,16 +128,16 @@ describe("AST structure optimizer", () => {
         choice: [
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { optional: { nonTerminal: "b" } }
-        ]
+          { optional: { nonTerminal: "b" } },
+        ],
       },
       {
-        choice: [{ skip: true }, { nonTerminal: "a" }, { nonTerminal: "b" }]
+        choice: [{ skip: true }, { nonTerminal: "a" }, { nonTerminal: "b" }],
       },
       {
         optional: {
-          choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }]
-        }
+          choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }],
+        },
       }
     );
   });
@@ -145,21 +148,21 @@ describe("AST structure optimizer", () => {
       {
         choice: [
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "b" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "b" }, skippable: true },
+        ],
       },
       {
         choice: [
           { skip: true },
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "b" }, skippable: false }
-        ]
+          { repetition: { nonTerminal: "b" }, skippable: false },
+        ],
       },
       {
         choice: [
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "b" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "b" }, skippable: true },
+        ],
       }
     );
   });
@@ -172,27 +175,27 @@ describe("AST structure optimizer", () => {
           { nonTerminal: "a" },
           {
             optional: {
-              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
-            }
-          }
-        ]
+              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
+            },
+          },
+        ],
       },
       {
         choice: [
           { skip: true },
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       },
       {
         optional: {
           choice: [
             { nonTerminal: "a" },
             { nonTerminal: "b" },
-            { nonTerminal: "c" }
-          ]
-        }
+            { nonTerminal: "c" },
+          ],
+        },
       }
     );
   });
@@ -205,24 +208,24 @@ describe("AST structure optimizer", () => {
           { nonTerminal: "a" },
           {
             group: {
-              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
-            }
-          }
-        ]
+              choice: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
+            },
+          },
+        ],
       },
       {
         choice: [
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       },
       {
         choice: [
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       }
     );
   });
@@ -235,26 +238,26 @@ describe("AST structure optimizer", () => {
           choice: [
             { nonTerminal: "a" },
             { nonTerminal: "b" },
-            { nonTerminal: "c" }
-          ]
-        }
+            { nonTerminal: "c" },
+          ],
+        },
       },
       {
         choice: [
           { skip: true },
           { nonTerminal: "a" },
           { nonTerminal: "b" },
-          { nonTerminal: "c" }
-        ]
+          { nonTerminal: "c" },
+        ],
       },
       {
         optional: {
           choice: [
             { nonTerminal: "a" },
             { nonTerminal: "b" },
-            { nonTerminal: "c" }
-          ]
-        }
+            { nonTerminal: "c" },
+          ],
+        },
       }
     );
   });
@@ -265,18 +268,18 @@ describe("AST structure optimizer", () => {
       {
         sequence: [
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "a" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "a" }, skippable: true },
+        ],
       },
       {
         repetition: { nonTerminal: "a" },
-        skippable: false
+        skippable: false,
       },
       {
         sequence: [
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "a" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "a" }, skippable: true },
+        ],
       }
     );
   });
@@ -287,20 +290,20 @@ describe("AST structure optimizer", () => {
       {
         sequence: [
           { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       },
       {
         sequence: [
           { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       },
       {
         sequence: [
           { group: { choice: [{ nonTerminal: "a" }, { nonTerminal: "b" }] } },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       }
     );
   });
@@ -311,18 +314,18 @@ describe("AST structure optimizer", () => {
       {
         sequence: [
           { group: { nonTerminal: "a" } },
-          { repetition: { nonTerminal: "a" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "a" }, skippable: true },
+        ],
       },
       {
         repetition: { nonTerminal: "a" },
-        skippable: false
+        skippable: false,
       },
       {
         sequence: [
           { nonTerminal: "a" },
-          { repetition: { nonTerminal: "a" }, skippable: true }
-        ]
+          { repetition: { nonTerminal: "a" }, skippable: true },
+        ],
       }
     );
   });
@@ -344,26 +347,26 @@ describe("AST structure optimizer", () => {
                   { nonTerminal: "d" },
                   { nonTerminal: "e" },
                   { nonTerminal: "b" },
-                  { nonTerminal: "c" }
-                ]
+                  { nonTerminal: "c" },
+                ],
               },
-              skippable: true
-            }
-          ]
+              skippable: true,
+            },
+          ],
         },
         {
           sequence: [
             { nonTerminal: "a" },
             {
               repetition: {
-                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
               repeater: {
-                sequence: [{ nonTerminal: "e" }, { nonTerminal: "d" }]
+                sequence: [{ nonTerminal: "e" }, { nonTerminal: "d" }],
               },
-              skippable: false
-            }
-          ]
+              skippable: false,
+            },
+          ],
         },
         {
           sequence: [
@@ -376,12 +379,12 @@ describe("AST structure optimizer", () => {
                   { nonTerminal: "d" },
                   { nonTerminal: "e" },
                   { nonTerminal: "b" },
-                  { nonTerminal: "c" }
-                ]
+                  { nonTerminal: "c" },
+                ],
               },
-              skippable: true
-            }
-          ]
+              skippable: true,
+            },
+          ],
         }
       );
     }
@@ -399,22 +402,22 @@ describe("AST structure optimizer", () => {
             { nonTerminal: "c" },
             {
               repetition: {
-                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
-              skippable: true
-            }
-          ]
+              skippable: true,
+            },
+          ],
         },
         {
           sequence: [
             { nonTerminal: "a" },
             {
               repetition: {
-                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
-              skippable: false
-            }
-          ]
+              skippable: false,
+            },
+          ],
         },
         {
           sequence: [
@@ -423,11 +426,11 @@ describe("AST structure optimizer", () => {
             { nonTerminal: "c" },
             {
               repetition: {
-                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
+                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
-              skippable: true
-            }
-          ]
+              skippable: true,
+            },
+          ],
         }
       );
     }
@@ -447,7 +450,7 @@ describe("AST structure optimizer", () => {
       { optional: { repetition: { nonTerminal: "a" }, skippable: true } },
       {
         repetition: { nonTerminal: "a" },
-        skippable: true
+        skippable: true,
       }
     );
   });
@@ -461,10 +464,10 @@ describe("AST structure optimizer", () => {
             { nonTerminal: "a" },
             {
               repetition: { nonTerminal: "a" },
-              skippable: true
-            }
-          ]
-        }
+              skippable: true,
+            },
+          ],
+        },
       },
       { optional: { repetition: { nonTerminal: "a" }, skippable: false } },
       {
@@ -473,10 +476,10 @@ describe("AST structure optimizer", () => {
             { nonTerminal: "a" },
             {
               repetition: { nonTerminal: "a" },
-              skippable: true
-            }
-          ]
-        }
+              skippable: true,
+            },
+          ],
+        },
       }
     );
   });
@@ -498,21 +501,21 @@ describe("AST structure optimizer", () => {
             sequence: [
               { nonTerminal: "a" },
               { nonTerminal: "b" },
-              { nonTerminal: "c" }
-            ]
+              { nonTerminal: "c" },
+            ],
           },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       },
       {
         sequence: [
           { nonTerminal: "a" },
           {
             optional: {
-              sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }]
-            }
-          }
-        ]
+              sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
+            },
+          },
+        ],
       },
       {
         choice: [
@@ -520,11 +523,11 @@ describe("AST structure optimizer", () => {
             sequence: [
               { nonTerminal: "a" },
               { nonTerminal: "b" },
-              { nonTerminal: "c" }
-            ]
+              { nonTerminal: "c" },
+            ],
           },
-          { nonTerminal: "a" }
-        ]
+          { nonTerminal: "a" },
+        ],
       }
     );
   });
@@ -541,33 +544,33 @@ describe("AST structure optimizer", () => {
               sequence: [
                 { nonTerminal: "x" },
                 { nonTerminal: "y" },
-                { nonTerminal: "z" }
-              ]
+                { nonTerminal: "z" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
-                { nonTerminal: "c" }
-              ]
+                { nonTerminal: "c" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
                 { nonTerminal: "d" },
-                { nonTerminal: "e" }
-              ]
+                { nonTerminal: "e" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
                 { nonTerminal: "f" },
-                { nonTerminal: "e" }
-              ]
-            }
-          ]
+                { nonTerminal: "e" },
+              ],
+            },
+          ],
         },
         {
           choice: [
@@ -575,8 +578,8 @@ describe("AST structure optimizer", () => {
               sequence: [
                 { nonTerminal: "x" },
                 { nonTerminal: "y" },
-                { nonTerminal: "z" }
-              ]
+                { nonTerminal: "z" },
+              ],
             },
             {
               sequence: [
@@ -588,16 +591,16 @@ describe("AST structure optimizer", () => {
                     {
                       sequence: [
                         {
-                          choice: [{ nonTerminal: "d" }, { nonTerminal: "f" }]
+                          choice: [{ nonTerminal: "d" }, { nonTerminal: "f" }],
                         },
-                        { nonTerminal: "e" }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+                        { nonTerminal: "e" },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           choice: [
@@ -605,33 +608,33 @@ describe("AST structure optimizer", () => {
               sequence: [
                 { nonTerminal: "x" },
                 { nonTerminal: "y" },
-                { nonTerminal: "z" }
-              ]
+                { nonTerminal: "z" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
-                { nonTerminal: "c" }
-              ]
+                { nonTerminal: "c" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
                 { nonTerminal: "d" },
-                { nonTerminal: "e" }
-              ]
+                { nonTerminal: "e" },
+              ],
             },
             {
               sequence: [
                 { nonTerminal: "a" },
                 { nonTerminal: "b" },
                 { nonTerminal: "f" },
-                { nonTerminal: "e" }
-              ]
-            }
-          ]
+                { nonTerminal: "e" },
+              ],
+            },
+          ],
         }
       );
     }
