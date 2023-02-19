@@ -1478,12 +1478,12 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.13.0.tgz#ecac691977b3178d1032998826005871ec5f6bcc"
-  integrity sha512-FZQ+EGliLd1WTr9lLRiGRCE7YNKCusjc+t9j1m+YQPMOv+Qa40NetvlbO+LKCpI8/n5TRf3szhfZuCx31WG92w==
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.13.1.tgz#5641f2f34aecd564c159e3925e620fe525aed917"
+  integrity sha512-Vbdsuu5A3OLbaAkXzHA5AwOHZicFEtURhOMWjjzCtR2H7ORJduIe+1j+vRL088aP45SJHwJ/n4Qzq3492ujXag==
   dependencies:
     commander "^2.19.0"
-    prettier "^1.14.3"
+    prettier "2.8.4"
     railroad-diagrams "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
     showdown "^1.0.0"
     utf-railroad "^1.0.1"
@@ -3855,10 +3855,10 @@ postcss@^7.0.1, postcss@^7.0.27:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-prettier@^1.14.3:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
-  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+prettier@2.8.4:
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
+  integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
 
 prettier@^2.1.2:
   version "2.1.2"
