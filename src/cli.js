@@ -4,10 +4,10 @@ const readFile = util.promisify(require("fs").readFile);
 const writeFile = util.promisify(require("fs").writeFile);
 const { parseEbnf } = require("./main");
 const {
-  createDocumentation: createHtmlDocumentation
+  createDocumentation: createHtmlDocumentation,
 } = require("./html-report-builder");
 const {
-  createDocumentation: createMarkdownDocumentation
+  createDocumentation: createMarkdownDocumentation,
 } = require("./markdown-report-builder");
 const { validateEbnf } = require("./validate");
 const { version } = require("../package.json");
@@ -60,13 +60,14 @@ async function run(args) {
   const optimizeText = program.optimizations;
   const textFormatting = program.textFormatting;
   const diagramWrap = program.diagramWrap;
-  const output = text => allowOutput && process.stdout.write(text + "\n");
-  const outputError = text => allowOutput && process.stderr.write(text + "\n");
-  const errLocation = struct =>
+  const output = (text) => allowOutput && process.stdout.write(text + "\n");
+  const outputError = (text) =>
+    allowOutput && process.stderr.write(text + "\n");
+  const errLocation = (struct) =>
     struct.pos !== undefined
       ? `${struct.line}:${struct.pos}`
       : `${struct.line}`;
-  const outputErrorStruct = struct =>
+  const outputErrorStruct = (struct) =>
     allowOutput &&
     process.stderr.write(
       `${struct.type} on line ${errLocation(struct)}: ${struct.message}\n`
@@ -76,10 +77,7 @@ async function run(args) {
     const filename = program.args[0];
     const ebnf = await readFile(filename, "utf8");
 
-    const basename = filename
-      .split(".")
-      .slice(0, -1)
-      .join(".");
+    const basename = filename.split(".").slice(0, -1).join(".");
     const defaultOutputFilename = basename + ".html";
     const documentTitle = program.title || basename;
 
@@ -99,14 +97,14 @@ async function run(args) {
     }
     warnings.length > 0 &&
       allowOutput &&
-      warnings.forEach(warning => outputErrorStruct(warning));
+      warnings.forEach((warning) => outputErrorStruct(warning));
 
     if (program.writeStyle || program.rewrite) {
       const optimizedAST = program.rewrite ? optimize(ast) : ast;
 
       const prettyOutput = productionToEBNF(optimizedAST, {
         markup: false,
-        format: true
+        format: true,
       });
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
@@ -119,7 +117,7 @@ async function run(args) {
         optimizeText,
         textFormatting,
         overviewDiagram,
-        diagramWrap
+        diagramWrap,
       });
       await writeFile(targetFilename, report, "utf8");
       output(`📜 Document created at ${targetFilename}`);
@@ -131,7 +129,7 @@ async function run(args) {
         optimizeText,
         textFormatting,
         overviewDiagram,
-        diagramWrap
+        diagramWrap,
       });
       await writeFile(targetFilename, report, "utf8");
       output(`📜 Document created at ${targetFilename}`);
@@ -144,9 +142,10 @@ async function run(args) {
         line,
         pos,
         type: "Parse error",
-        message: `Expected ${expected}, got ${token}`
+        message: `Expected ${expected}, got ${token}`,
       });
     } else {
+      console.log(e);
       outputError(e.message);
       output("");
       output("use --help for usage information");
@@ -155,5 +154,5 @@ async function run(args) {
   }
 }
 module.exports = {
-  run
+  run,
 };
