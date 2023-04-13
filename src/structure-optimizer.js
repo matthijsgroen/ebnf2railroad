@@ -21,6 +21,7 @@ const optimizeText = ebnfOptimizer([
   ungroup,
   deduplicateChoices,
   unwrapOptional,
+  repetition,
   optionalChoices,
 ]);
 

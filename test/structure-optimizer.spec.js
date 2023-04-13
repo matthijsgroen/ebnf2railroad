@@ -276,10 +276,8 @@ describe("AST structure optimizer", () => {
         skippable: false,
       },
       {
-        sequence: [
-          { nonTerminal: "a" },
-          { repetition: { nonTerminal: "a" }, skippable: true },
-        ],
+        repetition: { nonTerminal: "a" },
+        skippable: false,
       }
     );
   });
@@ -322,10 +320,8 @@ describe("AST structure optimizer", () => {
         skippable: false,
       },
       {
-        sequence: [
-          { nonTerminal: "a" },
-          { repetition: { nonTerminal: "a" }, skippable: true },
-        ],
+        repetition: { nonTerminal: "a" },
+        skippable: false,
       }
     );
   });
@@ -371,18 +367,14 @@ describe("AST structure optimizer", () => {
         {
           sequence: [
             { nonTerminal: "a" },
-            { nonTerminal: "b" },
-            { nonTerminal: "c" },
             {
               repetition: {
-                sequence: [
-                  { nonTerminal: "d" },
-                  { nonTerminal: "e" },
-                  { nonTerminal: "b" },
-                  { nonTerminal: "c" },
-                ],
+                sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
-              skippable: true,
+              repeater: {
+                sequence: [{ nonTerminal: "e" }, { nonTerminal: "d" }],
+              },
+              skippable: false,
             },
           ],
         }
@@ -422,13 +414,11 @@ describe("AST structure optimizer", () => {
         {
           sequence: [
             { nonTerminal: "a" },
-            { nonTerminal: "b" },
-            { nonTerminal: "c" },
             {
               repetition: {
                 sequence: [{ nonTerminal: "b" }, { nonTerminal: "c" }],
               },
-              skippable: true,
+              skippable: false,
             },
           ],
         }
@@ -455,30 +445,34 @@ describe("AST structure optimizer", () => {
     );
   });
 
-  it("leaves `[ a, { a } ]` alone", () => {
+  it('optimizes `[ a, { "," , a } ]`', () => {
     compareAst(
-      "foo = [ a, { a } ];",
+      'foo = [ a, { "," , a } ];',
       {
         optional: {
           sequence: [
             { nonTerminal: "a" },
             {
-              repetition: { nonTerminal: "a" },
+              repetition: {
+                sequence: [{ terminal: "," }, { nonTerminal: "a" }],
+              },
               skippable: true,
             },
           ],
         },
       },
-      { optional: { repetition: { nonTerminal: "a" }, skippable: false } },
       {
         optional: {
-          sequence: [
-            { nonTerminal: "a" },
-            {
-              repetition: { nonTerminal: "a" },
-              skippable: true,
-            },
-          ],
+          repeater: { terminal: "," },
+          repetition: { nonTerminal: "a" },
+          skippable: false,
+        },
+      },
+      {
+        optional: {
+          repeater: { terminal: "," },
+          repetition: { nonTerminal: "a" },
+          skippable: false,
         },
       }
     );

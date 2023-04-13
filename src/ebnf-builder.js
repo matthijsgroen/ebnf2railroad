@@ -245,6 +245,36 @@ const productionToEBNF = (production, setOptions) => {
       options.markup
     )} ${productionToEBNF(production.repetition, options)}`;
   }
+  if (
+    production.repetition &&
+    production.skippable === false &&
+    !production.repeater
+  ) {
+    const renderConfig = detectRenderConfig(production.repetition, options);
+    return `${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : ""
+    }{ ${productionToEBNF(production.repetition, renderConfig)}${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
+    }}-`;
+  }
+  if (
+    production.repetition &&
+    production.skippable === false &&
+    production.repeater
+  ) {
+    const renderConfig = detectRenderConfig(production.repetition, options);
+    return `${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : ""
+    }${productionToEBNF(
+      production.repetition,
+      renderConfig
+    )}, { ${productionToEBNF(
+      production.repeater,
+      renderConfig
+    )} , ${productionToEBNF(production.repetition, renderConfig)}${
+      renderConfig.multiline ? lineIndent(renderConfig.indent) : " "
+    }}`;
+  }
   if (production.repetition) {
     const renderConfig = detectRenderConfig(production.repetition, options);
     return `${

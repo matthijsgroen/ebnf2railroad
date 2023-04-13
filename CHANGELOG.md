@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2023-04-13
+
+### Added
+
+- One ore more. Support for 'zero or more' with an empty exception. `{ a }-` which, according to section section 5.8 of [ISO/IEC 14977](https://www.cl.cam.ac.uk/~mgk25/iso-14977.pdf) means 'one or more'. Text using `( a , b ), { a, b }` will automatically be optimized to `{ a, b }-`
+
 ## [1.13.1] - 2023-02-19
 
 ### Fixes
