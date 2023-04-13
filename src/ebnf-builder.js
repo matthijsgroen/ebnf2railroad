@@ -268,8 +268,10 @@ const productionToEBNF = (production, setOptions) => {
     }${productionToEBNF(
       production.repetition,
       renderConfig
-    )}, { ${productionToEBNF(
-      production.repeater,
+    )} , { ${productionToEBNF(
+      production.repeater.sequence
+        ? { sequence: [].concat(production.repeater.sequence).reverse() }
+        : production.repeater,
       renderConfig
     )} , ${productionToEBNF(production.repetition, renderConfig)}${
       renderConfig.multiline ? lineIndent(renderConfig.indent) : " "

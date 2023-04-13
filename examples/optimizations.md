@@ -446,7 +446,7 @@ one or more with group = { "a" | "b" }- ;
 Text:
 
 ```ebnf
-one or more with repeater = "a" , "b" , "c", { "e" , "d" , "b" , "c" } ;
+one or more with repeater = "a" , "b" , "c" , { "d" , "e" , "b" , "c" } ;
 ```
 
 ## optional repeater
@@ -746,7 +746,7 @@ Text:
 
 ```ebnf
 comment in one or more with repeater = "a" , "b" ,
-  (* comment *) , "c", { "b" , "e" , "d" , "c" } ;
+  (* comment *) , "c" , { "d" , "e" , "b" , "c" } ;
 ```
 
 ## comment before optional
@@ -814,7 +814,7 @@ Text:
 
 ```ebnf
 comment in one or more with repeater after = "a" ,
-  "b" , "c", { "e" , "d" , "b" , "c" } , (* comment *) ;
+  "b" , "c" , { "d" , "e" , "b" , "c" } , (* comment *) ;
 ```
 
 # html dangerous content

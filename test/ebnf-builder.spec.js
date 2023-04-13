@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const { parser } = require("../src/ebnf-parser");
 const { productionToEBNF } = require("../src/ebnf-builder");
+const { optimizeText } = require("../src/structure-optimizer");
 
 describe("EBNF Builder", () => {
   describe("plain comments", () => {
@@ -156,8 +157,23 @@ describe("EBNF Builder", () => {
     it("accepts zero-or-more repetitions with repeater", () => {
       const text = "statement=a,{b,c,a};";
       const ast = parser.parse(text);
-      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      const optimizedAst = optimizeText(ast);
+      const result = productionToEBNF(optimizedAst[0], {
+        markup: false,
+        format: true,
+      });
       expect(result).to.eql("statement = a , { b , c , a } ;");
+    });
+
+    it("accepts zero-or-more repetitions with repeater sequence", () => {
+      const text = "statement=a,b,{c,d,a,b};";
+      const ast = parser.parse(text);
+      const optimizedAst = optimizeText(ast);
+      const result = productionToEBNF(optimizedAst[0], {
+        markup: false,
+        format: true,
+      });
+      expect(result).to.eql("statement = a , b , { c , d , a , b } ;");
     });
   });
 

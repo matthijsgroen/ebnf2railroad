@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.1] - 2023-04-13
+
+### Fixed
+
+- Fixed an issue where repeaters written back as text did not reverse repeater sequences. (`a, b, { c, d, a, b }` was turned into `a, b, { d, c, a, b }` in the output text version).
+
 ## [1.14.0] - 2023-04-13
 
 ### Added
