@@ -76,9 +76,9 @@ Check the examples folder for an example input file and the generated result
 page.
 
 - EBNF `ebnf2railroad examples/ebnf.ebnf --title EBNF` [View
-  online][example-ebnf]
+  result online][example-ebnf] [View source](./examples/ebnf.ebnf)
 - JSON `ebnf2railroad examples/json.ebnf --title JSON` [View
-  online][example-json]
+  result online][example-json] [View source](./examples/json.ebnf)
 
 ## Usage as module
 
