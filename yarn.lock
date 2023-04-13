@@ -1478,9 +1478,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     stream-shift "^1.0.0"
 
 ebnf2railroad@*:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.14.0.tgz#34ae184e3d59835c1311201f5f2e7f1ad35c2da3"
-  integrity sha512-+WBeRg3IZj42QD/He9F/Rfr1usctl7us7LiXcudwemuTdxNfda+aLmpOZoh6mXzX42TbhUvIT3bnvoVqcYTTXg==
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/ebnf2railroad/-/ebnf2railroad-1.14.1.tgz#fedffcd604a3b555e528ba8e29d9400d211d06de"
+  integrity sha512-25FZ4J0j637nfm61I4nGrVWglcHaNEnnxrJjEV0KA/32QM3sBod6jxDKSaUUppjilsiwLf7PD/i1JmTi3kCPBw==
   dependencies:
     commander "^2.19.0"
     prettier "2.8.4"
