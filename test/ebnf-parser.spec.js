@@ -133,7 +133,7 @@ describe("EBNF parser", () => {
     });
   });
 
-  it("supports repetition", () => {
+  it("supports repetition (zero or more)", () => {
     const text = 'foo = { "a" } / (: "b" :);';
     const result = parseEbnf(text);
     const firstDefinition = result[0].definition;
@@ -141,6 +141,18 @@ describe("EBNF parser", () => {
       choice: [
         { repetition: { terminal: "a" }, skippable: true },
         { repetition: { terminal: "b" }, skippable: true },
+      ],
+    });
+  });
+
+  it("supports repetition (one or more)", () => {
+    const text = 'foo = { "a" }- / (: "b" :)-;';
+    const result = parseEbnf(text);
+    const firstDefinition = result[0].definition;
+    expect(firstDefinition).to.eql({
+      choice: [
+        { repetition: { terminal: "a" }, skippable: false },
+        { repetition: { terminal: "b" }, skippable: false },
       ],
     });
   });

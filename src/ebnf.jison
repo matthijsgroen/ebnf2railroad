@@ -69,6 +69,8 @@ rhs
     { $$ = $1.sequence ? { sequence: $1.sequence.concat($3) } : { sequence: [$1, $3] } }
   | rhs "|" rhs
     { $$ = $1.choice ? { choice: $1.choice.concat($3) } : { choice: [$1, $3] } }
+  | "{" rhs "}" "-"
+    { $$ = { repetition: $2, skippable: false } }
   | "{" rhs "}"
     { $$ = { repetition: $2, skippable: true } }
   | "(" rhs ")"

@@ -138,6 +138,29 @@ describe("EBNF Builder", () => {
     });
   });
 
+  describe("repetitions", () => {
+    it("accepts one-or-more repetitions", () => {
+      const text = "statement = { a }-;";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql("statement = { a }- ;");
+    });
+
+    it("accepts zero-or-more repetitions", () => {
+      const text = "statement = a, { a };";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql("statement = a , { a } ;");
+    });
+
+    it("accepts zero-or-more repetitions with repeater", () => {
+      const text = "statement=a,{b,c,a};";
+      const ast = parser.parse(text);
+      const result = productionToEBNF(ast[0], { markup: false, format: true });
+      expect(result).to.eql("statement = a , { b , c , a } ;");
+    });
+  });
+
   describe("sequences", () => {
     it("wraps to multiline for long sequences", () => {
       const text =
