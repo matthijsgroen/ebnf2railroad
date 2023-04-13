@@ -120,6 +120,21 @@ nested choices with multiple optionals = "a" | [ "b" | "c"] | [ "d" | "e" ];
 
 nested choices = "a" | ( "b" | "c" );
 
+(*
+
+  ## Optimization: Ungrouping
+
+  If a structure can be ungrouped without changing
+  the meaning, ungroup it.
+
+  original fragment:
+
+  ```
+  nested choices = "a" | ( "b" | "c" );
+  ```
+*)
+
+
 duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
 
 (*
@@ -132,13 +147,23 @@ duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
   original fragment:
 
   ```
-  nested choices = "a" | ( "b" | "c" );
   duplicate choices = "a" | ( "b" | "c" | "a" ) | "b";
   ```
 *)
 
 choice with one or more= "a" | { "b" };
 one or more = "a", { "a" };
+(*
+
+  ## Optimization: Simplify one-or-more syntax
+
+  original fragment:
+
+  ```
+  one or more = "a", { "a" };
+  ```
+*)
+
 one or more with group = ( "a" | "b" ), { "a" | "b" };
 one or more with repeater = "a", "b", "c", { "d", "e", "b", "c" };
 

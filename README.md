@@ -75,10 +75,22 @@ ebnf2railroad --write-style inputfile.ebnf --no-target
 Check the examples folder for an example input file and the generated result
 page.
 
-- EBNF `ebnf2railroad examples/ebnf.ebnf --title EBNF` [View
-  result online][example-ebnf] [View source](./examples/ebnf.ebnf)
-- JSON `ebnf2railroad examples/json.ebnf --title JSON` [View
-  result online][example-json] [View source](./examples/json.ebnf)
+- EBNF `ebnf2railroad examples/ebnf.ebnf --title EBNF`
+  [View html result online][example-ebnf] [View source](./examples/ebnf.ebnf)
+- JSON `ebnf2railroad examples/json.ebnf --title JSON`
+  [View html result online][example-json] [View source](./examples/json.ebnf)
+
+### Optimizations
+
+The following optimizations are applied:
+
+- Ungrouping of groups that do not affect meaning of syntax
+- Untangling of nested choice elements
+- Duplicate choices are removed
+- Pretty printing of original syntax, with wrapping, column alignment
+
+[View html result online][example-optimizations] [View source](./examples/optimizations.ebnf)
+[View markdown result](./examples/optimizations.md)
 
 ## Usage as module
 
@@ -110,3 +122,4 @@ this project. [Get started here](CONTRIBUTING.md)
 
 [example-ebnf]: https://htmlpreview.github.io/?https://github.com/matthijsgroen/ebnf2railroad/blob/master/examples/ebnf.html
 [example-json]: https://htmlpreview.github.io/?https://github.com/matthijsgroen/ebnf2railroad/blob/master/examples/json.html
+[example-optimizations]: https://htmlpreview.github.io/?https://github.com/matthijsgroen/ebnf2railroad/blob/master/examples/optimizations.html
