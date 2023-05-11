@@ -109,28 +109,21 @@ async function run(args) {
       await writeFile(filename, prettyOutput, "utf8");
       output(`💅 Source updated at ${filename}`);
     }
-    const markdown = targetFilename.endsWith(".md");
-    if (targetFilename && !markdown) {
-      const report = createHtmlDocumentation(ast, {
+
+    if (targetFilename) {
+      const options = {
         title: documentTitle,
         optimizeDiagrams,
         optimizeText,
         textFormatting,
         overviewDiagram,
         diagramWrap,
-      });
-      await writeFile(targetFilename, report, "utf8");
-      output(`📜 Document created at ${targetFilename}`);
-    }
-    if (targetFilename && markdown) {
-      const report = createMarkdownDocumentation(ast, {
-        title: documentTitle,
-        optimizeDiagrams,
-        optimizeText,
-        textFormatting,
-        overviewDiagram,
-        diagramWrap,
-      });
+      };
+
+      const report = targetFilename.endsWith(".md")
+        ? createMarkdownDocumentation(ast, options)
+        : createHtmlDocumentation(ast, options);
+
       await writeFile(targetFilename, report, "utf8");
       output(`📜 Document created at ${targetFilename}`);
     }
