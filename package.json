@@ -6,7 +6,6 @@
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
   "author": "Matthijs Groen <matthijs.groen@gmail.com",
   "license": "MIT",
-  "private": false,
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack",
     "start": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server"
