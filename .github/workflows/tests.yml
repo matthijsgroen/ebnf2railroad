@@ -10,32 +10,12 @@ on:
     branches: ["main"]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - name: Install Dependencies
-        run: yarn install --immutable
-      - name: Linting
-        run: yarn lint
-
   test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x, 20.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -45,13 +25,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-
+      - name: Enable corepack
+        run: corepack enable
       - name: Install Dependencies
         run: yarn install --immutable
-
-      - name: Run lint
+      - name: Linting
         run: yarn lint
-
       - name: Run unit tests
         run: yarn test --coverage
 

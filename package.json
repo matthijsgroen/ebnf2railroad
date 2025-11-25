@@ -1,6 +1,6 @@
 {
   "name": "ebnf2railroad",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "description": "EBNF to Railroad diagram",
   "keywords": [
     "ebnf",
@@ -17,9 +17,7 @@
   "repository": "git@github.com:matthijsgroen/ebnf2railroad.git",
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "license": "MIT",
-  "bin": {
-    "ebnf2railroad": "./bin/ebnf2railroad.js"
-  },
+  "bin": "./bin/ebnf2railroad.js",
   "scripts": {
     "build-parser": "jison src/ebnf.jison -o src/ebnf-parser.js",
     "test": "mocha --recursive",
@@ -27,7 +25,6 @@
     "update-examples": "bin/ebnf2railroad.js examples/json.ebnf --title JSON; bin/ebnf2railroad.js examples/ebnf.ebnf --title EBNF; bin/ebnf2railroad.js examples/optimizations.ebnf; bin/ebnf2railroad.js examples/optimizations.ebnf --target examples/optimizations.md",
     "publish": ".travis/publish-site.sh"
   },
-  "private": false,
   "files": [
     "src/*",
     "bin/*"
@@ -49,5 +46,6 @@
   },
   "resolutions": {
     "minimist": "^1.2.3"
-  }
+  },
+  "packageManager": "yarn@4.10.3+sha512.c38cafb5c7bb273f3926d04e55e1d8c9dfa7d9c3ea1f36a4868fa028b9e5f72298f0b7f401ad5eb921749eb012eb1c3bb74bf7503df3ee43fd600d14a018266f"
 }

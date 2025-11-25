@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.2] - 2025-11-25
+
+### Fixed
+
+- Fixed an issue where errors occurred when `--no-target` was used. Thanks jasonvasquez!
+
 ## [1.14.1] - 2023-04-13
 
 ### Fixed
