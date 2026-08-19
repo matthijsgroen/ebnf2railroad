@@ -22,7 +22,7 @@ based on the ISO/IEC 14977 specification
 ## Installation
 
 ```
-npm install -g ebnf2railroad
+npm install --allow-git=all -g ebnf2railroad
 ```
 
 ## Usage from command line
