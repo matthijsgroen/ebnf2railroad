@@ -90,6 +90,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prantlf/railroad-diagrams@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@prantlf/railroad-diagrams@npm:1.0.1"
+  dependencies:
+    js-yaml: "npm:3.13.1"
+    tiny-glob: "npm:0.2.6"
+  bin:
+    rrd2svg: bin/rrd2svg
+    rrdlint: bin/rrdlint
+  checksum: 10c0/72fdb43a79a2298d5939adaa29aae66108c968d763587aa25c6a27732b191a16420555581e97bcbc51cfaadaea1b1427a74d1e8326c76ac786c0979c8f38748e
+  languageName: node
+  linkType: hard
+
 "@types/color-name@npm:^1.1.1":
   version: 1.1.1
   resolution: "@types/color-name@npm:1.1.1"
@@ -586,6 +599,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ebnf2railroad@workspace:."
   dependencies:
+    "@prantlf/railroad-diagrams": "npm:^1.0.1"
     chai: "npm:^4.2.0"
     commander: "npm:^2.19.0"
     eslint: "npm:^7.0.0"
@@ -594,7 +608,6 @@ __metadata:
     jison: "npm:^0.4.18"
     mocha: "npm:^8.0.0"
     prettier: "npm:2.8.4"
-    railroad-diagrams: "https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
     showdown: "npm:^1.0.0"
     utf-railroad: "npm:^1.0.1"
   bin:
@@ -1145,6 +1158,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globalyzer@npm:^0.1.0":
+  version: 0.1.4
+  resolution: "globalyzer@npm:0.1.4"
+  checksum: 10c0/fb1b9b1741c6d89af545ac7dd7c4dffdaab75eaa766f00d5a9f4586e023f085a45554c094d817b87d90e463c7a9f3c7002c399bb4c87b7719457d650d091dcc1
+  languageName: node
+  linkType: hard
+
+"globrex@npm:^0.1.1":
+  version: 0.1.2
+  resolution: "globrex@npm:0.1.2"
+  checksum: 10c0/a54c029520cf58bda1d8884f72bd49b4cd74e977883268d931fd83bcbd1a9eb96d57c7dbd4ad80148fb9247467ebfb9b215630b2ed7563b2a8de02e1ff7f89d1
+  languageName: node
+  linkType: hard
+
 "graceful-fs@npm:^4.2.6":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
@@ -1481,6 +1508,18 @@ __metadata:
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
   checksum: 10c0/e248708d377aa058eacf2037b07ded847790e6de892bbad3dac0abba2e759cb9f121b00099a65195616badcb6eca8d14d975cb3e89eb1cfda644756402c8aeed
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:3.13.1":
+  version: 3.13.1
+  resolution: "js-yaml@npm:3.13.1"
+  dependencies:
+    argparse: "npm:^1.0.7"
+    esprima: "npm:^4.0.0"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 10c0/6a4f78b998d2eb58964cc5e051c031865bf292dc3c156a8057cf468d9e60a8739f4e8f607a267e97f09eb8d08263b8262df57eddb16b920ec5a04a259c3b4960
   languageName: node
   linkType: hard
 
@@ -2089,13 +2128,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"railroad-diagrams@https://github.com/tabatkins/railroad-diagrams#c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963":
-  version: 1.1.0
-  resolution: "railroad-diagrams@https://github.com/tabatkins/railroad-diagrams.git#commit=c7730b8fab6cb0fd55fc3c3b0a81ce355fdbf963"
-  checksum: 10c0/d2f9eab45166a825e318c49bd3066fe72d39ca34325ee6f496647d2391fa1340a16a39fde19d2273fd6875cd8cb1d052c3dfdc2e41c3f610427d7758870666a9
-  languageName: node
-  linkType: hard
-
 "ramda@npm:^0.27.1":
   version: 0.27.1
   resolution: "ramda@npm:0.27.1"
@@ -2453,6 +2485,16 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: 10c0/02805740c12851ea5982686810702e2f14369a5f4c5c40a836821e3eefc65ffeec3131ba324692a37608294b0fd8c1e55a2dd571ffed4909822787668ddbee5c
+  languageName: node
+  linkType: hard
+
+"tiny-glob@npm:0.2.6":
+  version: 0.2.6
+  resolution: "tiny-glob@npm:0.2.6"
+  dependencies:
+    globalyzer: "npm:^0.1.0"
+    globrex: "npm:^0.1.1"
+  checksum: 10c0/aafa882306e3fec9d6e7d3f5ae4df6d3cec934bdb4bb7c108738d35b3798070ccf2a4af1c7f80b12e6a949145ec64cef8e487a77d1c1293051ca994d0396a2a8
   languageName: node
   linkType: hard
 
