@@ -2,7 +2,6 @@ const { travelers, identifyNode, NodeTypes } = require("./ast/ebnf-transform");
 const { traverse } = require("./ast/traverse");
 const { optimizeAST } = require("./structure-optimizer");
 const {
-  Comment,
   ComplexDiagram,
   Diagram,
   HorizontalChoice,
@@ -12,8 +11,13 @@ const {
   Skip,
   Stack,
   Terminal,
-} = require("railroad-diagrams");
-const { CommentWithLine, Group, Choice } = require("./extra-diagram-elements");
+} = require("@prantlf/railroad-diagrams").default;
+const {
+  Comment,
+  CommentWithLine,
+  Group,
+  Choice,
+} = require("./extra-diagram-elements");
 
 /**
  * Replaces one or multiple spaces with a dash
@@ -96,7 +100,7 @@ const baseDiagramRendering = {
 
 const maxChoiceLength = (max) => ({
   [NodeTypes.Choice]: (node) => {
-    const makeChoice = (items) => new Choice(0, items);
+    const makeChoice = (items) => Choice(0, ...items);
     const choiceOptions = node.items;
     const choiceLists = [];
     while (choiceOptions.length > max) {
